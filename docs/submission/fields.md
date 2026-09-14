@@ -7,8 +7,8 @@
 | 主题 | 知识炼金场、跨次元游乐场 |
 | 作品链接 | https://yida-world.zackguo.chatgpt.site/ |
 | 知乎登录回调地址 | https://yida-world.zackguo.chatgpt.site/api/auth/callback |
-| GitHub 链接（选填） | 留空。当前仓库私有，不能作为公开源码入口。 |
-| 视频介绍链接（选填） | 上传随附 MP4 后填写视频平台公开链接；尚未创建公开视频链接，可先留空。 |
+| GitHub 链接 | https://github.com/pitchIT12138/yida-world |
+| 视频介绍链接 | https://pitchit12138.github.io/yida-world/ |
 | 产品说明计划书 | 复制「产品说明计划书.md」全文；源文件为 product-plan.md。 |
 | 封面图 | 上传「封面.png」：1600 × 900，PNG，16:9，小于 5 MB。 |
 | 项目 ICON | 上传「ICON.png」：512 × 512，PNG，小于 5 MB。 |
