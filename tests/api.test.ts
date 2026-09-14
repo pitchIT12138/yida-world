@@ -76,3 +76,5 @@ describe('real generation transport with explicitly mocked provider',()=>{
     const bad=await app.request('http://local.test/api/content/knowledge/not-a-number',{},env);expect(bad.status).toBe(400);
   });
 });
+
+describe('official detail route',()=>{it('keeps knowledge on the verified knowledge endpoint',async()=>{const fetcher=vi.fn().mockResolvedValue(Response.json({content:'Official body',work_id:'1307332455322529792'}));vi.stubGlobal('fetch',fetcher);const r=await app.request('/api/content/knowledge/1307332455322529792',{},env);expect(r.status).toBe(200);expect(fetcher.mock.calls[0][0]).toBe('https://api.zhihu.com/km-indep-home/hackathon/v2/knowledge/1307332455322529792')})});

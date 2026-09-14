@@ -1,4 +1,4 @@
-import {describe,it,expect} from 'vitest';
+import {describe,it,expect,vi} from 'vitest';
 import {app} from '../server/app';
 import {CloudWorkspace,digest,reserveGeneration} from '../server/cloud';
 import {parseProfile} from '../server/auth';
@@ -29,6 +29,16 @@ describe('release storage and identity',()=>{
   const state='s',browser='b';await f.DB.prepare('INSERT INTO oauth_states VALUES(?,?,?)').bind(await digest(state),await digest(browser),Date.now()+60000).run();
   const bad=await app.request('https://site.test/api/auth/callback?state=s&code=x',{headers:{cookie:'yida_oauth=wrong'}},env);expect(bad.status).toBe(400);expect(f.sqlite.prepare('SELECT count(*) AS n FROM oauth_states').get()?.n).toBe(1);
   await f.DB.prepare('INSERT INTO users VALUES(?,?,?,?)').bind('id','name','','now').run();const token=crypto.randomUUID();await f.DB.prepare('INSERT INTO sessions VALUES(?,?,?)').bind(await digest(token),'id',Date.now()-1).run();const r=await app.request('/api/auth/session',{headers:{cookie:'yida_session='+token}},env);expect((await r.json()).user).toBeNull();
+ });
+ it('exchanges OAuth only once, binds a private session and invalidates logout',async()=>{
+  const f=cloudFixture(),env={...f,AUTH_REQUIRED:'true',ZHIHU_APP_ID:'test',ZHIHU_APP_KEY:'test',ZHIHU_REDIRECT_URI:'https://site.test/api/auth/callback'};
+  const state='valid-state',browser='valid-browser';await f.DB.prepare('INSERT INTO oauth_states VALUES(?,?,?)').bind(await digest(state),await digest(browser),Date.now()+60000).run();
+  const fetcher=vi.fn().mockResolvedValueOnce(Response.json({access_token:'mock-provider-token'})).mockResolvedValueOnce(new Response('{"uid":1747681485547843585,"fullname":"Fixture user"}'));vi.stubGlobal('fetch',fetcher);
+  try{const callback='https://site.test/api/auth/callback?state='+state+'&code=mock-code',headers={cookie:'yida_oauth='+browser};const r=await app.request(callback,{headers},env);expect(r.status).toBe(302);const cookie=r.headers.get('set-cookie')!;expect(cookie).toContain('HttpOnly');expect(cookie).toContain('Secure');const session=cookie.match(/yida_session=([^;]+)/)![1];
+   const profile=await(await app.request('/api/auth/session',{headers:{cookie:'yida_session='+session}},env)).json();expect(profile.user.id).toBe('zhihu:1747681485547843585');
+   expect((await app.request(callback,{headers},env)).status).toBe(400);expect(fetcher).toHaveBeenCalledTimes(2);
+   await app.request('/api/auth/logout',{method:'POST',headers:{cookie:'yida_session='+session}},env);expect((await(await app.request('/api/auth/session',{headers:{cookie:'yida_session='+session}},env)).json()).user).toBeNull();
+  }finally{vi.unstubAllGlobals()}
  });
  it('protects the task and media upload interfaces with separate credentials',async()=>{const env={...cloudFixture(),RUNNER_TOKEN:'secret'};expect((await app.request('/api/admin/jobs/claim',{method:'POST'},env)).status).toBe(401);expect((await app.request('/api/admin/jobs/claim',{method:'POST',headers:{Authorization:'Bearer secret'}},env)).status).toBe(200)});
 });

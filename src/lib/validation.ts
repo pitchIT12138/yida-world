@@ -95,7 +95,7 @@ export function validateArtifact(v: unknown, source: AnswerSource, selected: str
     if(s.text !== undefined) str(s.text,200,'镜头说明',true);
     if(s.title!==undefined)str(s.title,80,'讲解标题');
     if(s.demo){
-      if(!ids.has(s.target)||!['click','input'].includes(s.demo.event))fail('操作演示只能指向本篇表达片段');
+      if(!ids.has(s.target)||!['click','input'].includes(s.demo.event))fail('操作演示 target='+s.target+' selector='+s.demo.selector+' 无效：有 demo 的步骤必须 target 为本次 blocks 中的块ID，不能是段落ID；selector 必须在该块HTML内。允许块ID：'+[...ids].join(','));
       str(s.demo.selector,160,'演示选择器');
       if(s.demo.value!==undefined)str(s.demo.value,160,'演示输入',true);
     }

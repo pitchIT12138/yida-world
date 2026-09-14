@@ -28,7 +28,7 @@ export async function generateArtifact(input:GenerationInput,env:RuntimeEnv,opti
    artifact.scene?.forEach((step:any,i:number)=>{if(step.action==='demo'&&step.demo){step.action='reveal';normalized.push('scene['+i+'].action:demo→reveal')}});
    artifact.provenance={method:'api',runId:options.runId,sourceHash,model:p.model,tier:input.tier,createdAt:new Date().toISOString(),prompt:input.instruction,reasoningEffort:p.reasoningEffort,baselineVersion:baseline?.version||DESIGN_POLICY_VERSION,baselineHash:await digest(JSON.stringify(baseline||DESIGN_POLICY_VERSION)),elapsedMs:Date.now()-start+(input.repair?.candidate.provenance.elapsedMs||0),usage,repairCount:repairs,normalizations:normalized};
    validateArtifact(artifact,input.source,input.selectedParagraphIds);validateLibraryReferences(artifact);
-   for(const block of artifact.blocks)parse(block.js,{ecmaVersion:2022,sourceType:'script'});
+   for(const block of artifact.blocks){try{parse(block.js,{ecmaVersion:2022,sourceType:'script'})}catch(e){throw Error('交互块 '+block.id+' 的 JavaScript 语法错误：'+String(e))}}
    return {artifact:mergeArtifact(input.current,artifact,input.source,input.selectedParagraphIds),repairs};
   }catch(e){
    if(repairs>=2)throw e;await options.onRepair?.();repairs++;
