@@ -1,0 +1,54 @@
+{
+  "sourceHash": "f9d903cba93ad6768fb921cd1247a3812ea31a2641c2210ae804c620c59500da",
+  "design": {
+    "version": "session-repair-2026-09-14",
+    "intent": "亲手把不同份量放到同一餐盘，再保持24克总量替换组合，理解每份对总量的贡献。",
+    "readingFlow": "示例份量处加法 → 摆盘处对照同总量组合。",
+    "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
+    "style": {
+      "palette": [
+        "#183a35",
+        "#f2f5ed",
+        "#d98b51"
+      ],
+      "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+      "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+      "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
+    },
+    "decisions": [
+      {
+        "title": "操作必须改变可见关系",
+        "reason": "亲手把不同份量放到同一餐盘，再保持24克总量替换组合，理解每份对总量的贡献。",
+        "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "protein-plate",
+        "purpose": "同总量的不同构成可直接替换，色段是份量贡献，不把总克数当唯一理解。",
+        "whyHere": "紧接对应原文：当我们把食物真的摆到一餐里，抽象的克数就变成了可以理解的选择。增加一份、拿走一份，看看组合如何变化。",
+        "interaction": "上桌、拿走、换同总量组合，盘中份数与加法条一一对应。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#same → 8 + 8 + 8 = 24 克 · 3 份",
+          "#mix → 6 + 8 + 10 = 24 克 · 3 份",
+          "[data-index=\"0\"] → 8 + 10 = 18 克 · 2 份",
+          "#reset → 0 克 · 0 份"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "protein-plate": "e7bd0a4d7031a2d7e9c937991a6fa9679152130fed60557f3e6233ced21b57c7"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-18d731ef-ec75-476d-a6c3-4c298a9cabae",
+    "sourceHash": "f9d903cba93ad6768fb921cd1247a3812ea31a2641c2210ae804c620c59500da",
+    "createdAt": "2026-09-14T15:33:58.696Z",
+    "baselineVersion": "expressive-v7.2026-09-14",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

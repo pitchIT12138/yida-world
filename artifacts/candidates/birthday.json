@@ -24,122 +24,99 @@
   "artifact": {
     "version": 1,
     "answerId": "birthday",
-    "explanation": "比较“任意两人”与“有人和我相同”的差别，并用重复实验核对理论。",
+    "explanation": "把“与你同生日”与“任意两人”放进同一个房间，用真实抽样对照不断增加的配对数量。",
+    "bindings": [],
     "blocks": [
       {
-        "id": "birthday-compare",
+        "id": "birthday-pairs",
         "afterParagraphId": "birthday-p1",
-        "title": "同一间房，两个不同的问题",
-        "kind": "figure",
-        "height": 420,
-        "html": "<h3>同一间房，两个不同的问题</h3><div class=\"fields\"><label>房间总人数<input id=\"n\" type=\"number\" value=\"23\" min=\"1\" max=\"100\" step=\"1\"></label></div><div class=\"metrics\"><div class=\"metric\"><span>任意两人相同</span><strong id=\"any\"></strong></div><div class=\"metric\"><span>有人和指定一人相同</span><strong id=\"me\"></strong></div></div><div id=\"bars\"></div><p class=\"formula\" id=\"eq\"></p><nav><button id=\"fifty\">50 人</button><button id=\"reset\">回到 23 人</button></nav><p id=\"status\"></p>",
-        "css": ":root{--accent:#3a7188;--tint:#edf5fa}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));function render(){const n=Math.round(num('#n',1,100));let no=1;for(let i=0;i<n;i++)no*=1-i/365;const any=1-no,me=1-Math.pow(364/365,n-1);txt('#any',(100*any).toFixed(1)+'%');txt('#me',(100*me).toFixed(1)+'%');$('#bars').innerHTML=bar('任意两人',any,1,(any*100).toFixed(1)+'%')+bar('指定一人',me,1,(me*100).toFixed(1)+'%',true);txt('#eq','任意相同 = 1 − ∏(365 − i)/365；i = 0…'+(n-1));txt('#status',n+' 人有 '+n*(n-1)/2+' 组配对；指定一人只有 '+(n-1)+' 组');world.emit('people',String(n))}listen(render);$('#fifty').onclick=()=>{$('#n').value=50;render()};$('#reset').onclick=()=>{$('#n').value=23;render()};render();"
+        "title": "先问清楚：你在找哪一种相同？",
+        "html": "<h3>23个人，可不止22次比较</h3><label>房间人数（包含你）<input id=\"n\" type=\"range\" min=\"2\" max=\"60\" value=\"23\"></label><div class=\"row\"><button id=\"any\">任意两人</button><button id=\"me\">其他人与我</button><button id=\"reset\">复位</button></div><svg class=\"visual\" viewBox=\"0 0 600 300\"></svg><output id=\"status\"></output><p id=\"formula\" class=\"note\"></p><p class=\"note\">独立、均匀、365天；圆点表示人，连线表示候选配对，不是已经同生日。任意两人事件用“所有生日均不同”的补集计算。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let any=true;function draw(){const n=+q(\"#n\").value,pts=Array.from({length:n},(_,i)=>[300+130*Math.cos(i/n*Math.PI*2),150+130*Math.sin(i/n*Math.PI*2)]);let s=\"\";for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)if(any||i===0)s+='<path d=\"M'+pts[i].join(\" \")+\"L\"+pts[j].join(\" \")+'\" stroke=\"#c097cc\" opacity=\".25\"/>';pts.forEach(([x,y],i)=>s+='<circle cx=\"'+x+'\" cy=\"'+y+'\" r=\"'+(i===0?8:5)+'\" fill=\"'+(i===0?\"#aa487b\":\"#504784\")+'\"/>');q(\"svg\").innerHTML=s;let diff=1;for(let k=1;k<n;k++)diff*=1-k/365;const p=any?1-diff:1-Math.pow(364/365,n-1);q(\"#status\").textContent=n+\"\\u4EBA \\xB7 \"+(any?n*(n-1)/2:n-1)+\"\\u7EC4\\u5019\\u9009\\u914D\\u5BF9 \\xB7 \\u6982\\u7387 \"+(p*100).toFixed(2)+\"%\";q(\"#formula\").textContent=any?\"P=1\\u2212(365/365 \\xD7 364/365 \\xD7 \\u2026 \\xD7 (366\\u2212n)/365)\":\"P=1\\u2212(364/365)^(n\\u22121)\\uFF0C\\u8FD9\\u91CC\\u7684n\\u5305\\u62EC\\u4F60\\u3002\"}__name(draw,\"draw\");q(\"#n\").oninput=draw;q(\"#any\").onclick=()=>{any=true;draw()};q(\"#me\").onclick=()=>{any=false;draw()};q(\"#reset\").onclick=()=>{any=true;q(\"#n\").value=23;draw()};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#504784;--paper:#f6f1f8;--muted:#76617e}",
+        "height": 570,
+        "kind": "experience"
       },
       {
-        "id": "birthday-experiment",
+        "id": "birthday-room",
         "afterParagraphId": "birthday-p2",
-        "title": "一次发生，不等于概率就是100%",
-        "kind": "figure",
-        "height": 420,
-        "html": "<h3>一次发生，不等于概率就是100%</h3><nav><button id=\"run\">模拟 1000 间房</button><button id=\"reset\">清空实验</button></nav><div class=\"metrics\"><div class=\"metric\"><span>观测频率</span><strong id=\"frequency\"></strong></div><div class=\"metric\"><span>理论概率</span><strong id=\"theory\"></strong></div></div><p id=\"status\"></p><p class=\"note\">生日独立且均匀分布在365天；实验使用固定种子的伪随机数便于复查，结果是样本频率。</p>",
-        "css": ":root{--accent:#3a7188;--tint:#edf5fa}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));let n=23,trials=0,hits=0,seed=20260914;const random=()=>{seed=(Math.imul(1664525,seed)+1013904223)>>>0;return seed/4294967296};function render(){let p=1;for(let i=0;i<n;i++)p*=1-i/365;txt('#frequency',trials?(hits/trials*100).toFixed(1)+'%':'尚未实验');txt('#theory',((1-p)*100).toFixed(1)+'%');txt('#status','人数 '+n+'；已模拟 '+trials+' 间房')}function reset(){trials=0;hits=0;seed=20260914;render()}$('#run').onclick=()=>{for(let t=0;t<1000;t++){const seen=new Set();let hit=false;for(let j=0;j<n;j++){const d=Math.floor(random()*365);if(seen.has(d))hit=true;seen.add(d)}if(hit)hits++;trials++}render()};$('#reset').onclick=reset;world.onState(s=>{if(s.people&&Number(s.people)!==n){n=Number(s.people);reset()}});render();"
+        "title": "让生日真的走进房间",
+        "html": "<h3>这一次，会在第几个人相遇？</h3><div class=\"row\"><button id=\"add\">再进来一人</button><button id=\"batch\">重复100间23人房间</button><button id=\"reset\">清空实验</button></div><div id=\"room\"></div><output id=\"status\"></output><output id=\"trials\"></output><p class=\"note\">随机实验不保证23人恰好撞生日。重复实验每间固定23人，判断是否出现任意重复；红色筹码代表重复生日。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let days=[],count=0,hits=0;function draw(){q(\"#room\").innerHTML=days.map(d=>'<span style=\"background:'+(days.filter(x=>x===d).length>1?\"#b84870\":\"#62578c\")+'\">\\u7B2C'+(d+1)+\"\\u5929</span>\").join(\"\");q(\"#status\").textContent=\"\\u623F\\u95F4\\u5DF2\\u6709 \"+days.length+\" \\u4EBA \\xB7 \"+(new Set(days).size<days.length?\"\\u51FA\\u73B0\\u540C\\u751F\\u65E5\":\"\\u5C1A\\u65E0\\u91CD\\u590D\");q(\"#trials\").textContent=count?\"\\u91CD\\u590D \"+count+\" \\u95F4\\u623F \\xB7 \\u51FA\\u73B0\\u91CD\\u590D \"+hits+\" \\u95F4\\uFF08\"+(100*hits/count).toFixed(1)+\"%\\uFF09\":\"\\u5C1A\\u672A\\u8FDB\\u884C\\u91CD\\u590D\\u5B9E\\u9A8C\";q(\"#add\").disabled=days.length>=60}__name(draw,\"draw\");q(\"#add\").onclick=()=>{days.push(Math.floor(Math.random()*365));draw()};q(\"#batch\").onclick=()=>{for(let i=0;i<100;i++){const d=Array.from({length:23},()=>Math.floor(Math.random()*365));hits+=new Set(d).size<23?1:0}count+=100;draw()};q(\"#reset\").onclick=()=>{days=[];count=hits=0;draw()};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}#room{display:flex;flex-wrap:wrap;gap:6px;min-height:60px}#room span{padding:4px 8px;border-radius:5px;color:white;font-size:12px}body{--ink:#504784;--paper:#f6f1f8}",
+        "height": 380,
+        "kind": "experience"
       }
     ],
-    "bindings": [
-      {
-        "id": "people",
-        "paragraphId": "birthday-p2",
-        "label": "当前总人数",
-        "initial": "23",
-        "hidden": true
-      }
-    ],
-    "libraryReferences": [],
     "scene": [
       {
         "action": "focus",
         "target": "birthday-p1",
-        "title": "沿正文理解",
-        "text": "两种问题 → 组合与补集 → 随机实验。"
+        "title": "先问清楚：你在找哪一种相同？",
+        "text": "两种事件的比较对象必须可见；把指数式增长的配对连线与理论概率同时展示。"
       },
       {
         "action": "reveal",
-        "target": "birthday-compare",
-        "title": "同一间房，两个不同的问题",
-        "text": "调节总人数，同时计算任意碰撞和与指定一人相同的概率。",
-        "demo": {
-          "event": "click",
-          "selector": "#fifty"
-        }
+        "target": "birthday-pairs",
+        "title": "亲手试一次",
+        "text": "点其他人与我，密网变成从你出发的星形；改变人数核对配对数与概率。"
       },
       {
-        "action": "reveal",
-        "target": "birthday-experiment",
-        "title": "一次发生，不等于概率就是100%",
-        "text": "在当前人数下重复1000次房间实验，比较频率与理论值；换人数后清空旧实验。",
-        "demo": {
-          "event": "click",
-          "selector": "#run"
-        }
-      },
-      {
-        "action": "restore",
+        "action": "focus",
         "target": "birthday-p2",
-        "title": "回到原文",
-        "text": "把比较结果带回作者的论点；可以复位并重新尝试。"
+        "title": "让生日真的走进房间",
+        "text": "把随机单次与长期频率分开，碰撞以房间中两枚同色生日筹码显示。"
+      },
+      {
+        "action": "reveal",
+        "target": "birthday-room",
+        "title": "亲手试一次",
+        "text": "逐人加入；或重复100次固定23人实验，观察频率接近而不必等于理论值。"
       }
     ],
     "design": {
-      "version": "explanation-v4.2026-09-14",
-      "intent": "比较“任意两人”与“有人和我相同”的差别，并用重复实验核对理论。",
-      "readingFlow": "两种问题 → 组合与补集 → 随机实验。",
-      "voice": "保留原文语气，补充内容使用可核对的解释。",
+      "version": "session-repair-2026-09-14",
+      "intent": "把“与你同生日”与“任意两人”放进同一个房间，用真实抽样对照不断增加的配对数量。",
+      "readingFlow": "两种问题处连线对比 → 末段逐人入场并重复试验。",
+      "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
-          "#3a7188",
-          "#edf5fa",
-          "#243b3b"
+          "#183a35",
+          "#f2f5ed",
+          "#d98b51"
         ],
-        "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
-        "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
-        "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+        "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+        "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+        "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
       },
       "decisions": [
         {
-          "title": "围绕问题安排操作",
-          "reason": "比较“任意两人”与“有人和我相同”的差别，并用重复实验核对理论。",
-          "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
-        },
-        {
-          "title": "保留事实边界",
-          "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
-          "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+          "title": "操作必须改变可见关系",
+          "reason": "把“与你同生日”与“任意两人”放进同一个房间，用真实抽样对照不断增加的配对数量。",
+          "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
         }
       ],
       "components": [
         {
-          "blockId": "birthday-compare",
-          "purpose": "调节总人数，同时计算任意碰撞和与指定一人相同的概率。",
-          "whyHere": "此处原文刚提出“同一间房，两个不同的问题”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "调节总人数，同时计算任意碰撞和与指定一人相同的概率。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "birthday-pairs",
+          "purpose": "两种事件的比较对象必须可见；把指数式增长的配对连线与理论概率同时展示。",
+          "whyHere": "紧接对应原文：我们经常把问题理解成“有没有人和我同一天生日”，但真正的问题是“任意两个人”。随着人越来越多，可比较的两两组合增加得比人数快得多。",
+          "interaction": "点其他人与我，密网变成从你出发的星形；改变人数核对配对数与概率。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "97.0%",
-            "0.0%",
-            "23 人有 253 组配对；指定一人只有 22 组"
+            "#me → 23人 · 22组候选配对 · 概率 5.86%",
+            "#reset → 23人 · 253组候选配对 · 概率 50.73%"
           ]
         },
         {
-          "blockId": "birthday-experiment",
-          "purpose": "在当前人数下重复1000次房间实验，比较频率与理论值；换人数后清空旧实验。",
-          "whyHere": "此处原文刚提出“一次发生，不等于概率就是100%”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "在当前人数下重复1000次房间实验，比较频率与理论值；换人数后清空旧实验。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "birthday-room",
+          "purpose": "把随机单次与长期频率分开，碰撞以房间中两枚同色生日筹码显示。",
+          "whyHere": "紧接对应原文：这很适合做成一次小实验：让人一个一个走进房间，出现重复生日时停下来。重复几次，亲眼看看随机结果与理论概率的区别。",
+          "interaction": "逐人加入；或重复100次固定23人实验，观察频率接近而不必等于理论值。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "人数 23；已模拟 1000 间房",
-            "人数 23；已模拟 0 间房"
+            "#add → 房间已有 1 人 · 尚无重复",
+            "#reset → 房间已有 0 人 · 尚无重复"
           ]
         }
       ]
@@ -148,11 +125,11 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-e1cb7cd3-e050-434e-bced-a29da7d93d52",
+      "runId": "codex-f1cec7d9-4058-4503-a182-321bc421e826",
       "sourceHash": "a65c16652907e229fc57419798da1af6c97367609455812b3aed08bf920d2e19",
-      "createdAt": "2026-09-14T12:39:54.112Z",
-      "baselineVersion": "explanation-v4",
-      "prompt": "按当前原文与作者要求重构，区分原文事实、补充计算和情景假设，保留图片来源，逐篇实际验收。"
+      "createdAt": "2026-09-14T15:33:19.552Z",
+      "baselineVersion": "expressive-v7.2026-09-14",
+      "prompt": "用户要求：先使用自己作为 Agent 进行默认生成。读取此文章，视觉与交互只使用 HTML/CSS/JS/SVG/Canvas；不使用外部素材，保持原文，先编排整篇阅读路线，再让不同片段自然融入正文；记录每处风格、位置理由、实现及验收约定，以逐步讲解和真实操作展示设计。"
     }
   }
 }

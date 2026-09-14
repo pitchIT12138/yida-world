@@ -204,206 +204,166 @@
   "artifact": {
     "version": 1,
     "answerId": "studio-53d8ab39-7517-4a98-bc62-ede592b2c041",
-    "explanation": "把研究口径与统计结论放在相应段落旁，读者可以核对分母、年份和分类。",
+    "explanation": "先限定研究样本，再比较分数、固定130分覆盖及录用构成；不能把岗位覆盖误作个人录取概率。",
+    "bindings": [],
     "blocks": [
       {
-        "id": "recruit-scope",
-        "afterParagraphId": "p-a4449ef8-1597-456f-9f5a-05442aafd7b9",
-        "title": "先界定这份统计覆盖了谁",
-        "kind": "aside",
-        "height": 420,
-        "html": "<h3>先界定这份统计覆盖了谁</h3><nav><button id=\"planned\">国考计划</button><button id=\"observed\">已公示样本</button></nav><div class=\"metrics\"><div class=\"metric\"><span>原文人数</span><strong id=\"count\"></strong></div></div><p id=\"status\"></p><p>国考 · 中央选调 · 特招 · 公开遴选／选调 · 定向遴选 · 军转安置 · 调动</p><p class=\"note\">原文只对特定机关本级及在京参公单位作分析。以上七类为作者梳理的渠道；计划与公示差额不等于弃录人数。</p>",
-        "css": ":root{--accent:#5b5c91;--tint:#f2f1fa}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));$('#planned').onclick=()=>{txt('#count','约 950');txt('#status','计划范围含补录新增')};$('#observed').onclick=()=>{txt('#count','798');txt('#status','78 家单位已公示样本')};$('#observed').click();"
+        "id": "exam-scope",
+        "afterParagraphId": "p-99933172-101c-43a1-a148-afb3046f093a",
+        "title": "这份研究照亮了哪一条入口",
+        "html": "<small>沿用作者范围，非全国公务员总招录</small><h3>七条渠道，本文统计其中一条</h3><div class=\"row\"><button id=\"all\">看全部渠道关系</button><button id=\"scope\">只看本文范围</button></div><div id=\"channels\"></div><output id=\"status\"></output><p class=\"note\">国考样本限定在京机关本级及作者指定参公单位。分数排除专业测试岗位；约950拟招与798公示不是同一统计阶段，不把差额全部算成放弃。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");function draw(scope){q(\"#channels\").innerHTML=[\"\\u56FD\\u8003 \\xB7 \\u672C\\u6587\\u516C\\u793A798\\u4EBA\",\"\\u4E2D\\u592E\\u9009\\u8C03 \\xB7 \\u72EC\\u7ACB\\u62DB\\u5F55\\u6D41\\u7A0B\",\"\\u7279\\u62DB \\xB7 \\u7EA6\\u6570\\u53CA\\u6709\\u9650\\u516C\\u5F00\\u4FE1\\u606F\",\"\\u516C\\u5F00\\u9074\\u9009\\u548C\\u9009\\u8C03\",\"\\u5B9A\\u5411\\u9074\\u9009\",\"\\u519B\\u8F6C\\u5B89\\u7F6E\",\"\\u8C03\\u52A8\"].map((t,i)=>'<div class=\"branch\" style=\"opacity:'+(scope&&i?\".24\":\"1\")+'\"><span>'+t+\"</span><b>\\u2192</b><em>\\u90E8\\u59D4</em></div>\").join(\"\");q(\"#status\").textContent=scope?\"\\u672C\\u6587\\u6837\\u672C\\uFF1A\\u56FD\\u8003\\u6E20\\u9053\\uFF0C798\\u540D\\u516C\\u793A\\u5F55\\u7528\\u4EBA\\u5458\\u3002\":\"\\u4E03\\u6761\\u8FDB\\u5165\\u6E20\\u9053\\uFF1A\\u56FD\\u8003\\u6837\\u672C\\u4E0D\\u80FD\\u4EE3\\u8868\\u6240\\u6709\\u6E20\\u9053\\u3002\"}__name(draw,\"draw\");q(\"#all\").onclick=()=>draw(false);q(\"#scope\").onclick=()=>draw(true);draw(true)",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#314c70;--paper:#f0f4fa}.branch{display:flex;justify-content:space-between;border-bottom:1px solid #c7d4e3;padding:8px;font-size:13px}.branch span{flex:1}.branch em{margin-left:20px;font-style:normal}",
+        "height": 530,
+        "kind": "experience"
       },
       {
-        "id": "recruit-years",
+        "id": "exam-score",
         "afterParagraphId": "p-e8630d9c-8a66-4a9d-94f6-e8631de4b3ac",
-        "title": "均值下降，130分覆盖比例也会上升吗",
-        "kind": "figure",
-        "height": 420,
-        "html": "<h3>均值下降，130分覆盖比例也会上升吗</h3><nav><button id=\"mean\">平均分</button><button id=\"median\">中位数</button><button id=\"coverage\">130分覆盖比例</button></nav><div id=\"bars\"></div><p id=\"status\"></p><p class=\"note\">数据来自作者统计，不代表所有国考岗位；覆盖比例是岗位分数线统计，不是某位考生的进面或录取概率。缺少岗位明细，不能推算其他分数。</p>",
-        "css": ":root{--accent:#5b5c91;--tint:#f2f1fa}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));const data={mean:[124.48,124.17,122.1],median:[125.7,125.1,123],coverage:[80.72,86.86,86.48]};function render(k){const unit=k==='coverage'?'%':'分',max=k==='coverage'?100:150;$('#bars').innerHTML=data[k].map((v,i)=>bar(String(2024+i),v,max,v.toFixed(2)+unit)).join('');txt('#status',k==='coverage'?'2025→2026：覆盖比例下降 0.38 个百分点':k==='mean'?'2025→2026：平均分下降 2.07 分':'2025→2026：中位数下降 2.10 分')}Object.keys(data).forEach(k=>$('#'+k).onclick=()=>render(k));render('mean');"
+        "title": "平均分下降，130分却未必覆盖更多",
+        "html": "<small>作者同口径统计 · 非个人录取概率</small><h3>把三年的位置叠在同一把尺上</h3><div class=\"row\"><button id=\"mean\">平均分</button><button id=\"median\">中位数</button><button id=\"coverage\">130分覆盖岗位</button></div><svg class=\"visual\" viewBox=\"0 0 660 270\"></svg><output id=\"status\"></output><p class=\"note\">分数尺明确截取120—132，便于看差异；覆盖图使用0—100%。缺少岗位明细，不能外推其他分数覆盖，更不能生成个人录取概率。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");function draw(mode){const vals=mode===\"mean\"?[124.48,124.17,122.1]:mode===\"median\"?[125.7,125.1,123]:[80.72,86.86,86.48],min=mode===\"coverage\"?0:120,max=mode===\"coverage\"?100:132;let s=\"\";vals.forEach((v,i)=>{const x=100+(v-min)/(max-min)*450,y=50+i*75;s+='<text x=\"10\" y=\"'+(y+5)+'\">'+(2024+i)+'</text><path d=\"M100 '+y+'H550\" stroke=\"#becde0\"/>'+(mode===\"coverage\"?'<rect x=\"100\" y=\"'+(y-10)+'\" width=\"'+(x-100)+'\" height=\"20\" fill=\"#557ba6\"/>':'<circle cx=\"'+x+'\" cy=\"'+y+'\" r=\"10\" fill=\"#557ba6\"/>')+'<text x=\"570\" y=\"'+(y+5)+'\">'+v+(mode===\"coverage\"?\"%\":\"\")+\"</text>\"});s+='<text x=\"100\" y=\"260\">'+min+'</text><text x=\"535\" y=\"260\">'+max+\"</text>\";q(\"svg\").innerHTML=s;q(\"#status\").textContent=mode===\"coverage\"?\"130\\u5206\\u8986\\u76D6\\uFF1A2025\\u5E7486.86% \\u2192 2026\\u5E7486.48%\\uFF0C\\u4E0B\\u964D0.38\\u4E2A\\u767E\\u5206\\u70B9\\u3002\":mode===\"mean\"?\"\\u5E73\\u5747\\u5206\\uFF1A124.48 \\u2192 124.17 \\u2192 122.10\\u3002\":\"\\u4E2D\\u4F4D\\u6570\\uFF1A125.70 \\u2192 125.10 \\u2192 123.00\\u3002\"}__name(draw,\"draw\");q(\"#mean\").onclick=()=>draw(\"mean\");q(\"#median\").onclick=()=>draw(\"median\");q(\"#coverage\").onclick=()=>draw(\"coverage\");draw(\"mean\")",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#314c70;--paper:#f0f4fa}",
+        "height": 540,
+        "kind": "experience"
       },
       {
-        "id": "recruit-replacement",
+        "id": "replacement-denominator",
         "afterParagraphId": "p-1ccb22b2-0b67-4f27-b2c6-eeff6f717a7b",
-        "title": "“接近9%”的分母是什么",
-        "kind": "aside",
-        "height": 420,
-        "html": "<h3>“接近9%”的分母是什么</h3><nav><button id=\"ratio\">复算比例</button><button id=\"limits\">核对可比范围</button></nav><div class=\"metrics\"><div class=\"metric\"><span>343 ÷ 3905</span><strong id=\"rate\"></strong></div></div><p id=\"status\"></p><p class=\"note\">作者注明递补人数为不完全统计；原文未给出前两年精确人数，所以不补画三年趋势。</p>",
-        "css": ":root{--accent:#5b5c91;--tint:#f2f1fa}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));txt('#rate',(343/3905*100).toFixed(2)+'%');$('#ratio').onclick=()=>txt('#status','343 ÷ 3905 = 8.78%');$('#limits').onclick=()=>txt('#status','不完全统计；缺少前两年精确值');$('#ratio').click();"
+        "title": "343，除以谁？",
+        "html": "<h3>递补数量，要放回第一批名单旁</h3><div class=\"row\"><button id=\"author\">作者定义：343 / 3905</button><button id=\"wrong\">比较另一分母：343 / (3905+343)</button></div><svg class=\"visual\" viewBox=\"0 0 620 130\"></svg><output id=\"status\"></output><p class=\"note\">作者定义是递补人数除第一批进面人数。343为不完全统计；另一分母只是口径比较，不能将两份名单简单相加推断最终独立到场人数。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");function draw(author){const d=author?3905:4248,r=343/d;q(\"svg\").innerHTML='<rect x=\"10\" y=\"40\" width=\"600\" height=\"45\" fill=\"#ccd7e6\"/><rect x=\"10\" y=\"40\" width=\"'+600*r+'\" height=\"45\" fill=\"#496c94\"/><text x=\"10\" y=\"120\">\\u5206\\u5B50343\\uFF0C\\u5206\\u6BCD'+d+\"</text>\";q(\"#status\").textContent=(author?\"\\u4F5C\\u8005\\u53E3\\u5F84\\uFF1A\":\"\\u53E6\\u4E00\\u53E3\\u5F84\\uFF1A\")+\"343 / \"+d+\" = \"+(r*100).toFixed(2)+\"%\"}__name(draw,\"draw\");q(\"#author\").onclick=()=>draw(true);q(\"#wrong\").onclick=()=>draw(false);draw(true)",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#314c70;--paper:#f0f4fa}",
+        "height": 370,
+        "kind": "experience"
       },
       {
-        "id": "recruit-fresh",
-        "afterParagraphId": "p-b89d6711-0add-4681-a72a-a30a6a9f7260",
-        "title": "应届生：按作者的学校学历分类",
-        "kind": "figure",
-        "height": 420,
-        "html": "<h3>应届生：按作者的学校学历分类</h3><nav><button id=\"counts\">人数</button><button id=\"shares\">比例</button></nav><div id=\"bars\"></div><p id=\"status\"></p><p class=\"note\">学校学历分类沿用作者体系，不等同于官方质量排名。应届生与非应届生分类维度不同，不能按相同字母直接横比。</p>",
-        "css": ":root{--accent:#5b5c91;--tint:#f2f1fa}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));const labels=[\"A+\", \"A\", \"B\", \"C\", \"D\"],v=[36, 179, 97, 39, 9],total=360;function render(share){$('#bars').innerHTML=v.map((n,i)=>bar(labels[i],n,total,share?(n/total*100).toFixed(2)+'%':n+'人')).join('');txt('#status',share?'比例分母：'+total+' 人':'合计 '+total+' 人')}$('#counts').onclick=()=>render(false);$('#shares').onclick=()=>render(true);render(false);"
-      },
-      {
-        "id": "recruit-experienced",
+        "id": "recruitment-cohorts",
         "afterParagraphId": "p-f753065e-bc9b-4a88-930f-bb7152665c4d",
-        "title": "非应届生：按作者的工作履历分类",
-        "kind": "figure",
-        "height": 420,
-        "html": "<h3>非应届生：按作者的工作履历分类</h3><nav><button id=\"counts\">人数</button><button id=\"shares\">比例</button></nav><div id=\"bars\"></div><p id=\"status\"></p><p class=\"note\">工作履历分类沿用作者体系，不等同于官方质量排名。应届生与非应届生分类维度不同，不能按相同字母直接横比。</p>",
-        "css": ":root{--accent:#5b5c91;--tint:#f2f1fa}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));const labels=[\"A\", \"B\", \"C\", \"D\"],v=[67, 239, 117, 15],total=438;function render(share){$('#bars').innerHTML=v.map((n,i)=>bar(labels[i],n,total,share?(n/total*100).toFixed(2)+'%':n+'人')).join('');txt('#status',share?'比例分母：'+total+' 人':'合计 '+total+' 人')}$('#counts').onclick=()=>render(false);$('#shares').onclick=()=>render(true);render(false);"
+        "title": "两组人，两套分类，不能混排",
+        "html": "<small>作者自定义分类，非平台评价</small><h3>先分清学校与工作履历，再看构成</h3><div class=\"row\"><button id=\"fresh\">应届360人：学校学历</button><button id=\"experienced\">非应届438人：工作履历</button></div><div id=\"tiles\"></div><div id=\"categories\" class=\"row\"></div><output id=\"status\"></output><p class=\"note\">每格一人。应届A+36、A179、B97、C39、D9；非应届A67、B239、C117、D15。作者对学校和履历的调整沿用原文，只能在同组内比较；这里不代表综合素质评判。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let fresh=true,selected=\"\\u5168\\u90E8\";const cols=[\"#304f78\",\"#5279a4\",\"#88a4b9\",\"#b9c8d0\",\"#e1e6e8\"];function draw(){const names=fresh?[\"A+\",\"A\",\"B\",\"C\",\"D\"]:[\"A\",\"B\",\"C\",\"D\"],nums=fresh?[36,179,97,39,9]:[67,239,117,15],total=fresh?360:438;q(\"#tiles\").innerHTML=nums.flatMap((n,i)=>Array.from({length:n},()=>'<i style=\"background:'+cols[i]+\";opacity:\"+(selected===\"\\u5168\\u90E8\"||selected===names[i]?1:.15)+'\"></i>')).join(\"\");q(\"#categories\").innerHTML=[\"\\u5168\\u90E8\",...names].map(n=>'<button data-category=\"'+n+'\">'+n+\"</button>\").join(\"\");const index=names.indexOf(selected),count=index<0?total:nums[index];q(\"#status\").textContent=(fresh?\"\\u5B66\\u6821\\u5B66\\u5386\":\"\\u5DE5\\u4F5C\\u5C65\\u5386\")+\" \\xB7 \"+selected+\"\\uFF1A\"+count+\" / \"+total+\"\\uFF08\"+(100*count/total).toFixed(2)+\"%\\uFF09\"}__name(draw,\"draw\");q(\"#fresh\").onclick=()=>{fresh=true;selected=\"\\u5168\\u90E8\";draw()};q(\"#experienced\").onclick=()=>{fresh=false;selected=\"\\u5168\\u90E8\";draw()};q(\"#categories\").onclick=e=>{const b=e.target.closest(\"[data-category]\");if(b){selected=b.dataset.category;draw()}};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#314c70;--paper:#f0f4fa}#tiles{display:grid;grid-template-columns:repeat(30,minmax(0,1fr));gap:3px}#tiles i{display:block;aspect-ratio:1}#categories button{padding:5px 12px}",
+        "height": 570,
+        "kind": "experience"
       }
     ],
-    "bindings": [],
-    "libraryReferences": [],
     "scene": [
       {
         "action": "focus",
-        "target": "p-a4449ef8-1597-456f-9f5a-05442aafd7b9",
-        "title": "沿正文理解",
-        "text": "研究范围与局限 → 年份比较 → 递补口径 → 两类人员构成。"
+        "target": "p-99933172-101c-43a1-a148-afb3046f093a",
+        "title": "这份研究照亮了哪一条入口",
+        "text": "渠道关系与研究抽样同时可见，避免把国考构成外推到全部部委招录。"
       },
       {
         "action": "reveal",
-        "target": "recruit-scope",
-        "title": "先界定这份统计覆盖了谁",
-        "text": "切换计划名额与已公示人数，理解样本范围为何不等于所有进入部委的渠道。",
-        "demo": {
-          "event": "click",
-          "selector": "#planned"
-        }
+        "target": "exam-scope",
+        "title": "亲手试一次",
+        "text": "切全渠道与本文范围；其他六条关系仍在，但统计聚焦国考分支。"
+      },
+      {
+        "action": "focus",
+        "target": "p-e8630d9c-8a66-4a9d-94f6-e8631de4b3ac",
+        "title": "平均分下降，130分却未必覆盖更多",
+        "text": "同尺比较三年，支持“整体分数下降但高分覆盖未单调上升”的具体论点。"
       },
       {
         "action": "reveal",
-        "target": "recruit-years",
-        "title": "均值下降，130分覆盖比例也会上升吗",
-        "text": "在相同纵轴上比较三个年份的平均值、中位数与130分覆盖岗位比例。",
-        "demo": {
-          "event": "click",
-          "selector": "#coverage"
-        }
+        "target": "exam-score",
+        "title": "亲手试一次",
+        "text": "在平均分、中位数和固定130覆盖间切换，点位或覆盖条依据原文数据重绘。"
+      },
+      {
+        "action": "focus",
+        "target": "p-1ccb22b2-0b67-4f27-b2c6-eeff6f717a7b",
+        "title": "343，除以谁？",
+        "text": "保留原文统计分母，直接展示分母替换导致的比例变化。"
       },
       {
         "action": "reveal",
-        "target": "recruit-replacement",
-        "title": "“接近9%”的分母是什么",
-        "text": "复算343与3905的比值，区分递补人数、样本覆盖和年度比较。",
-        "demo": {
-          "event": "click",
-          "selector": "#limits"
-        }
+        "target": "replacement-denominator",
+        "title": "亲手试一次",
+        "text": "切换两个明确写出的分母，比例条和算式一同改变；作者口径可复位。"
       },
       {
-        "action": "reveal",
-        "target": "recruit-fresh",
-        "title": "应届生：按作者的学校学历分类",
-        "text": "切换人数与比例，核对构成；保留作者分类定义与局限。",
-        "demo": {
-          "event": "click",
-          "selector": "#shares"
-        }
-      },
-      {
-        "action": "reveal",
-        "target": "recruit-experienced",
-        "title": "非应届生：按作者的工作履历分类",
-        "text": "切换人数与比例，核对构成；保留作者分类定义与局限。",
-        "demo": {
-          "event": "click",
-          "selector": "#shares"
-        }
-      },
-      {
-        "action": "restore",
+        "action": "focus",
         "target": "p-f753065e-bc9b-4a88-930f-bb7152665c4d",
-        "title": "回到原文",
-        "text": "把比较结果带回作者的论点；可以复位并重新尝试。"
+        "title": "两组人，两套分类，不能混排",
+        "text": "一人一格的构成对应精确人数；切组时分类名称一起更换，不伪造统一层次。"
+      },
+      {
+        "action": "reveal",
+        "target": "recruitment-cohorts",
+        "title": "亲手试一次",
+        "text": "选应届或非应届，再点类别定位人数与比例；保持每个类别在所属分母下。"
       }
     ],
     "design": {
-      "version": "explanation-v4.2026-09-14",
-      "intent": "把研究口径与统计结论放在相应段落旁，读者可以核对分母、年份和分类。",
-      "readingFlow": "研究范围与局限 → 年份比较 → 递补口径 → 两类人员构成。",
-      "voice": "保留原文语气，补充内容使用可核对的解释。",
+      "version": "session-repair-2026-09-14",
+      "intent": "先限定研究样本，再比较分数、固定130分覆盖及录用构成；不能把岗位覆盖误作个人录取概率。",
+      "readingFlow": "研究范围旁看七渠道 → 研究结论首条对照三年分数与130覆盖 → 递补处看分母 → 应届与非应届分开看分类。",
+      "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
-          "#5b5c91",
-          "#f2f1fa",
-          "#243b3b"
+          "#183a35",
+          "#f2f5ed",
+          "#d98b51"
         ],
-        "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
-        "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
-        "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+        "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+        "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+        "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
       },
       "decisions": [
         {
-          "title": "围绕问题安排操作",
-          "reason": "把研究口径与统计结论放在相应段落旁，读者可以核对分母、年份和分类。",
-          "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
-        },
-        {
-          "title": "保留事实边界",
-          "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
-          "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+          "title": "操作必须改变可见关系",
+          "reason": "先限定研究样本，再比较分数、固定130分覆盖及录用构成；不能把岗位覆盖误作个人录取概率。",
+          "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
         }
       ],
       "components": [
         {
-          "blockId": "recruit-scope",
-          "purpose": "切换计划名额与已公示人数，理解样本范围为何不等于所有进入部委的渠道。",
-          "whyHere": "此处原文刚提出“先界定这份统计覆盖了谁”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "切换计划名额与已公示人数，理解样本范围为何不等于所有进入部委的渠道。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "exam-scope",
+          "purpose": "渠道关系与研究抽样同时可见，避免把国考构成外推到全部部委招录。",
+          "whyHere": "紧接对应原文：需要进一步界定的是，本文接下来所研究的国考招录情况（包括前面所列举的数字），范围仅限于在京的部委机关本级（含部委管理的国家局本级）及统一使用副省级试卷、人员和机关合署办公或者和机关双向流动较为频繁的参公事业单位。本文排除了3家不在京但也有单独招录“户头”的党口参公事业单位，一刀切排除了部委下属所有不在京的参公事业单位，",
+          "interaction": "切全渠道与本文范围；其他六条关系仍在，但统计聚焦国考分支。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "计划范围含补录新增",
-            "78 家单位已公示样本"
+            "#all → 七条进入渠道：国考样本不能代表所有渠道。",
+            "#scope → 本文样本：国考渠道，798名公示录用人员。"
           ]
         },
         {
-          "blockId": "recruit-years",
-          "purpose": "在相同纵轴上比较三个年份的平均值、中位数与130分覆盖岗位比例。",
-          "whyHere": "此处原文刚提出“均值下降，130分覆盖比例也会上升吗”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "在相同纵轴上比较三个年份的平均值、中位数与130分覆盖岗位比例。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "exam-score",
+          "purpose": "同尺比较三年，支持“整体分数下降但高分覆盖未单调上升”的具体论点。",
+          "whyHere": "紧接对应原文：一是尽管近些年整体就业形势严峻，部委岗位的平均报录比也与日俱增，但2024至2026年部委本级岗位的进面分数线（包括平均值和中位数）却呈现稳中有降的态势。根据前述统计口径，2024年部委本级进面分数线平均值是124.48分，中位数是125.7分，如果考130分可以入围约80.72%的岗位。2025年部委本级进面分数线平",
+          "interaction": "在平均分、中位数和固定130覆盖间切换，点位或覆盖条依据原文数据重绘。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "2025→2026：覆盖比例下降 0.38 个百分点",
-            "2025→2026：平均分下降 2.07 分"
+            "#median → 中位数：125.70 → 125.10 → 123.00。",
+            "#coverage → 130分覆盖：2025年86.86% → 2026年86.48%，下降0.38个百分点。"
           ]
         },
         {
-          "blockId": "recruit-replacement",
-          "purpose": "复算343与3905的比值，区分递补人数、样本覆盖和年度比较。",
-          "whyHere": "此处原文刚提出““接近9%”的分母是什么”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "复算343与3905的比值，区分递补人数、样本覆盖和年度比较。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "replacement-denominator",
+          "purpose": "保留原文统计分母，直接展示分母替换导致的比例变化。",
+          "whyHere": "紧接对应原文：二是2024至2026年递补进面率明显增加。据不完全统计，2026年在前述国考招录专题网站上，按照前述口径，数十家单位发布的递补进面公告共递补了343人，个别单位的递补名单是用word发布的，足足有七、八页。这块之所以说是不完全统计，因为我只数了一遍，且我很确定还有至少2家单位没有在专题网站上公示递补情况，我在确定明显",
+          "interaction": "切换两个明确写出的分母，比例条和算式一同改变；作者口径可复位。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "不完全统计；缺少前两年精确值",
-            "343 ÷ 3905 = 8.78%"
+            "#author → 作者口径：343 / 3905 = 8.78%",
+            "#wrong → 另一口径：343 / 4248 = 8.07%"
           ]
         },
         {
-          "blockId": "recruit-fresh",
-          "purpose": "切换人数与比例，核对构成；保留作者分类定义与局限。",
-          "whyHere": "此处原文刚提出“应届生：按作者的学校学历分类”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "切换人数与比例，核对构成；保留作者分类定义与局限。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "recruitment-cohorts",
+          "purpose": "一人一格的构成对应精确人数；切组时分类名称一起更换，不伪造统一层次。",
+          "whyHere": "紧接对应原文：四是非应届生招录方面，从过往工作履历和学校学历层次看整体上是不如应届生的，人员结构整体以来自泛体制内单位为主，来自纯体制外单位或者待业的一般学历背景较为突出，和往年相比对待业人员更为友好。2026年国考招录，部委本级岗位共招录非应届生438人，其中过往工作履历情况A的共67人（男生28人）；B的共239人；C的共117",
+          "interaction": "选应届或非应届，再点类别定位人数与比例；保持每个类别在所属分母下。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "比例分母：360 人",
-            "合计 360 人"
-          ]
-        },
-        {
-          "blockId": "recruit-experienced",
-          "purpose": "切换人数与比例，核对构成；保留作者分类定义与局限。",
-          "whyHere": "此处原文刚提出“非应届生：按作者的工作履历分类”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "切换人数与比例，核对构成；保留作者分类定义与局限。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
-          "checks": [
-            "比例分母：438 人",
-            "合计 438 人"
+            "[data-category=\"A\"] → 学校学历 · A：179 / 360（49.72%）",
+            "#experienced → 工作履历 · 全部：438 / 438（100.00%）",
+            "[data-category=\"A\"] → 工作履历 · A：67 / 438（15.30%）"
           ]
         }
       ]
@@ -412,10 +372,10 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-1054cf34-fb95-438a-9ad1-2dfa98ca84fa",
+      "runId": "codex-a35ec9f0-e1c5-43ae-9842-8661fc43af2a",
       "sourceHash": "5d85d0c329b6a4de5c47ef4f943b1dac0c1897803e70882743997402d63b546a",
-      "createdAt": "2026-09-14T12:40:48.108Z",
-      "baselineVersion": "explanation-v4",
+      "createdAt": "2026-09-14T15:36:12.671Z",
+      "baselineVersion": "expressive-v7.2026-09-14",
       "prompt": "按作者要求加工；内部备注留存在本地工作台。"
     }
   }

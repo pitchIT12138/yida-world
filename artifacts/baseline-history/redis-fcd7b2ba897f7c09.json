@@ -1,0 +1,53 @@
+{
+  "sourceHash": "a08546a68a06da50b9690592317f40624b1c3c40ca170ef32bfbe97c075a32a8",
+  "design": {
+    "version": "session-repair-2026-09-14",
+    "intent": "让每一段网络等待占据时间轴，改变批次后只压缩等待；存在前后依赖时禁止提前合批。",
+    "readingFlow": "公式处跑两条队列 → 末段改变依赖和批次，检验加速条件。",
+    "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
+    "style": {
+      "palette": [
+        "#183a35",
+        "#f2f5ed",
+        "#d98b51"
+      ],
+      "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+      "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+      "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
+    },
+    "decisions": [
+      {
+        "title": "操作必须改变可见关系",
+        "reason": "让每一段网络等待占据时间轴，改变批次后只压缩等待；存在前后依赖时禁止提前合批。",
+        "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "network-tracks",
+        "purpose": "批处理改变等待段数量，不改变处理总量；时间游标对应已完成命令数量。",
+        "whyHere": "紧接对应原文：Pipeline 的核心不是让命令凭空消失，而是把多条命令先发出去，再读取响应。简化示意下，逐条等待约花 6×(80+2) 毫秒，一批发送约花 80+6×2 毫秒。",
+        "interaction": "改批次大小并推进一批；再开启依赖，观察队列退回逐条等待。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#step → 已完成 6 / 6 条 · 92 ms",
+          "#reset → 已完成 0 / 6 条 · 0 ms",
+          "#dependent → 逐条 492 ms / 当前 492 ms · 处理均为12 ms"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "network-tracks": "b78c360871489f9666d42965dfa521c5ef588af2b798835ea1d9c4d9b4274f9e"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-fc5c37b0-30f9-40a0-b97b-35f0fda07e78",
+    "sourceHash": "a08546a68a06da50b9690592317f40624b1c3c40ca170ef32bfbe97c075a32a8",
+    "createdAt": "2026-09-14T15:38:26.199Z",
+    "baselineVersion": "expressive-v7.2026-09-14",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

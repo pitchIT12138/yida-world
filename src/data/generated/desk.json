@@ -29,83 +29,69 @@
   "artifact": {
     "version": 1,
     "answerId": "desk",
-    "explanation": "沿三个年份对照同一人物的物件与原句，让价值变化由叙事证据呈现。",
+    "explanation": "把不同年份的桌面并置，翻开物件才看到原句；愿望的改变通过留下与移走的东西呈现。",
+    "bindings": [],
     "blocks": [
       {
-        "id": "desk-compare",
+        "id": "desk-archive",
         "afterParagraphId": "desk-p2",
-        "title": "物件留下来，愿望发生了变化",
-        "kind": "figure",
-        "height": 420,
-        "html": "<h3>物件留下来，愿望发生了变化</h3><nav><button id=\"y2016\">2016</button><button id=\"y2021\">2021</button><button id=\"y2026\">2026</button></nav><div class=\"metrics\"><div class=\"metric\"><small>2016 · 起点</small><p>空白笔记本</p><blockquote>要成为一个很厉害的人。</blockquote></div><div class=\"metric\"><small id=\"year\"></small><p id=\"objects\"></p><blockquote id=\"quote\"></blockquote></div></div><p id=\"status\"></p><p class=\"note\">物件和原句均来自虚构故事；不把生活选择打分。</p>",
-        "css": ":root{--accent:#8c694d;--tint:#fbf3e9}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));const data={2016:['空白笔记本','要成为一个很厉害的人。','愿望尚未被日程填满'],2021:['三本笔记本、工牌、待办纸、冷茶','把每天填满，并不等于知道自己想去哪里。','忙碌与方向感出现分离'],2026:['旅行车票','有时间认真生活。','从外部成就转向生活时间']};function render(y){txt('#year',String(y));txt('#objects',data[y][0]);txt('#quote',data[y][1]);txt('#status',data[y][2])}Object.keys(data).forEach(y=>$('#y'+y).onclick=()=>render(y));render(2016);"
+        "title": "十年都在这张桌上",
+        "html": "<small>虚构人物 · 物件位置为场景设计</small><h3>翻开物件，再对照那一年的话</h3><div class=\"row\"><button id=\"y2016\">2016</button><button id=\"y2021\">2021</button><button id=\"y2026\">2026</button><button id=\"compare\">并排看十年前</button></div><div id=\"desk\"></div><output id=\"status\"></output><blockquote id=\"quote\">点桌上的物件，打开它对应的原句。</blockquote><div id=\"past\" hidden><b>2016</b><p>一本空白笔记本</p><q>要成为一个很厉害的人。</q></div><p class=\"note\">2016空白本，2021三本笔记、工牌、待办与冷茶，2026留下车票。物件只是原文已有意象，不替人物编造职业经历。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let year=2016;const scenes={2016:[[\"notebook\",\"\\u7A7A\\u767D\\u7B14\\u8BB0\\u672C\",\"\\u8981\\u6210\\u4E3A\\u4E00\\u4E2A\\u5F88\\u5389\\u5BB3\\u7684\\u4EBA\\u3002\"]],2021:[[\"books\",\"\\u4E09\\u672C\\u7B14\\u8BB0\\u672C\",\"\\u7B14\\u8BB0\\u672C\\u6362\\u4E86\\u4E09\\u672C\\u3002\"],[\"badge\",\"\\u5DE5\\u724C\",\"\\u684C\\u4E0A\\u591A\\u4E86\\u5DE5\\u724C\\u3001\\u5F85\\u529E\\u7EB8\\u548C\\u51B7\\u6389\\u7684\\u8336\\u3002\"],[\"todo\",\"\\u5F85\\u529E\\u7EB8\",\"\\u628A\\u6BCF\\u5929\\u586B\\u6EE1\\uFF0C\\u5E76\\u4E0D\\u7B49\\u4E8E\\u77E5\\u9053\\u81EA\\u5DF1\\u60F3\\u53BB\\u54EA\\u91CC\\u3002\"],[\"tea\",\"\\u51B7\\u8336\",\"\\u684C\\u4E0A\\u591A\\u4E86\\u5DE5\\u724C\\u3001\\u5F85\\u529E\\u7EB8\\u548C\\u51B7\\u6389\\u7684\\u8336\\u3002\"]],2026:[[\"ticket\",\"\\u65C5\\u884C\\u8F66\\u7968\",\"\\u6709\\u65F6\\u95F4\\u8BA4\\u771F\\u751F\\u6D3B\\u3002\"]]};function draw(){q(\"#desk\").innerHTML=scenes[year].map(([id,label],i)=>'<button data-object=\"'+i+'\" class=\"'+id+'\">'+label+\"</button>\").join(\"\");q(\"#status\").textContent=year+\" \\xB7 \"+scenes[year].length+\"\\u4EF6\\u53EF\\u7FFB\\u770B\\u7684\\u7269\\u4EF6\";q(\"#quote\").textContent=\"\\u70B9\\u684C\\u4E0A\\u7684\\u7269\\u4EF6\\uFF0C\\u6253\\u5F00\\u5B83\\u5BF9\\u5E94\\u7684\\u539F\\u53E5\\u3002\"}__name(draw,\"draw\");[2016,2021,2026].forEach(y=>q(\"#y\"+y).onclick=()=>{year=y;draw()});q(\"#desk\").onclick=e=>{const b=e.target.closest(\"[data-object]\");if(b){q(\"#quote\").textContent=scenes[year][+b.dataset.object][2];b.classList.add(\"opened\")}};q(\"#compare\").onclick=()=>q(\"#past\").hidden=!q(\"#past\").hidden;draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#5b442e;--paper:#f7efdf;--muted:#8b725b}#desk{position:relative;background:repeating-linear-gradient(3deg,#cda87d 0 22px,#cba478 22px 24px);min-height:270px;display:flex;gap:22px;align-items:center;justify-content:center;flex-wrap:wrap;padding:22px}#desk button{box-shadow:4px 6px 0 #63412f25;transform:rotate(-7deg);height:130px;background:#f3e0ad;border:0;color:#634b30;font-size:13px}.books{border-left:10px double #986e48!important}.badge{background:#eee8de!important;height:90px!important}.tea{border-radius:50%;height:70px!important}.ticket{height:70px!important;width:230px;border-left:5px dotted #bba078!important}.opened{transform:rotate(0)!important;box-shadow:1px 2px 0 #63412f25!important}blockquote{margin:12px 0;border-left:2px solid #a67b53;padding:8px 16px}#past{padding:15px;background:#e9dcc2}",
+        "height": 580,
+        "kind": "experience"
       }
     ],
-    "bindings": [],
-    "libraryReferences": [],
     "scene": [
       {
         "action": "focus",
         "target": "desk-p2",
-        "title": "沿正文理解",
-        "text": "2016的愿望 → 2021的忙碌 → 2026对生活的重新命名。"
+        "title": "十年都在这张桌上",
+        "text": "年份切换改变桌面上的实体与数量，物件打开对应原句，叙事比较建立在具体意象上。"
       },
       {
         "action": "reveal",
-        "target": "desk-compare",
-        "title": "物件留下来，愿望发生了变化",
-        "text": "选择年份，看物件、原句和2016年起点并列，比较人物如何重新理解生活。",
-        "demo": {
-          "event": "click",
-          "selector": "#y2026"
-        }
-      },
-      {
-        "action": "restore",
-        "target": "desk-p2",
-        "title": "回到原文",
-        "text": "把比较结果带回作者的论点；可以复位并重新尝试。"
+        "target": "desk-archive",
+        "title": "亲手试一次",
+        "text": "在2021翻工牌和待办，再到2026翻车票；并置2016的愿望，观察物件与原句的变化。"
       }
     ],
     "design": {
-      "version": "explanation-v4.2026-09-14",
-      "intent": "沿三个年份对照同一人物的物件与原句，让价值变化由叙事证据呈现。",
-      "readingFlow": "2016的愿望 → 2021的忙碌 → 2026对生活的重新命名。",
-      "voice": "保留原文语气，补充内容使用可核对的解释。",
+      "version": "session-repair-2026-09-14",
+      "intent": "把不同年份的桌面并置，翻开物件才看到原句；愿望的改变通过留下与移走的东西呈现。",
+      "readingFlow": "2016愿望 → 2021物件增多 → 2026选择留下车票；每件物品关联原句。",
+      "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
-          "#8c694d",
-          "#fbf3e9",
-          "#243b3b"
+          "#183a35",
+          "#f2f5ed",
+          "#d98b51"
         ],
-        "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
-        "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
-        "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+        "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+        "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+        "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
       },
       "decisions": [
         {
-          "title": "围绕问题安排操作",
-          "reason": "沿三个年份对照同一人物的物件与原句，让价值变化由叙事证据呈现。",
-          "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
-        },
-        {
-          "title": "保留事实边界",
-          "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
-          "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+          "title": "操作必须改变可见关系",
+          "reason": "把不同年份的桌面并置，翻开物件才看到原句；愿望的改变通过留下与移走的东西呈现。",
+          "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
         }
       ],
       "components": [
         {
-          "blockId": "desk-compare",
-          "purpose": "选择年份，看物件、原句和2016年起点并列，比较人物如何重新理解生活。",
-          "whyHere": "此处原文刚提出“物件留下来，愿望发生了变化”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "选择年份，看物件、原句和2016年起点并列，比较人物如何重新理解生活。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "desk-archive",
+          "purpose": "年份切换改变桌面上的实体与数量，物件打开对应原句，叙事比较建立在具体意象上。",
+          "whyHere": "紧接对应原文：2026 年，桌子还是那张桌子。我留下一张旅行车票，把“很厉害”改成“有时间认真生活”。这是一个虚构人物的片段，不是一份职业建议。",
+          "interaction": "在2021翻工牌和待办，再到2026翻车票；并置2016的愿望，观察物件与原句的变化。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "从外部成就转向生活时间",
-            "忙碌与方向感出现分离",
-            "愿望尚未被日程填满"
+            "#y2021 → 2021 · 4件可翻看的物件",
+            "[data-object=\"2\"] → 把每天填满，并不等于知道自己想去哪里。",
+            "#y2026 → 2026 · 1件可翻看的物件",
+            "[data-object=\"0\"] → 有时间认真生活。",
+            "#y2016 → 2016 · 1件可翻看的物件"
           ]
         }
       ]
@@ -114,10 +100,10 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-323d43ff-db68-434e-b34a-47fefc280dbd",
+      "runId": "codex-52366124-3575-4b85-aae4-36e9ad8acdfd",
       "sourceHash": "57cd98b6620556e118d738ca724f4aa3574181275ea8138373ada69fab9e9355",
-      "createdAt": "2026-09-14T12:39:56.898Z",
-      "baselineVersion": "explanation-v4",
+      "createdAt": "2026-09-14T15:34:09.384Z",
+      "baselineVersion": "expressive-v7.2026-09-14",
       "prompt": "按作者要求加工；内部备注留存在本地工作台。"
     }
   }

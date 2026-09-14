@@ -1,0 +1,54 @@
+{
+  "sourceHash": "8057b35e82a715f777ed7cf0b062b450669adc3a687ef7350aa03a185750a471",
+  "design": {
+    "version": "session-repair-2026-09-14",
+    "intent": "在同一查询上逐次量距离、沿边走，再下降一层，让近路有可追溯的访问路径。",
+    "readingFlow": "城市类比后跑同一查询的高层与低层 → 原文边界处对照全扫描。",
+    "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
+    "style": {
+      "palette": [
+        "#183a35",
+        "#f2f5ed",
+        "#d98b51"
+      ],
+      "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+      "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+      "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
+    },
+    "decisions": [
+      {
+        "title": "操作必须改变可见关系",
+        "reason": "在同一查询上逐次量距离、沿边走，再下降一层，让近路有可追溯的访问路径。",
+        "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "layer-route",
+        "purpose": "可见节点与实际距离缓存一一对应，搜索结果由图算法计算，不播放预制文字路径。",
+        "whyHere": "紧接对应原文：如果能让读者自己选一个查询位置，看搜索从入口开始，一层一层接近目标，这段解释就不只是一张静态图片了。这里展示的是层级搜索的概念，不等于完整算法的性能基准。",
+        "interaction": "选查询位置，逐步比较邻居或走完；查看层级、已访问节点和距离计算次数。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#finish → 结束：最近节点 80，距离 4",
+          "#query → 第1步 · 高层 · 比较节点 0",
+          "#finish → 结束：最近节点 10，距离 0",
+          "#reset → 第1步 · 高层 · 比较节点 0"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "layer-route": "bcdacc900916c0e000203e3ea705bced4cd5018be48aeff81a6d11310e62d0d3"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-b1a006a5-3ba3-4abe-a8b1-90f5ced55b4e",
+    "sourceHash": "8057b35e82a715f777ed7cf0b062b450669adc3a687ef7350aa03a185750a471",
+    "createdAt": "2026-09-14T15:33:38.854Z",
+    "baselineVersion": "expressive-v7.2026-09-14",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

@@ -25,113 +25,99 @@
   "artifact": {
     "version": 1,
     "answerId": "neutron",
-    "explanation": "将体积换算、密度乘法与数量级比较拆开，让极端数值能够逐步核对。",
+    "explanation": "把毫升逐级换成立方米，再让读者沿数量级缩放，看到2×10¹²千克离日常有多远。",
+    "bindings": [],
     "blocks": [
       {
-        "id": "neutron-mass",
+        "id": "density-scale",
         "afterParagraphId": "neutron-p1",
-        "title": "先把毫升变成立方米",
-        "kind": "figure",
-        "height": 420,
-        "html": "<h3>先把毫升变成立方米</h3><div class=\"fields\"><label>体积／mL<input id=\"volume\" type=\"number\" value=\"5\" min=\"0\" max=\"1000\" step=\"0.1\"></label></div><div class=\"metrics\"><div class=\"metric\"><span>体积／m³</span><strong id=\"m3\"></strong></div><div class=\"metric\"><span>质量／kg</span><strong id=\"mass\"></strong></div></div><p class=\"formula\" id=\"eq\"></p><nav><button id=\"one\">1 mL</button><button id=\"reset\">5 mL</button></nav><p id=\"status\"></p><p class=\"note\">假定密度 4×10¹⁷ kg/m³；只做数学类比，不表示中子星物质能稳定装进勺子。</p>",
-        "css": ":root{--accent:#575c84;--tint:#f0f1f8}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));function render(){const v=num('#volume',0,1000),m=v*1e-6*4e17;txt('#m3',(v*1e-6).toExponential(2));txt('#mass',m.toExponential(2));txt('#eq',v+' mL × 10⁻⁶ m³/mL × 4×10¹⁷ kg/m³');txt('#status',v+' mL 对应 '+m.toExponential(2)+' kg')}listen(render);$('#one').onclick=()=>{$('#volume').value=1;render()};$('#reset').onclick=()=>{$('#volume').value=5;render()};render();"
+        "title": "一勺不是单位，先把单位换对",
+        "html": "<small>数学类比 · 中子星物质不能这样取出</small><h3>让体积经过单位闸门</h3><label>体积 / mL<input id=\"volume\" type=\"range\" min=\"1\" max=\"10\" value=\"5\"></label><svg class=\"visual\" viewBox=\"0 0 620 220\"></svg><output id=\"status\"></output><div class=\"row\"><button id=\"kg\">看千克</button><button id=\"ton\">换成吨</button><button id=\"reset\">复位5mL</button></div><p class=\"note\">固定原文假设ρ=4×10¹⁷ kg/m³。1mL=10⁻⁶m³；m=ρV。容器只画体积比例，绝不表现可取出的真实材料。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let tonne=false;function draw(){const v=+q(\"#volume\").value,m=v*4e11;q(\"svg\").innerHTML='<path d=\"M30 40v150h100V40\" fill=\"none\" stroke=\"#6e618c\" stroke-width=\"3\"/><rect x=\"32\" y=\"'+(188-v*13)+'\" width=\"96\" height=\"'+v*13+'\" fill=\"#8066a0\"/><path d=\"M160 110H220M340 110H410\" stroke=\"#837292\" stroke-width=\"4\"/><text x=\"220\" y=\"83\">\\xF7 1,000,000</text><text x=\"220\" y=\"133\">'+v+' \\xD7 10\\u207B\\u2076 m\\xB3</text><text x=\"420\" y=\"83\">\\xD7 4\\xD710\\xB9\\u2077</text><text x=\"420\" y=\"133\">'+(m/1e12).toFixed(1)+\" \\xD710\\xB9\\xB2 kg</text>\";q(\"#status\").textContent=tonne?(m/1e3).toLocaleString(\"en-US\")+\" \\u5428\":m.toLocaleString(\"en-US\")+\" \\u5343\\u514B\"}__name(draw,\"draw\");q(\"#volume\").oninput=draw;q(\"#kg\").onclick=()=>{tonne=false;draw()};q(\"#ton\").onclick=()=>{tonne=true;draw()};q(\"#reset\").onclick=()=>{q(\"#volume\").value=5;tonne=false;draw()};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#534164;--paper:#f5eff8;--muted:#806c8c}",
+        "height": 470,
+        "kind": "experience"
       },
       {
-        "id": "neutron-scale",
+        "id": "orders-ruler",
         "afterParagraphId": "neutron-p2",
-        "title": "把十二个零拆成六次千倍",
-        "kind": "aside",
-        "height": 420,
-        "html": "<h3>把十二个零拆成六次千倍</h3><nav><button id=\"next\">再放大 1000 倍</button><button id=\"reset\">回到 1 克</button></nav><div class=\"metrics\"><div class=\"metric\"><span>当前质量／kg</span><strong id=\"scale\"></strong></div></div><p id=\"status\"></p>",
-        "css": ":root{--accent:#575c84;--tint:#f0f1f8}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));let e=-3;function render(){txt('#scale',Math.pow(10,e).toExponential(0));txt('#status',e===12?'10¹² kg；5 mL 样本约为它的 2 倍':'当前是 10^'+e+' kg');$('#next').disabled=e===12}$('#next').onclick=()=>{e=Math.min(12,e+3);render()};$('#reset').onclick=()=>{e=-3;render()};render();"
+        "title": "把尺子拉远十二个数量级",
+        "html": "<h3>先用日常的秤，再换数量级</h3><label>标尺上限 / 10的几次方千克<input id=\"exponent\" type=\"range\" min=\"0\" max=\"13\" value=\"3\"></label><svg class=\"visual\" viewBox=\"0 0 620 150\"></svg><output id=\"status\"></output><button id=\"fit\">拉到能放下</button><button id=\"reset\">回到日常秤</button><p class=\"note\">这是一把线性标尺；只有上限按10倍扩大。目标固定为原文5mL示例的2×10¹²kg。越界箭头明确表示超出范围，避免用对数长度假装质量比例。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");function draw(){const exp=+q(\"#exponent\").value,max=10**exp,ratio=2e12/max,x=30+Math.min(1,ratio)*560;q(\"svg\").innerHTML='<path d=\"M30 95H590\" stroke=\"#7b718f\"/><rect x=\"30\" y=\"55\" width=\"'+Math.min(1,ratio)*560+'\" height=\"25\" fill=\"#7d6599\"/><text x=\"30\" y=\"130\">0</text><text x=\"475\" y=\"130\">10^'+exp+\" kg</text>\"+(ratio>1?'<path d=\"M575 35l20 30-20 30\" stroke=\"#c37358\" fill=\"none\" stroke-width=\"5\"/>':'<circle cx=\"'+x+'\" cy=\"48\" r=\"6\" fill=\"#b26047\"/>');q(\"#status\").textContent=ratio>1?\"\\u4ECD\\u8D85\\u51FA\\u6807\\u5C3A\\uFF1A\\u76EE\\u6807\\u662F\\u4E0A\\u9650\\u7684 \"+ratio.toLocaleString(\"en-US\")+\" \\u500D\":\"\\u76EE\\u6807\\u5360\\u6807\\u5C3A \"+(ratio*100).toFixed(0)+\"%\"}__name(draw,\"draw\");q(\"#exponent\").oninput=draw;q(\"#fit\").onclick=()=>{q(\"#exponent\").value=13;draw()};q(\"#reset\").onclick=()=>{q(\"#exponent\").value=3;draw()};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#534164;--paper:#f5eff8;--muted:#806c8c}",
+        "height": 370,
+        "kind": "experience"
       }
     ],
-    "bindings": [],
-    "libraryReferences": [],
     "scene": [
       {
         "action": "focus",
         "target": "neutron-p1",
-        "title": "沿正文理解",
-        "text": "换单位 → 算质量 → 比较数量级。"
+        "title": "一勺不是单位，先把单位换对",
+        "text": "单位换算直接控制质量，防止把毫升乘以每立方米密度漏掉百万倍。"
       },
       {
         "action": "reveal",
-        "target": "neutron-mass",
-        "title": "先把毫升变成立方米",
-        "text": "调节体积，在同一处展示单位换算与质量乘法。",
-        "demo": {
-          "event": "click",
-          "selector": "#one"
-        }
+        "target": "density-scale",
+        "title": "亲手试一次",
+        "text": "拖动体积，液面与每一步换算同步；用千克和吨两种单位核对。"
       },
       {
-        "action": "reveal",
-        "target": "neutron-scale",
-        "title": "把十二个零拆成六次千倍",
-        "text": "沿千倍刻度前进，比较克、千克、吨与5mL样本的数量级。",
-        "demo": {
-          "event": "click",
-          "selector": "#next"
-        }
-      },
-      {
-        "action": "restore",
+        "action": "focus",
         "target": "neutron-p2",
-        "title": "回到原文",
-        "text": "把比较结果带回作者的论点；可以复位并重新尝试。"
+        "title": "把尺子拉远十二个数量级",
+        "text": "把数量级换算变成越界与装入标尺的操作，解释常识尺度为何失效。"
+      },
+      {
+        "action": "reveal",
+        "target": "orders-ruler",
+        "title": "亲手试一次",
+        "text": "逐次拉远标尺，直到质量落进画面；上限、条长和越界提示一致。"
       }
     ],
     "design": {
-      "version": "explanation-v4.2026-09-14",
-      "intent": "将体积换算、密度乘法与数量级比较拆开，让极端数值能够逐步核对。",
-      "readingFlow": "换单位 → 算质量 → 比较数量级。",
-      "voice": "保留原文语气，补充内容使用可核对的解释。",
+      "version": "session-repair-2026-09-14",
+      "intent": "把毫升逐级换成立方米，再让读者沿数量级缩放，看到2×10¹²千克离日常有多远。",
+      "readingFlow": "密度假设旁量体积 → 末段展开数量级尺；同一质量同步两处。",
+      "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
-          "#575c84",
-          "#f0f1f8",
-          "#243b3b"
+          "#183a35",
+          "#f2f5ed",
+          "#d98b51"
         ],
-        "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
-        "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
-        "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+        "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+        "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+        "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
       },
       "decisions": [
         {
-          "title": "围绕问题安排操作",
-          "reason": "将体积换算、密度乘法与数量级比较拆开，让极端数值能够逐步核对。",
-          "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
-        },
-        {
-          "title": "保留事实边界",
-          "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
-          "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+          "title": "操作必须改变可见关系",
+          "reason": "把毫升逐级换成立方米，再让读者沿数量级缩放，看到2×10¹²千克离日常有多远。",
+          "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
         }
       ],
       "components": [
         {
-          "blockId": "neutron-mass",
-          "purpose": "调节体积，在同一处展示单位换算与质量乘法。",
-          "whyHere": "此处原文刚提出“先把毫升变成立方米”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "调节体积，在同一处展示单位换算与质量乘法。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "density-scale",
+          "purpose": "单位换算直接控制质量，防止把毫升乘以每立方米密度漏掉百万倍。",
+          "whyHere": "紧接对应原文：做一个明确写出假设的数量级练习：取密度 4×10¹⁷ 千克每立方米，体积 5 毫升，也就是 5×10⁻⁶ 立方米。质量等于密度乘体积。",
+          "interaction": "拖动体积，液面与每一步换算同步；用千克和吨两种单位核对。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "1 mL 对应 4.00e+11 kg",
-            "5 mL 对应 2.00e+12 kg"
+            "#ton → 2,000,000,000 吨",
+            "#reset → 2,000,000,000,000 千克"
           ]
         },
         {
-          "blockId": "neutron-scale",
-          "purpose": "沿千倍刻度前进，比较克、千克、吨与5mL样本的数量级。",
-          "whyHere": "此处原文刚提出“把十二个零拆成六次千倍”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "沿千倍刻度前进，比较克、千克、吨与5mL样本的数量级。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "orders-ruler",
+          "purpose": "把数量级换算变成越界与装入标尺的操作，解释常识尺度为何失效。",
+          "whyHere": "紧接对应原文：一个数字太容易被划过去。也许让读者先猜，再比较不同数量级，最后不断拉远尺度，才会感到日常直觉为什么在这里失效。这个练习只是密度乘体积的数学类比。",
+          "interaction": "逐次拉远标尺，直到质量落进画面；上限、条长和越界提示一致。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "当前是 10^0 kg",
-            "当前是 10^-3 kg"
+            "#fit → 目标占标尺 20%",
+            "#reset → 仍超出标尺：目标是上限的 2,000,000,000 倍"
           ]
         }
       ]
@@ -140,10 +126,10 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-1e3147d0-4ea9-44e4-9fad-4f169b417bca",
+      "runId": "codex-8420677a-56af-4a00-82a5-3ebf32093d12",
       "sourceHash": "fd38a92b2b8c68cec571e01ef3c0dfe694a8f20db07273ff8229dfe809b56847",
-      "createdAt": "2026-09-14T12:39:54.905Z",
-      "baselineVersion": "explanation-v4",
+      "createdAt": "2026-09-14T15:33:43.055Z",
+      "baselineVersion": "expressive-v7.2026-09-14",
       "prompt": "按作者要求加工；内部备注留存在本地工作台。"
     }
   }

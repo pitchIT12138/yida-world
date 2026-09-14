@@ -1,0 +1,67 @@
+{
+  "sourceHash": "9ad523f3b0b23ca4fa77f0e9da3f3c4a99cfebb7992bb0eb45110f977c71ddad",
+  "design": {
+    "version": "session-repair-2026-09-14",
+    "intent": "拆开房价月租倍数、年毛收益和净运营收益；把空置和费用从十二张租金账单中真正扣掉。",
+    "readingFlow": "倍数争议处换算 → 成交案例处逐月收租与扣费 → 下行风险在同一账本调整租金。",
+    "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
+    "style": {
+      "palette": [
+        "#183a35",
+        "#f2f5ed",
+        "#d98b51"
+      ],
+      "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+      "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+      "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
+    },
+    "decisions": [
+      {
+        "title": "操作必须改变可见关系",
+        "reason": "拆开房价月租倍数、年毛收益和净运营收益；把空置和费用从十二张租金账单中真正扣掉。",
+        "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "rent-denominator",
+        "purpose": "用可数月租块和年收益换算解释分母，而不是把不同口径统称租售比。",
+        "whyHere": "紧接对应原文：这个问题下（或者说全知乎）提房地产税的人99%以上基本对有房地产税地方的租售比究竟是多少毫无量化概念。他们只会复读一句：有房地产税所以持有成本高，他们根本不理解在有房地产税的地方，租售比是远远低于200的。而150 vs 200就是30%的房价差了。",
+        "interaction": "比较150、200、300倍，房价对应的租金堆叠和年毛收益率反向变化。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#m150 → 150个月租金买下房子 · 年毛收益率 8.00%",
+          "#m200 → 200个月租金买下房子 · 年毛收益率 6.00%"
+        ]
+      },
+      {
+        "blockId": "rent-calendar",
+        "purpose": "把空置率落实为没收到的月份，费用与租金下跌同时改变现金流和收益分子。",
+        "whyHere": "紧接对应原文：PS：这套房子我们最后才卖了115万，租售比100，买家自己计算的最后实际租金收益7.5-8%。",
+        "interaction": "点一张账单切换空置；调整租金下降或持有成本，年度流水和收益率同步；全年空置仍须支付成本。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#reset → 出租 12 个月 · 年净运营收入 121400.00",
+          "#down → 出租 12 个月 · 年净运营收入 107960.00",
+          "#empty → 出租 0 个月 · 年净运营收入 -13000.00",
+          "#reset → 出租 12 个月 · 年净运营收入 121400.00",
+          "[data-month=\"0\"] → 出租 11 个月 · 年净运营收入 110200.00"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "rent-denominator": "4ff16e43484cc88c2c239b6700bb2240264ff2548f5fbd9d2f6abf35f4f32a57",
+    "rent-calendar": "468fa151cc6518bfd208acfafb0c3ec77b2e887a82d2f627a9345c20c32ff1e6"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-dded917f-f8e3-407b-b011-fcbbe4431434",
+    "sourceHash": "9ad523f3b0b23ca4fa77f0e9da3f3c4a99cfebb7992bb0eb45110f977c71ddad",
+    "createdAt": "2026-09-14T15:36:03.281Z",
+    "baselineVersion": "expressive-v7.2026-09-14",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

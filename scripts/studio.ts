@@ -30,7 +30,7 @@ try{
  }else if(command==='accept'){
  const candidate=publicCandidate(a);const review=argument('review');if(!review.trim())throw Error('必须提供 --review 实际内容检查说明');
  const checks=JSON.parse(await readFile(argument('checks'),'utf8')) as InteractionCheck[];
- const evidence=await verifyInteractive(candidate.artifact,checks,candidate.assets);const artifactHash=createHash('sha256').update(JSON.stringify(candidate.artifact)).digest('hex');
+ const evidence=await verifyInteractive(candidate.artifact,checks,candidate.assets,argument('evidence-dir','artifacts/reviews/'+candidate.artifact.provenance.runId));const artifactHash=createHash('sha256').update(JSON.stringify(candidate.artifact)).digest('hex');
  await mkdir('artifacts/reviews',{recursive:true});await mkdir('src/data/generated',{recursive:true});
  await writeFile('artifacts/reviews/'+candidate.artifact.provenance.runId+'.json',JSON.stringify({...evidence,artifactHash,runId:candidate.artifact.provenance.runId,review},null,2));
  // Recheck revision after browser work to avoid publishing a superseded draft.

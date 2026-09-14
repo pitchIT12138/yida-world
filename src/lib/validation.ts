@@ -79,7 +79,7 @@ export function validateArtifact(v: unknown, source: AnswerSource, selected: str
     if (/<\s*(script|iframe|object|embed|base|meta|link)\b/i.test(b.html) || /\son[a-z]+\s*=/i.test(b.html)) fail('HTML 中包含未允许的脚本或嵌入标签');
     if (/javascript\s*:/i.test(b.html) || /<\/script/i.test(b.js) || /<\/style/i.test(b.css)) fail('代码中包含无效的文档边界');
     if(b.kind!==undefined&&!['inline','figure','experience','aside'].includes(b.kind))fail('表达片段布局无效');
-    if (!Number.isFinite(b.height) || b.height < 36 || b.height > 1000) fail('表达片段高度应在 36–1000 之间');
+    if (!Number.isFinite(b.height) || b.height < 36 || b.height > 1000) fail('blocks['+a.blocks.indexOf(b)+'] ('+b.id+').height 高度应在 36–1000 之间');
   }
   if (!Array.isArray(a.bindings) || a.bindings.length > 12) fail('正文联动格式无效');
   const bindingIds = new Set<string>();

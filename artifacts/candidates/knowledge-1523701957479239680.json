@@ -256,113 +256,103 @@
   "artifact": {
     "version": 1,
     "answerId": "knowledge-1523701957479239680",
-    "explanation": "区分模糊愿望、可执行行动与明确结束条件，帮助读者辨认任务回路。",
+    "explanation": "让模糊任务与明确完成标准走过同一段行动，再通过完成或主动终止把回路闭合；不把情绪简化为可测数值。",
+    "bindings": [],
     "blocks": [
       {
-        "id": "wins-boundary",
-        "afterParagraphId": "knowledge-1523701957479239680-p4",
-        "title": "怎样才算做完了",
-        "kind": "aside",
-        "height": 420,
-        "html": "<h3>怎样才算做完了</h3><nav><button id=\"vague\">我要学好英语</button><button id=\"specific\">今天完成一次练习</button></nav><p id=\"status\"></p><p class=\"note\">教学例子：目标可以宏大，但本次行动需要可以辨认的结束条件。</p>",
-        "css": ":root{--accent:#8a7750;--tint:#faf5e7}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));$('#vague').onclick=()=>txt('#status','缺少范围和结束条件：何时可以确认完成？');$('#specific').onclick=()=>txt('#status','阅读一篇短文，记录3个生词并各写1个例句；核对后结束。');$('#vague').click();"
+        "id": "close-loop",
+        "afterParagraphId": "knowledge-1523701957479239680-p16",
+        "title": "做了三步，为什么还像没做完？",
+        "html": "<small>教学任务 · 不是心理状态诊断</small><h3>同样三句笔记，两种结束方式</h3><div class=\"row\"><button id=\"vague\">模糊任务：好好学习</button><button id=\"clear\">明确任务：写完3句并存档</button></div><div id=\"paper\"></div><div class=\"row\"><button id=\"act\">写下一句笔记</button><button id=\"finish\">确认完成并存档</button><button id=\"reset\">重做</button></div><svg class=\"visual\" viewBox=\"0 0 600 110\"></svg><output id=\"status\"></output><p class=\"note\">模拟笔记不是你的真实学习成果；操作展示“行动→可检查的结果→明确终点”。模糊任务没有给定结束标准，不能仅凭做了三次就认定完成。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let clear=false,n=0,done=false;function draw(){q(\"#paper\").innerHTML=Array.from({length:n},(_,i)=>\"<p>\\u7B14\\u8BB0\"+(i+1)+\"\\uFF1A\"+[\"\\u5199\\u660E\\u8FD9\\u6B21\\u8981\\u5B8C\\u6210\\u4EC0\\u4E48\\u3002\",\"\\u7ED9\\u7ED3\\u679C\\u8BBE\\u4E00\\u4E2A\\u53EF\\u68C0\\u67E5\\u7684\\u6807\\u51C6\\u3002\",\"\\u5B8C\\u6210\\u540E\\u5B58\\u6863\\uFF0C\\u505C\\u6B62\\u672C\\u6B21\\u4EFB\\u52A1\\u3002\"][i]+\"</p>\").join(\"\");q(\"svg\").innerHTML='<path d=\"M80 50H300H520\" stroke=\"#bac5b6\" stroke-width=\"8\"/><path d=\"M80 50H'+(done?520:80+n*70)+'\" stroke=\"#4d7553\" stroke-width=\"8\"/>'+[80,300,520].map((x,i)=>'<circle cx=\"'+x+'\" cy=\"50\" r=\"14\" fill=\"'+(i===0||i===1&&n||done?\"#4d7553\":\"#bac5b6\")+'\"/><text x=\"'+(x-25)+'\" y=\"90\">'+[\"\\u884C\\u52A8\",\"\\u7ED3\\u679C\",\"\\u7EC8\\u70B9\"][i]+\"</text>\").join(\"\");q(\"#status\").textContent=done?\"\\u5DF2\\u5B8C\\u6210\\u5E76\\u5B58\\u6863\\uFF1A\\u672C\\u6B21\\u4EFB\\u52A1\\u95ED\\u5408\\u3002\":clear?\"\\u660E\\u786E\\u6807\\u51C6\\uFF1A\"+n+\"/3\\u53E5\\uFF0C\"+(n===3?\"\\u53EF\\u4EE5\\u5B58\\u6863\":\"\\u7EE7\\u7EED\\u884C\\u52A8\"):\"\\u6A21\\u7CCA\\u4EFB\\u52A1\\uFF1A\\u5199\\u4E86\"+n+\"\\u53E5\\uFF0C\\u4F46\\u6CA1\\u6709\\u7EA6\\u5B9A\\u7EC8\\u70B9\\u3002\";q(\"#act\").disabled=n===3||done;q(\"#finish\").disabled=!clear||n!==3||done}__name(draw,\"draw\");q(\"#vague\").onclick=()=>{clear=false;done=false;draw()};q(\"#clear\").onclick=()=>{clear=true;done=false;draw()};q(\"#act\").onclick=()=>{n=Math.min(3,n+1);draw()};q(\"#finish\").onclick=()=>{if(clear&&n===3){done=true;draw()}};q(\"#reset\").onclick=()=>{n=0;clear=false;done=false;draw()};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#3f6544;--paper:#f0f4e9;--muted:#768367}#paper{min-height:90px;background:#fff9;padding:12px;font-size:13px}#paper p{border-bottom:1px solid #b7c3af;margin:4px 0}",
+        "height": 580,
+        "kind": "experience"
       },
       {
-        "id": "small-wins",
-        "afterParagraphId": "knowledge-1523701957479239680-p16",
-        "title": "为这一次行动写下结束条件",
-        "kind": "figure",
-        "height": 420,
-        "html": "<h3>为这一次行动写下结束条件</h3><label>本次行动<input id=\"task\" type=\"text\" maxlength=\"80\" placeholder=\"例如：阅读一篇短文\"></label><label>结束条件<input id=\"done\" type=\"text\" maxlength=\"120\" placeholder=\"例如：记下3个词并造句\"></label><nav><button id=\"start\">开始这项行动</button><button id=\"complete\">确认现实中已完成</button><button id=\"stop\">主动终止并放下</button><button id=\"reset\">重新填写</button></nav><p id=\"status\"></p><p class=\"note\">网页只记录你的自述，不能代替现实行动，也不推断心理或健康状态。</p>",
-        "css": ":root{--accent:#8a7750;--tint:#faf5e7}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));let stage=0;function state(s){txt('#status',s);$('#complete').disabled=stage!==1;$('#stop').disabled=stage!==1;$('#start').disabled=stage===1}$('#start').onclick=()=>{if(!$('#task').value.trim()||!$('#done').value.trim()){state('请同时写下行动和结束条件');return}stage=1;state('进行中：按你写下的结束条件核对')};$('#complete').onclick=()=>{stage=2;state('已记录：你确认现实中完成了这项行动')};$('#stop').onclick=()=>{stage=2;state('已记录：主动终止；请总结原因，再决定下一项')};$('#reset').onclick=()=>{stage=0;$('#task').value='';$('#done').value='';state('待填写：行动与结束条件')};state('待填写：行动与结束条件');"
+        "id": "project-shelf",
+        "afterParagraphId": "knowledge-1523701957479239680-p42",
+        "title": "认真终止，也是一个明确结尾",
+        "html": "<h3>把手头的项目放到三个位置</h3><div class=\"shelf\"><section><b>进行中</b><div id=\"open\"></div></section><section><b>已完成</b><div id=\"done\"></div></section><section><b>已终止</b><div id=\"stopped\"></div></section></div><label>选择项目<select id=\"item\"><option value=\"0\">半篇文章</option><option value=\"1\">旧学习计划</option><option value=\"2\">未读完的书</option></select></label><label>结果或终止原因<input id=\"reason\" type=\"text\" placeholder=\"写下可回看的交代\" maxlength=\"120\"></label><div class=\"row\"><button id=\"complete\">记录完成</button><button id=\"stop\">主动终止</button><button id=\"reset\">重置示例</button></div><output id=\"status\"></output><p class=\"note\">此处只整理模拟项目，不验证你在现实中是否完成。完成与终止分栏保存原因；不虚构“能量感”分数。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");const names=[\"\\u534A\\u7BC7\\u6587\\u7AE0\",\"\\u65E7\\u5B66\\u4E60\\u8BA1\\u5212\",\"\\u672A\\u8BFB\\u5B8C\\u7684\\u4E66\"];let states=[\"open\",\"open\",\"open\"],reasons=[\"\",\"\",\"\"];function draw(){for(const k of[\"open\",\"done\",\"stopped\"]){const box=q(\"#\"+k);box.replaceChildren();states.forEach((s,i)=>{if(s===k){const p=document.createElement(\"p\");p.textContent=names[i]+(reasons[i]?\"\\uFF1A\"+reasons[i]:\"\");box.append(p)}})}q(\"#status\").textContent=\"\\u8FDB\\u884C\\u4E2D \"+states.filter(s=>s===\"open\").length+\" / \\u5DF2\\u5B8C\\u6210 \"+states.filter(s=>s===\"done\").length+\" / \\u5DF2\\u7EC8\\u6B62 \"+states.filter(s=>s===\"stopped\").length}__name(draw,\"draw\");function move(to){const i=+q(\"#item\").value,reason=q(\"#reason\").value.trim();if(!reason){q(\"#status\").textContent=\"\\u5148\\u4E3A\\u8FD9\\u4E2A\\u7ED3\\u5C3E\\u5199\\u4E00\\u53E5\\u7ED3\\u679C\\u6216\\u539F\\u56E0\\u3002\";return}states[i]=to;reasons[i]=reason;draw()}__name(move,\"move\");q(\"#complete\").onclick=()=>move(\"done\");q(\"#stop\").onclick=()=>move(\"stopped\");q(\"#reset\").onclick=()=>{states=[\"open\",\"open\",\"open\"];reasons=[\"\",\"\",\"\"];q(\"#reason\").value=\"\";draw()};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#3f6544;--paper:#f0f4e9}.shelf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.shelf section{background:#fff8;padding:8px;min-height:130px;font-size:12px}.shelf p{padding:5px;border-bottom:1px solid #adbea8;overflow-wrap:anywhere}input[type=text]{width:100%;padding:10px}",
+        "height": 570,
+        "kind": "experience"
       }
     ],
-    "bindings": [],
-    "libraryReferences": [],
     "scene": [
       {
         "action": "focus",
-        "target": "knowledge-1523701957479239680-p4",
-        "title": "沿正文理解",
-        "text": "识别模糊任务 → 写下结束条件 → 区分完成与主动终止。"
-      },
-      {
-        "action": "reveal",
-        "target": "wins-boundary",
-        "title": "怎样才算做完了",
-        "text": "比较同一目标的模糊描述与可核对行动，指出完成标准。",
-        "demo": {
-          "event": "click",
-          "selector": "#specific"
-        }
-      },
-      {
-        "action": "reveal",
-        "target": "small-wins",
-        "title": "为这一次行动写下结束条件",
-        "text": "写下行动和验收条件，亲自确认完成或记录主动终止，再开始下一项。",
-        "demo": {
-          "event": "click",
-          "selector": "#start"
-        }
-      },
-      {
-        "action": "restore",
         "target": "knowledge-1523701957479239680-p16",
-        "title": "回到原文",
-        "text": "把比较结果带回作者的论点；可以复位并重新尝试。"
+        "title": "做了三步，为什么还像没做完？",
+        "text": "用可检查结果和终点改变回路状态，避免纯粹点亮完成按钮充当成就感。"
+      },
+      {
+        "action": "reveal",
+        "target": "close-loop",
+        "title": "亲手试一次",
+        "text": "写三句后比较两种完成标准；明确任务才允许存档，闭合后的操作停止。"
+      },
+      {
+        "action": "focus",
+        "target": "knowledge-1523701957479239680-p42",
+        "title": "认真终止，也是一个明确结尾",
+        "text": "把作者提出的主动了断变成有记录的状态迁移，既不和成功混同，也不遗忘原因。"
+      },
+      {
+        "action": "reveal",
+        "target": "project-shelf",
+        "title": "亲手试一次",
+        "text": "填写原因后把项目移到已完成或已终止；三栏和未完数量真实改变。"
       }
     ],
     "design": {
-      "version": "explanation-v4.2026-09-14",
-      "intent": "区分模糊愿望、可执行行动与明确结束条件，帮助读者辨认任务回路。",
-      "readingFlow": "识别模糊任务 → 写下结束条件 → 区分完成与主动终止。",
-      "voice": "保留原文语气，补充内容使用可核对的解释。",
+      "version": "session-repair-2026-09-14",
+      "intent": "让模糊任务与明确完成标准走过同一段行动，再通过完成或主动终止把回路闭合；不把情绪简化为可测数值。",
+      "readingFlow": "定义后选择完成标准 → 亲身行动处动手完成 → 清理项目处区分完成、继续与主动终止。",
+      "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
-          "#8a7750",
-          "#faf5e7",
-          "#243b3b"
+          "#183a35",
+          "#f2f5ed",
+          "#d98b51"
         ],
-        "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
-        "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
-        "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+        "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+        "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+        "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
       },
       "decisions": [
         {
-          "title": "围绕问题安排操作",
-          "reason": "区分模糊愿望、可执行行动与明确结束条件，帮助读者辨认任务回路。",
-          "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
-        },
-        {
-          "title": "保留事实边界",
-          "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
-          "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+          "title": "操作必须改变可见关系",
+          "reason": "让模糊任务与明确完成标准走过同一段行动，再通过完成或主动终止把回路闭合；不把情绪简化为可测数值。",
+          "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
         }
       ],
       "components": [
         {
-          "blockId": "wins-boundary",
-          "purpose": "比较同一目标的模糊描述与可核对行动，指出完成标准。",
-          "whyHere": "此处原文刚提出“怎样才算做完了”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "比较同一目标的模糊描述与可核对行动，指出完成标准。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "close-loop",
+          "purpose": "用可检查结果和终点改变回路状态，避免纯粹点亮完成按钮充当成就感。",
+          "whyHere": "紧接对应原文：闭合任务回路的关键是亲身践行：你必须要通过你自己的行为来闭合任务回路——假想的没有用，看别人闭合没有用，给自己打鸡血没有用，必须要你亲身践行才有用。",
+          "interaction": "写三句后比较两种完成标准；明确任务才允许存档，闭合后的操作停止。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "阅读一篇短文，记录3个生词并各写1个例句；核对后结束。",
-            "缺少范围和结束条件：何时可以确认完成？"
+            "#act → 模糊任务：写了1句，但没有约定终点。",
+            "#act → 模糊任务：写了2句，但没有约定终点。",
+            "#act → 模糊任务：写了3句，但没有约定终点。",
+            "#clear → 明确标准：3/3句，可以存档",
+            "#finish → 已完成并存档：本次任务闭合。"
           ]
         },
         {
-          "blockId": "small-wins",
-          "purpose": "写下行动和验收条件，亲自确认完成或记录主动终止，再开始下一项。",
-          "whyHere": "此处原文刚提出“为这一次行动写下结束条件”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "写下行动和验收条件，亲自确认完成或记录主动终止，再开始下一项。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "project-shelf",
+          "purpose": "把作者提出的主动了断变成有记录的状态迁移，既不和成功混同，也不遗忘原因。",
+          "whyHere": "紧接对应原文：将不可能做完的项目彻底终止、勇于面对自己不得不放弃一个项目的事实，这本身也是一种「了断」和「完结」。如果能认真总结未能完成项目的经验并应用到接下来的行动中，这种中止依然能带来一定的完结感和意义感。",
+          "interaction": "填写原因后把项目移到已完成或已终止；三栏和未完数量真实改变。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "请同时写下行动和结束条件",
-            "待填写：行动与结束条件"
+            "#reason → 进行中 3 / 已完成 0 / 已终止 0",
+            "#stop → 进行中 2 / 已完成 0 / 已终止 1",
+            "#reset → 进行中 3 / 已完成 0 / 已终止 0"
           ]
         }
       ]
@@ -371,11 +361,11 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-a2b9f571-9e01-406d-9d97-9fec9f74d432",
+      "runId": "codex-83df23ae-2463-40b4-b2b1-1361085f6823",
       "sourceHash": "a3666d0cae64a8e06683fad306953b047e6bfea6ab8cdf5bbb4ebb7794915e87",
-      "createdAt": "2026-09-14T12:39:57.254Z",
-      "baselineVersion": "explanation-v4",
-      "prompt": "按当前原文与作者要求重构，区分原文事实、补充计算和情景假设，保留图片来源，逐篇实际验收。"
+      "createdAt": "2026-09-14T15:34:15.194Z",
+      "baselineVersion": "expressive-v7.2026-09-14",
+      "prompt": "用户要求：先使用自己作为 Agent 进行默认生成。读取此文章，视觉与交互只使用 HTML/CSS/JS/SVG/Canvas；不使用外部素材，保持原文，先编排整篇阅读路线，再让不同片段自然融入正文；记录每处风格、位置理由、实现及验收约定，以逐步讲解和真实操作展示设计。"
     }
   }
 }

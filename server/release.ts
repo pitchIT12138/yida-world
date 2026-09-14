@@ -55,7 +55,12 @@ releaseRoutes.post('/admin/jobs/claim',async c=>{
 releaseRoutes.post('/admin/jobs/:id/repair',async c=>{
  const input=await body(c.req.raw);const result=await c.env.DB!.prepare("UPDATE jobs SET repairs=repairs+1 WHERE id=? AND lease=? AND status='running' AND lease_until>? AND repairs<2").bind(c.req.param('id'),input.lease,Date.now()).run();return result.meta.changes?c.json({ok:true}):c.json({error:'修复额度或租约无效'},409);
 });
-releaseRoutes.post('/admin/jobs/:id/fail',async c=>{const input=await body(c.req.raw);const r=await c.env.DB!.prepare("UPDATE jobs SET status='failed',error=? WHERE id=? AND lease=? AND status='running'").bind(String(input.error||'验收失败').slice(0,1000),c.req.param('id'),input.lease).run();return c.json({saved:!!r.meta.changes})});
+releaseRoutes.post('/admin/jobs/:id/fail',async c=>{
+ const input=await body(c.req.raw),id=c.req.param('id'),outcome=input.outcome==='content_rejected'?'content_rejected':'system_failed';
+ const job=await c.env.DB!.prepare("SELECT id FROM jobs WHERE id=? AND lease=? AND status='running'").bind(id,input.lease).first();if(!job)return c.json({error:'任务租约无效'},409);
+ await c.env.MEDIA!.put('failures/'+id+'.json',JSON.stringify({outcome,error:String(input.error||'验收失败'),candidate:input.candidate,createdAt:new Date().toISOString()}));
+ const r=await c.env.DB!.prepare("UPDATE jobs SET status=?,error=? WHERE id=? AND lease=? AND status='running'").bind(outcome==='content_rejected'?'rejected':'failed',String(input.error||'验收失败').slice(0,1000),id,input.lease).run();return c.json({saved:!!r.meta.changes,outcome});
+});
 releaseRoutes.post('/admin/jobs/:id/complete',async c=>{
  try{
   const input=await body(c.req.raw),job=await c.env.DB!.prepare('SELECT * FROM jobs WHERE id=?').bind(c.req.param('id')).first<any>();

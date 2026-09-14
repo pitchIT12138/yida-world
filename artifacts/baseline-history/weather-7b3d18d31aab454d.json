@@ -1,0 +1,57 @@
+{
+  "sourceHash": "ec3a79f0261f1d6d9a21feb9f31735cfa3fc3a061c3c5d07d07c4bec63de758b",
+  "design": {
+    "version": "session-repair-2026-09-14",
+    "intent": "同一个带伞任务，亲自穿过两条不同入口路径；点击成本按实际动作计数。",
+    "readingFlow": "保留评论语气 → 第二段后同时摆出两部虚构手机，完成相同任务。",
+    "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
+    "style": {
+      "palette": [
+        "#183a35",
+        "#f2f5ed",
+        "#d98b51"
+      ],
+      "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+      "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+      "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
+    },
+    "decisions": [
+      {
+        "title": "操作必须改变可见关系",
+        "reason": "同一个带伞任务，亲自穿过两条不同入口路径；点击成本按实际动作计数。",
+        "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "umbrella-race",
+        "purpose": "干扰不是靠文字抱怨表达，而是让相同结果需要额外动作才能到达。",
+        "whyHere": "紧接对应原文：每一步单独看，似乎都有自己的业务理由。但对于那个出门前只想知道要不要带伞的人，任务已经变了。",
+        "interaction": "各点一次打开，然后完成多层路径；只有真正露出天气才算完成，计数来自每次点击。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "[data-phone=\"simple\"] → 1 次点击",
+          "[data-phone=\"busy\"] → 1 次点击",
+          "[data-phone=\"busy\"] → 2 次点击",
+          "[data-phone=\"busy\"] → 3 次点击",
+          "[data-phone=\"busy\"] → 4 次点击",
+          "[data-phone=\"busy\"] → 任务都完成：直接1次，多层5次，额外4次。",
+          "#reset → 完成两边的“要不要带伞”任务再比较。"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "umbrella-race": "76b323a772e8c51ceab293c2ebb3983ec1dfe8cf72d6aadd756d089cdcafbc03"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-d791775b-7131-4619-901c-d5146fc65d7e",
+    "sourceHash": "ec3a79f0261f1d6d9a21feb9f31735cfa3fc3a061c3c5d07d07c4bec63de758b",
+    "createdAt": "2026-09-14T15:34:02.791Z",
+    "baselineVersion": "expressive-v7.2026-09-14",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

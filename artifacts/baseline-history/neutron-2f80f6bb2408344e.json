@@ -1,0 +1,64 @@
+{
+  "sourceHash": "fd38a92b2b8c68cec571e01ef3c0dfe694a8f20db07273ff8229dfe809b56847",
+  "design": {
+    "version": "session-repair-2026-09-14",
+    "intent": "把毫升逐级换成立方米，再让读者沿数量级缩放，看到2×10¹²千克离日常有多远。",
+    "readingFlow": "密度假设旁量体积 → 末段展开数量级尺；同一质量同步两处。",
+    "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
+    "style": {
+      "palette": [
+        "#183a35",
+        "#f2f5ed",
+        "#d98b51"
+      ],
+      "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+      "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+      "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
+    },
+    "decisions": [
+      {
+        "title": "操作必须改变可见关系",
+        "reason": "把毫升逐级换成立方米，再让读者沿数量级缩放，看到2×10¹²千克离日常有多远。",
+        "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "density-scale",
+        "purpose": "单位换算直接控制质量，防止把毫升乘以每立方米密度漏掉百万倍。",
+        "whyHere": "紧接对应原文：做一个明确写出假设的数量级练习：取密度 4×10¹⁷ 千克每立方米，体积 5 毫升，也就是 5×10⁻⁶ 立方米。质量等于密度乘体积。",
+        "interaction": "拖动体积，液面与每一步换算同步；用千克和吨两种单位核对。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#ton → 2,000,000,000 吨",
+          "#reset → 2,000,000,000,000 千克"
+        ]
+      },
+      {
+        "blockId": "orders-ruler",
+        "purpose": "把数量级换算变成越界与装入标尺的操作，解释常识尺度为何失效。",
+        "whyHere": "紧接对应原文：一个数字太容易被划过去。也许让读者先猜，再比较不同数量级，最后不断拉远尺度，才会感到日常直觉为什么在这里失效。这个练习只是密度乘体积的数学类比。",
+        "interaction": "逐次拉远标尺，直到质量落进画面；上限、条长和越界提示一致。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#fit → 目标占标尺 20%",
+          "#reset → 仍超出标尺：目标是上限的 2,000,000,000 倍"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "density-scale": "8bf4f375dcd38cc0e69bcf52fc7dfa8432bf14f8b5e08ff7afa91907f952df32",
+    "orders-ruler": "3d56a9df3f5f34400d9c7f7bcd6684cbb44e9efae7c51d3b305a760f5e0a85a5"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-8420677a-56af-4a00-82a5-3ebf32093d12",
+    "sourceHash": "fd38a92b2b8c68cec571e01ef3c0dfe694a8f20db07273ff8229dfe809b56847",
+    "createdAt": "2026-09-14T15:33:43.055Z",
+    "baselineVersion": "expressive-v7.2026-09-14",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

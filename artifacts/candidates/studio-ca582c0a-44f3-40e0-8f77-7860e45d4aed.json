@@ -137,114 +137,102 @@
   "artifact": {
     "version": 1,
     "answerId": "studio-ca582c0a-44f3-40e0-8f77-7860e45d4aed",
-    "explanation": "用可复算的租金账目区分倍数、毛回报和净回报，再检验租金变化的后果。",
+    "explanation": "拆开房价月租倍数、年毛收益和净运营收益；把空置和费用从十二张租金账单中真正扣掉。",
+    "bindings": [],
     "blocks": [
       {
-        "id": "rent-ratio",
+        "id": "rent-denominator",
         "afterParagraphId": "p-d9bb71ed-1283-4189-a501-85831daa3d8a",
-        "title": "1:200 到底表示什么",
-        "kind": "figure",
-        "height": 420,
-        "html": "<h3>1:200 到底表示什么</h3><div class=\"fields\"><label>房价／月租倍数<input id=\"multiple\" type=\"number\" value=\"200\" min=\"1\" max=\"1000\" step=\"1\"></label><label>月租／同一货币单位<input id=\"monthly\" type=\"number\" value=\"10000\" min=\"1\" max=\"1000000\" step=\"1\"></label></div><div class=\"metrics\"><div class=\"metric\"><span>对应房价</span><strong id=\"price\"></strong></div><div class=\"metric\"><span>年毛收益率</span><strong id=\"yield\"></strong></div></div><p class=\"formula\">房价 = 月租 × 倍数；年毛收益率 = 12 ÷ 倍数</p><nav><button id=\"m150\">比较 150 倍</button><button id=\"reset\">恢复 200 倍</button></nav><p id=\"status\"></p><p class=\"note\">200→150 是降价 25%；150→200 是涨价 33.3%。原文“30%”为概数，分母不同不能混用。</p>",
-        "css": ":root{--accent:#34635b;--tint:#edf5ef}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));function render(){const m=num('#multiple',1,1000),r=num('#monthly',1,1e6);txt('#price',fmt(m*r));txt('#yield',(1200/m).toFixed(2)+'%');txt('#status',m+' 倍对应 '+(1200/m).toFixed(2)+'% 年毛收益率')}listen(render);$('#m150').onclick=()=>{$('#multiple').value=150;render()};$('#reset').onclick=()=>{$('#multiple').value=200;$('#monthly').value=10000;render()};render();"
+        "title": "同样月租，150倍和200倍差在哪",
+        "html": "<small>补充换算 · 不预设所谓国际统一标准</small><h3>把房价换成一叠月租</h3><div class=\"row\"><button id=\"m150\">150倍</button><button id=\"m200\">200倍</button><button id=\"m300\">300倍</button></div><svg class=\"visual\" viewBox=\"0 0 620 190\"></svg><output id=\"status\"></output><p class=\"note\">每小格代表10个月租金。倍数=P/月租；年毛收益率=12/倍数。150→200以150为基准是+33.3%；200→150是−25%，原文“30%”为约数，不静默改写。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");function draw(m){q(\"svg\").innerHTML=Array.from({length:30},(_,i)=>'<rect x=\"'+(10+i%10*60)+'\" y=\"'+(10+Math.floor(i/10)*52)+'\" width=\"50\" height=\"40\" fill=\"'+(i<m/10?\"#377365\":\"#d6e2d9\")+'\"/>').join(\"\");q(\"#status\").textContent=m+\"\\u4E2A\\u6708\\u79DF\\u91D1\\u4E70\\u4E0B\\u623F\\u5B50 \\xB7 \\u5E74\\u6BDB\\u6536\\u76CA\\u7387 \"+(1200/m).toFixed(2)+\"%\"}__name(draw,\"draw\");[150,200,300].forEach(m=>q(\"#m\"+m).onclick=()=>draw(m));draw(200)",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#255747;--paper:#edf4eb}",
+        "height": 400,
+        "kind": "experience"
       },
       {
-        "id": "rent-net",
+        "id": "rent-calendar",
         "afterParagraphId": "p-42247dd2-e87a-4d4b-826a-bc1b9176cc6a",
-        "title": "从毛租金到可留下的钱",
-        "kind": "figure",
-        "height": 420,
-        "html": "<h3>从毛租金到可留下的钱</h3><p class=\"note\">原文案例：成交价 115 万，月租 11,200，房产税“13,000 多”。下方税额暂取 13,000；空置与其他成本是可调假设，货币口径一致。</p><div class=\"fields\"><label>成交价<input id=\"price\" type=\"number\" value=\"1150000\" min=\"1\" max=\"100000000.0\" step=\"1\"></label><label>月租<input id=\"rent\" type=\"number\" value=\"11200\" min=\"0\" max=\"1000000\" step=\"1\"></label><label>空置率／%<input id=\"vacancy\" type=\"number\" value=\"0\" min=\"0\" max=\"100\" step=\"1\"></label><label>年房产税<input id=\"tax\" type=\"number\" value=\"13000\" min=\"0\" max=\"1000000\" step=\"1\"></label><label>年其他运营成本<input id=\"other\" type=\"number\" value=\"0\" min=\"0\" max=\"1000000\" step=\"1\"></label><label>租金下降／%<input id=\"fall\" type=\"number\" value=\"0\" min=\"0\" max=\"100\" step=\"1\"></label></div><div class=\"metrics\"><div class=\"metric\"><span>毛收益率</span><strong id=\"gross\"></strong></div><div class=\"metric\"><span>净运营收益率</span><strong id=\"net\"></strong></div></div><div id=\"bars\"></div><p class=\"formula\">净运营收入 = 月租 × 12 × (1 − 租金降幅) × (1 − 空置率) − 年税额 − 年其他成本</p><nav><button id=\"stress\">租金下降 10%</button><button id=\"reset\">恢复案例</button></nav><p id=\"status\"></p><p class=\"note\">未计贷款、交易费用和所得税。原文 7.5–8% 为买家自行估算，缺少费用明细，不能由已知数据直接复现。</p><details><summary>补充核验：地区税制</summary><p>新加坡住宅存在房地产税，按年度价值等因素计税；不能把“没有房产税”当成通用前提。<a target=\"_blank\" href=\"https://www.iras.gov.sg/taxes/property-tax/property-owners/annual-value\">IRAS 年度价值说明</a>（核对于 2026-09-14）。地区价格与投资判断仍为原作者观点。</p></details>",
-        "css": ":root{--accent:#34635b;--tint:#edf5ef}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));function render(){const price=num('#price',1,1e8),gross=num('#rent',0,1e6)*12*(1-num('#fall',0,100)/100),vac=gross*num('#vacancy',0,100)/100,tax=num('#tax',0,1e6),other=num('#other',0,1e6),net=gross-vac-tax-other;txt('#gross',(gross/price*100).toFixed(2)+'%');txt('#net',(net/price*100).toFixed(2)+'%');$('#bars').innerHTML=bar('全年毛租金',gross,Math.max(gross,1),fmt(gross))+bar('空置损失',vac,Math.max(gross,1),fmt(vac),true)+bar('税及其他成本',tax+other,Math.max(gross,1),fmt(tax+other),true)+bar('净运营收入',Math.max(net,0),Math.max(gross,1),fmt(net));txt('#status','年净运营收入 '+fmt(net))}listen(render);$('#stress').onclick=()=>{$('#fall').value=10;render()};$('#reset').onclick=()=>{['price','rent','vacancy','tax','other','fall'].forEach((s,i)=>$('#'+s).value=[1150000,11200,0,13000,0,0][i]);render()};render();"
+        "title": "十二张账单，哪些真的收到了",
+        "html": "<small>作者案例：成交115万、月租11,200；税费原文“13,000多”，演示取13,000</small><h3>点月份设为空置，再看看年末剩下多少</h3><div class=\"controls\"><label>成交价 / 原文货币单位<input id=\"price\" type=\"number\" min=\"100000\" max=\"10000000\" value=\"1150000\"></label><label>月租<input id=\"rent\" type=\"number\" min=\"0\" max=\"100000\" value=\"11200\"></label><label>全年持有成本<input id=\"cost\" type=\"number\" min=\"0\" max=\"1000000\" value=\"13000\"></label><label>租金下降 / %<input id=\"drop\" type=\"number\" min=\"0\" max=\"100\" value=\"0\"></label></div><div id=\"calendar\"></div><svg class=\"visual\" viewBox=\"0 0 620 180\"></svg><output id=\"status\"></output><output id=\"yield\"></output><div class=\"row\"><button id=\"down\">租金下跌10%</button><button id=\"empty\">全年空置</button><button id=\"reset\">恢复案例</button></div><p class=\"note\">净运营收入=实际月租×有租月份−全年成本。仅计填入费用，未计贷款、交易费与资本升值；不能用此简化值冒充作者称买家核算的7.5—8%。地区定价判断保留为作者观点。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let vacant=new Set;function number(k){const el=q(\"#\"+k),v=Math.max(+el.min,Math.min(+el.max,+el.value||0));el.value=v;return v}__name(number,\"number\");function draw(){const p=number(\"price\"),r=number(\"rent\")*(1-number(\"drop\")/100),c=number(\"cost\"),gross=r*12,collected=r*(12-vacant.size),net=collected-c,max=Math.max(1,gross,c,Math.abs(net));q(\"#calendar\").innerHTML=Array.from({length:12},(_,i)=>'<button data-month=\"'+i+'\" aria-pressed=\"'+vacant.has(i)+'\" class=\"'+(vacant.has(i)?\"vacant\":\"\")+'\">'+(i+1)+\"\\u6708<small>\"+(vacant.has(i)?\"\\u7A7A\\u7F6E\":r.toFixed(0))+\"</small></button>\").join(\"\");q(\"svg\").innerHTML=[[\"\\u6BDB\\u79DF\\u91D1\",gross,\"#a8bcb1\"],[\"\\u5B9E\\u6536\",collected,\"#568d76\"],[\"\\u6263\\u6210\\u672C\",-c,\"#bd855f\"],[\"\\u51C0\\u8FD0\\u8425\",net,net>=0?\"#255747\":\"#af574c\"]].map(([name,v,col],i)=>'<rect x=\"'+(25+i*150)+'\" y=\"'+(v>=0?100-v/max*70:100)+'\" width=\"90\" height=\"'+Math.abs(v)/max*70+'\" fill=\"'+col+'\"/><text x=\"'+(20+i*150)+'\" y=\"178\">'+name+\"</text>\").join(\"\")+'<path d=\"M10 100H610\" stroke=\"#809483\"/>';q(\"#status\").textContent=\"\\u51FA\\u79DF \"+(12-vacant.size)+\" \\u4E2A\\u6708 \\xB7 \\u5E74\\u51C0\\u8FD0\\u8425\\u6536\\u5165 \"+net.toFixed(2);q(\"#yield\").textContent=\"\\u5E74\\u6BDB\\u6536\\u76CA \"+(gross/p*100).toFixed(2)+\"% / \\u7B80\\u5316\\u51C0\\u6536\\u76CA \"+(net/p*100).toFixed(2)+\"%\"}__name(draw,\"draw\");q(\"#calendar\").onclick=e=>{const b=e.target.closest(\"[data-month]\");if(b){const n=+b.dataset.month;vacant.has(n)?vacant.delete(n):vacant.add(n);draw()}};[\"price\",\"rent\",\"cost\",\"drop\"].forEach(k=>q(\"#\"+k).oninput=draw);q(\"#down\").onclick=()=>{q(\"#drop\").value=10;draw()};q(\"#empty\").onclick=()=>{vacant=new Set(Array.from({length:12},(_,i)=>i));draw()};q(\"#reset\").onclick=()=>{vacant.clear();for(const[k,v]of Object.entries({price:115e4,rent:11200,cost:13e3,drop:0}))q(\"#\"+k).value=v;draw()};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#255747;--paper:#edf4eb;--muted:#648571}#calendar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin:14px 0}#calendar button{padding:6px 2px;border-color:#a7b8ab;font-size:12px;background:#fff}#calendar .vacant{background:#dfc8b7;color:#755239;text-decoration:line-through}#calendar small{display:block;font-size:10px;color:inherit}",
+        "height": 750,
+        "kind": "experience"
       }
     ],
-    "bindings": [],
-    "libraryReferences": [],
     "scene": [
       {
         "action": "focus",
         "target": "p-d9bb71ed-1283-4189-a501-85831daa3d8a",
-        "title": "沿正文理解",
-        "text": "口径换算 → 作者案例收支拆分 → 租金下行情景。"
+        "title": "同样月租，150倍和200倍差在哪",
+        "text": "用可数月租块和年收益换算解释分母，而不是把不同口径统称租售比。"
       },
       {
         "action": "reveal",
-        "target": "rent-ratio",
-        "title": "1:200 到底表示什么",
-        "text": "保持月租一致，比较房价／月租倍数与年毛收益率。",
-        "demo": {
-          "event": "click",
-          "selector": "#m150"
-        }
+        "target": "rent-denominator",
+        "title": "亲手试一次",
+        "text": "比较150、200、300倍，房价对应的租金堆叠和年毛收益率反向变化。"
       },
       {
-        "action": "reveal",
-        "target": "rent-net",
-        "title": "从毛租金到可留下的钱",
-        "text": "分别扣除空置、房产税与其他运营成本；检验租金下降而成本不变的情景。",
-        "demo": {
-          "event": "click",
-          "selector": "#stress"
-        }
-      },
-      {
-        "action": "restore",
+        "action": "focus",
         "target": "p-42247dd2-e87a-4d4b-826a-bc1b9176cc6a",
-        "title": "回到原文",
-        "text": "把比较结果带回作者的论点；可以复位并重新尝试。"
+        "title": "十二张账单，哪些真的收到了",
+        "text": "把空置率落实为没收到的月份，费用与租金下跌同时改变现金流和收益分子。"
+      },
+      {
+        "action": "reveal",
+        "target": "rent-calendar",
+        "title": "亲手试一次",
+        "text": "点一张账单切换空置；调整租金下降或持有成本，年度流水和收益率同步；全年空置仍须支付成本。"
       }
     ],
     "design": {
-      "version": "explanation-v4.2026-09-14",
-      "intent": "用可复算的租金账目区分倍数、毛回报和净回报，再检验租金变化的后果。",
-      "readingFlow": "口径换算 → 作者案例收支拆分 → 租金下行情景。",
-      "voice": "保留原文语气，补充内容使用可核对的解释。",
+      "version": "session-repair-2026-09-14",
+      "intent": "拆开房价月租倍数、年毛收益和净运营收益；把空置和费用从十二张租金账单中真正扣掉。",
+      "readingFlow": "倍数争议处换算 → 成交案例处逐月收租与扣费 → 下行风险在同一账本调整租金。",
+      "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
-          "#34635b",
-          "#edf5ef",
-          "#243b3b"
+          "#183a35",
+          "#f2f5ed",
+          "#d98b51"
         ],
-        "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
-        "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
-        "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+        "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+        "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+        "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
       },
       "decisions": [
         {
-          "title": "围绕问题安排操作",
-          "reason": "用可复算的租金账目区分倍数、毛回报和净回报，再检验租金变化的后果。",
-          "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
-        },
-        {
-          "title": "保留事实边界",
-          "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
-          "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+          "title": "操作必须改变可见关系",
+          "reason": "拆开房价月租倍数、年毛收益和净运营收益；把空置和费用从十二张租金账单中真正扣掉。",
+          "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
         }
       ],
       "components": [
         {
-          "blockId": "rent-ratio",
-          "purpose": "保持月租一致，比较房价／月租倍数与年毛收益率。",
-          "whyHere": "此处原文刚提出“1:200 到底表示什么”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "保持月租一致，比较房价／月租倍数与年毛收益率。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "rent-denominator",
+          "purpose": "用可数月租块和年收益换算解释分母，而不是把不同口径统称租售比。",
+          "whyHere": "紧接对应原文：这个问题下（或者说全知乎）提房地产税的人99%以上基本对有房地产税地方的租售比究竟是多少毫无量化概念。他们只会复读一句：有房地产税所以持有成本高，他们根本不理解在有房地产税的地方，租售比是远远低于200的。而150 vs 200就是30%的房价差了。",
+          "interaction": "比较150、200、300倍，房价对应的租金堆叠和年毛收益率反向变化。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "150 倍对应 8.00% 年毛收益率",
-            "200 倍对应 6.00% 年毛收益率"
+            "#m150 → 150个月租金买下房子 · 年毛收益率 8.00%",
+            "#m200 → 200个月租金买下房子 · 年毛收益率 6.00%"
           ]
         },
         {
-          "blockId": "rent-net",
-          "purpose": "分别扣除空置、房产税与其他运营成本；检验租金下降而成本不变的情景。",
-          "whyHere": "此处原文刚提出“从毛租金到可留下的钱”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "分别扣除空置、房产税与其他运营成本；检验租金下降而成本不变的情景。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "rent-calendar",
+          "purpose": "把空置率落实为没收到的月份，费用与租金下跌同时改变现金流和收益分子。",
+          "whyHere": "紧接对应原文：PS：这套房子我们最后才卖了115万，租售比100，买家自己计算的最后实际租金收益7.5-8%。",
+          "interaction": "点一张账单切换空置；调整租金下降或持有成本，年度流水和收益率同步；全年空置仍须支付成本。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "年净运营收入 107,960",
-            "年净运营收入 -13,000",
-            "年净运营收入 121,400"
+            "#reset → 出租 12 个月 · 年净运营收入 121400.00",
+            "#down → 出租 12 个月 · 年净运营收入 107960.00",
+            "#empty → 出租 0 个月 · 年净运营收入 -13000.00",
+            "#reset → 出租 12 个月 · 年净运营收入 121400.00",
+            "[data-month=\"0\"] → 出租 11 个月 · 年净运营收入 110200.00"
           ]
         }
       ]
@@ -253,11 +241,11 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-52a8d397-f689-4501-b54a-14320a800597",
+      "runId": "codex-dded917f-f8e3-407b-b011-fcbbe4431434",
       "sourceHash": "9ad523f3b0b23ca4fa77f0e9da3f3c4a99cfebb7992bb0eb45110f977c71ddad",
-      "createdAt": "2026-09-14T12:39:54.501Z",
-      "baselineVersion": "explanation-v4",
-      "prompt": "按当前原文与作者要求重构，区分原文事实、补充计算和情景假设，保留图片来源，逐篇实际验收。"
+      "createdAt": "2026-09-14T15:36:03.281Z",
+      "baselineVersion": "expressive-v7.2026-09-14",
+      "prompt": "用户要求：先使用自己作为 Agent 进行默认生成。读取此文章，视觉与交互只使用 HTML/CSS/JS/SVG/Canvas；不使用外部素材，保持原文，先编排整篇阅读路线，再让不同片段自然融入正文；记录每处风格、位置理由、实现及验收约定，以逐步讲解和真实操作展示设计。"
     }
   }
 }

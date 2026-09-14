@@ -2,9 +2,10 @@ import {writeFile,mkdir} from 'node:fs/promises';
 import {callModel,profile,type RuntimeEnv} from '../server/model';
 import {parseModelJSON} from '../src/lib/validation';
 import type {AnswerSource,AnswerArtifact,SourceAsset} from '../src/lib/types';
-import {verifyInteractive,type InteractionCheck} from '../studio/verify';
+import {verifyInteractive,BrowserArtifactError,CheckDefinitionError,type InteractionCheck} from '../studio/verify';
 import {digest} from '../server/cloud';
 import {modelJSON} from '../server/model-json';
+import {ArtifactRejected} from '../server/generation';
 export class ReviewUnavailable extends Error{}
 export async function reviewCandidate(source:AnswerSource,artifact:AnswerArtifact,assets:SourceAsset[],env:RuntimeEnv,outDir:string){
  const p=profile(env,'balanced');if(!p)throw Error('评审模型未配置');
@@ -14,6 +15,8 @@ export async function reviewCandidate(source:AnswerSource,artifact:AnswerArtifac
  const content=transport.value as {verdict:string;findings:string[];checks:InteractionCheck[]};
  if(!Array.isArray(content.checks)||!content.checks.length)throw new ReviewUnavailable('验收缺少实际操作');
  await mkdir(outDir,{recursive:true});await writeFile(outDir+'/content-review.json',JSON.stringify({...content,model:p.model,usage:response.usage,normalizations:transport.normalizations},null,2));await writeFile(outDir+'/checks.json',JSON.stringify(content.checks,null,2));
- const browser=await verifyInteractive(artifact,content.checks,assets,outDir);
+ if(!['pass','fail'].includes(content.verdict)||!Array.isArray(content.findings))throw new ReviewUnavailable('验收结果格式无效');
+ if(content.verdict==='fail')throw new ArtifactRejected(content.findings.join('\n'),artifact);
+ let browser;try{browser=await verifyInteractive(artifact,content.checks,assets,outDir)}catch(e){if(e instanceof BrowserArtifactError)throw new ArtifactRejected(String(e),artifact);throw new ReviewUnavailable('验收器未能确认操作结果；保留原候选，不要求模型重写：'+String(e))}
  return {artifactHash:await digest(JSON.stringify(artifact)),content:{verdict:content.verdict,findings:content.findings,model:p.model,usage:response.usage},browser,checks:content.checks};
 }

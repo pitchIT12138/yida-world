@@ -24,87 +24,71 @@
   "artifact": {
     "version": 1,
     "answerId": "weather",
-    "explanation": "把额外干扰转成真实点击路径，对照完成相同任务的成本。",
+    "explanation": "同一个带伞任务，亲自穿过两条不同入口路径；点击成本按实际动作计数。",
+    "bindings": [],
     "blocks": [
       {
-        "id": "weather-phone",
+        "id": "umbrella-race",
         "afterParagraphId": "weather-p1",
-        "title": "任务相同，路径为何变长",
-        "kind": "figure",
-        "height": 420,
-        "html": "<h3>任务相同，路径为何变长</h3><nav><button id=\"v0\">直接显示</button><button id=\"v1\">增加开屏</button><button id=\"v2\">多重干扰</button></nav><div class=\"phone\"><p id=\"screen\"></p><button id=\"act\">打开天气</button></div><div class=\"metrics\"><div class=\"metric\"><span>本次点击数</span><strong id=\"count\"></strong></div></div><p id=\"status\"></p><div id=\"history\"></div><nav><button id=\"reset\">清空所有记录</button></nav><p class=\"note\">仅计打开和关闭干扰；选择版本不计入。虚构应用，无真实广告或权限请求。</p>",
-        "css": ":root{--accent:#4e7b92;--tint:#edf6fa}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}.phone{margin:16px auto;background:#edf1f3;border:2px solid #b7c7d0;border-radius:18px;max-width:290px;padding:24px 18px;text-align:center;min-height:170px}.phone p{font-size:20px;margin:12px 0 22px}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));let mode=0,step=0,count=0,history=[];const screens=[['打开天气','天气已显示：18°C，小雨'],['打开天气','关闭开屏广告','天气已显示：18°C，小雨'],['打开天气','关闭活动弹窗','跳过兴趣选择','关闭会员提醒','天气已显示：18°C，小雨']];function render(){const end=step===screens[mode].length-1;txt('#screen',screens[mode][step]);txt('#act',end?'任务完成':step===0?'打开天气':screens[mode][step]);$('#act').disabled=end;txt('#count',String(count));txt('#status',end?'任务完成：'+count+' 次点击':'任务：确认是否带伞');$('#history').innerHTML=history.map(h=>bar(['直接显示','增加开屏','多重干扰'][h.mode],h.count,4,h.count+'次')).join('')}function choose(m){mode=m;step=0;count=0;render()}[0,1,2].forEach(m=>$('#v'+m).onclick=()=>choose(m));$('#act').onclick=()=>{count++;step++;if(step===screens[mode].length-1)history.push({mode,count});render()};$('#reset').onclick=()=>{history=[];choose(0)};render();"
+        "title": "你只想知道，要不要带伞",
+        "html": "<small>虚构界面实验 · 非真实天气预报</small><h3>两部手机，同一个出门任务</h3><div class=\"phones\"><section id=\"simple\"><h4>直接入口</h4><div class=\"screen\"></div><output class=\"count\"></output></section><section id=\"busy\"><h4>多层入口</h4><div class=\"screen\"></div><output class=\"count\"></output></section></div><button id=\"reset\">重试两条路径</button><output id=\"status\"></output><p class=\"note\">本实验将“打开App”计为第1次点击。多层路径依次经过开屏、活动、兴趣与会员提醒；可用键盘Tab、Enter完成，不计鼠标移动距离。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");const state={simple:0,busy:0};function draw(){for(const k of[\"simple\",\"busy\"]){const n=state[k],end=k===\"simple\"?1:5,screen=q(\"#\"+k+\" .screen\");screen.innerHTML=n===end?'<div class=\"forecast\"><b>\\u2602</b><h3>\\u4ECA\\u5929\\u6709\\u96E8</h3><p>\\u51FA\\u95E8\\u5E26\\u4F1E</p></div>':'<button data-phone=\"'+k+'\">'+(n===0?\"\\u6253\\u5F00\\u5929\\u6C14\":k===\"busy\"?[\"\",\"\\u5173\\u95ED\\u5F00\\u5C4F\",\"\\u8DF3\\u8FC7\\u6D3B\\u52A8\",\"\\u8DF3\\u8FC7\\u5174\\u8DA3\\u9009\\u62E9\",\"\\u7A0D\\u540E\\u5F00\\u901A\\u4F1A\\u5458\"][n]:\"\")+\"</button>\";q(\"#\"+k+\" .count\").textContent=n+\" \\u6B21\\u70B9\\u51FB\"}q(\"#status\").textContent=state.simple===1&&state.busy===5?\"\\u4EFB\\u52A1\\u90FD\\u5B8C\\u6210\\uFF1A\\u76F4\\u63A51\\u6B21\\uFF0C\\u591A\\u5C425\\u6B21\\uFF0C\\u989D\\u59164\\u6B21\\u3002\":\"\\u5B8C\\u6210\\u4E24\\u8FB9\\u7684\\u201C\\u8981\\u4E0D\\u8981\\u5E26\\u4F1E\\u201D\\u4EFB\\u52A1\\u518D\\u6BD4\\u8F83\\u3002\"}__name(draw,\"draw\");document.addEventListener(\"click\",e=>{const b=e.target.closest(\"[data-phone]\");if(b){state[b.dataset.phone]++;draw()}});q(\"#reset\").onclick=()=>{state.simple=state.busy=0;draw()};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#344b63;--paper:#edf3f9;--muted:#617a91}.phones{display:grid;grid-template-columns:1fr 1fr;gap:12px}.phones section{border:5px solid #384459;border-radius:18px;padding:12px;background:white;color:#334c64}.phones h4{margin:5px 0;font-size:13px}.screen{height:250px;display:grid;place-items:center;text-align:center}.screen button{font-size:13px;padding:8px}.forecast b{font-size:65px;color:#608aa6}.forecast h3{font-size:18px}.count{font-size:13px}",
+        "height": 530,
+        "kind": "experience"
       }
     ],
-    "bindings": [],
-    "libraryReferences": [],
     "scene": [
       {
         "action": "focus",
         "target": "weather-p1",
-        "title": "沿正文理解",
-        "text": "保持“看天气”任务 → 体验三个版本 → 对照完成路径。"
+        "title": "你只想知道，要不要带伞",
+        "text": "干扰不是靠文字抱怨表达，而是让相同结果需要额外动作才能到达。"
       },
       {
         "action": "reveal",
-        "target": "weather-phone",
-        "title": "任务相同，路径为何变长",
-        "text": "选择一个版本，实际走完打开与关闭步骤，再比较历史完成次数。",
-        "demo": {
-          "event": "click",
-          "selector": "#act"
-        }
-      },
-      {
-        "action": "restore",
-        "target": "weather-p1",
-        "title": "回到原文",
-        "text": "把比较结果带回作者的论点；可以复位并重新尝试。"
+        "target": "umbrella-race",
+        "title": "亲手试一次",
+        "text": "各点一次打开，然后完成多层路径；只有真正露出天气才算完成，计数来自每次点击。"
       }
     ],
     "design": {
-      "version": "explanation-v4.2026-09-14",
-      "intent": "把额外干扰转成真实点击路径，对照完成相同任务的成本。",
-      "readingFlow": "保持“看天气”任务 → 体验三个版本 → 对照完成路径。",
-      "voice": "保留原文语气，补充内容使用可核对的解释。",
+      "version": "session-repair-2026-09-14",
+      "intent": "同一个带伞任务，亲自穿过两条不同入口路径；点击成本按实际动作计数。",
+      "readingFlow": "保留评论语气 → 第二段后同时摆出两部虚构手机，完成相同任务。",
+      "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
-          "#4e7b92",
-          "#edf6fa",
-          "#243b3b"
+          "#183a35",
+          "#f2f5ed",
+          "#d98b51"
         ],
-        "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
-        "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
-        "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+        "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+        "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+        "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
       },
       "decisions": [
         {
-          "title": "围绕问题安排操作",
-          "reason": "把额外干扰转成真实点击路径，对照完成相同任务的成本。",
-          "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
-        },
-        {
-          "title": "保留事实边界",
-          "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
-          "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+          "title": "操作必须改变可见关系",
+          "reason": "同一个带伞任务，亲自穿过两条不同入口路径；点击成本按实际动作计数。",
+          "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
         }
       ],
       "components": [
         {
-          "blockId": "weather-phone",
-          "purpose": "选择一个版本，实际走完打开与关闭步骤，再比较历史完成次数。",
-          "whyHere": "此处原文刚提出“任务相同，路径为何变长”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "选择一个版本，实际走完打开与关闭步骤，再比较历史完成次数。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "umbrella-race",
+          "purpose": "干扰不是靠文字抱怨表达，而是让相同结果需要额外动作才能到达。",
+          "whyHere": "紧接对应原文：每一步单独看，似乎都有自己的业务理由。但对于那个出门前只想知道要不要带伞的人，任务已经变了。",
+          "interaction": "各点一次打开，然后完成多层路径；只有真正露出天气才算完成，计数来自每次点击。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "任务完成：1 次点击",
-            "任务：确认是否带伞",
-            "任务：确认是否带伞",
-            "任务：确认是否带伞",
-            "任务：确认是否带伞",
-            "任务完成：4 次点击",
-            "任务：确认是否带伞"
+            "[data-phone=\"simple\"] → 1 次点击",
+            "[data-phone=\"busy\"] → 1 次点击",
+            "[data-phone=\"busy\"] → 2 次点击",
+            "[data-phone=\"busy\"] → 3 次点击",
+            "[data-phone=\"busy\"] → 4 次点击",
+            "[data-phone=\"busy\"] → 任务都完成：直接1次，多层5次，额外4次。",
+            "#reset → 完成两边的“要不要带伞”任务再比较。"
           ]
         }
       ]
@@ -113,11 +97,11 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-a485962f-ea00-431e-959e-125b9f1a1bcc",
+      "runId": "codex-d791775b-7131-4619-901c-d5146fc65d7e",
       "sourceHash": "ec3a79f0261f1d6d9a21feb9f31735cfa3fc3a061c3c5d07d07c4bec63de758b",
-      "createdAt": "2026-09-14T12:39:55.193Z",
-      "baselineVersion": "explanation-v4",
-      "prompt": "按当前原文与作者要求重构，区分原文事实、补充计算和情景假设，保留图片来源，逐篇实际验收。"
+      "createdAt": "2026-09-14T15:34:02.791Z",
+      "baselineVersion": "expressive-v7.2026-09-14",
+      "prompt": "用户要求：先使用自己作为 Agent 进行默认生成。读取此文章，视觉与交互只使用 HTML/CSS/JS/SVG/Canvas；不使用外部素材，保持原文，先编排整篇阅读路线，再让不同片段自然融入正文；记录每处风格、位置理由、实现及验收约定，以逐步讲解和真实操作展示设计。"
     }
   }
 }

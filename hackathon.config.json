@@ -1,0 +1,12 @@
+{
+  "projectName": "一答一世界",
+  "existingApplication": true,
+  "framework": "Svelte + Hono",
+  "siteUrl": "https://yida-world.zackguo.chatgpt.site",
+  "oauth": {
+    "enabled": true,
+    "appId": "687",
+    "redirectUri": "https://yida-world.zackguo.chatgpt.site/api/auth/callback",
+    "credentialStorage": "Sites server Secret ZHIHU_APP_KEY"
+  }
+}

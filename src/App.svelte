@@ -101,7 +101,7 @@
     for(const value of seedAnswers){ensurePrevious(answers.find(a=>a.source.id===value.source.id));void queueSave(value,'restore')}
     answers=[...structuredClone(seedAnswers),...answers.filter(a=>!seedAnswers.some(s=>s.source.id===a.source.id))];await persist();tab='all';restoreOpen=false;notify('已恢复原始文章和随项目保存的精选版本');
   }
-  function startWriting(){if(config.authRequired&&!config.user){if(config.loginConfigured)location.assign('/api/auth/login');else notify('知乎登录正在接入中，当前可直接阅读精选。');return}if(!loaded){notify('正在恢复本地原文和图片，请稍候。');return}reviewing=undefined;composer=true;setTimeout(()=>document.querySelector('.composer')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'}),0)}
+  function startWriting(){if(config.authRequired&&!config.user){if(config.loginConfigured)location.assign('/api/auth/login');else notify('知乎登录尚未接通，当前可直接阅读精选。');return}if(!loaded){notify('正在恢复本地原文和图片，请稍候。');return}reviewing=undefined;composer=true;setTimeout(()=>document.querySelector('.composer')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'}),0)}
   function reviewSource(answer:Answer){startWriting();reviewing=answer}
   onMount(()=>{
     let alive=true;const disposers:(()=>void)[]=[];
@@ -150,7 +150,7 @@
     <button class="header-create" aria-label="导入或写回答" onclick={startWriting}><Icon name="edit" size={16}/><span>导入回答</span></button>
     <span class="nav-separator"></span>
     <button class="icon-button notification" aria-label="查看实验说明" onclick={()=>introOpen=!introOpen}><Icon name="bell" size={21}/></button>
-    {#if config.user}<button class="my-avatar" aria-label={'查看 '+config.user.name+' 的作品'} onclick={()=>tab='mine'}>{config.user.name.slice(0,1)}</button><button class="text-button" onclick={logout}>退出</button>{:else if config.authRequired}<button class="text-button" onclick={()=>config.loginConfigured?location.assign('/api/auth/login'):notify('知乎登录正在接入中，当前可以直接阅读。')}>知乎登录</button>{/if}
+    {#if config.user}<button class="my-avatar" aria-label={'查看 '+config.user.name+' 的作品'} onclick={()=>tab='mine'}>{config.user.name.slice(0,1)}</button><button class="text-button" onclick={logout}>退出</button>{:else if config.authRequired}<button class="text-button" onclick={()=>config.loginConfigured?location.assign('/api/auth/login'):notify('知乎登录尚未接通，当前可以直接阅读。')}>{config.loginConfigured?'知乎登录':'登录尚未接通'}</button>{/if}
   </nav>
 </header>
 <section class="question-section">

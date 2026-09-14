@@ -1,4 +1,4 @@
-export const DESIGN_POLICY_VERSION='expressive-v7.2026-09-14';
+export const DESIGN_POLICY_VERSION='composed-v8.2026-09-14';
 export const DESIGN_POLICY=[
   '长文沿关键论点分散安排交互，最多24个片段；不为了密度给每段强加控件。原文、外部核验与教学假设明确区分。',
   '允许引用本篇已保存的原图：mediaUrls声明来源，HTML img使用data-source-image属性；不要嵌入base64或联网。replaceParagraphIds仅能折叠参与对比的纯图片段落，文字不替代。',

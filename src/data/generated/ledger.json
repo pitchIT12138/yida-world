@@ -25,124 +25,99 @@
   "artifact": {
     "version": 1,
     "answerId": "ledger",
-    "explanation": "在同一组家庭假设下，连接等额本息公式、收支明细和现金储备变化。",
+    "explanation": "把月供拆成利息与本金，再按月消费现金储备，比较看似付得起与真实缓冲。",
+    "bindings": [],
     "blocks": [
       {
-        "id": "ledger-formula",
+        "id": "mortgage-strips",
         "afterParagraphId": "ledger-p0",
-        "title": "每月月供从哪里来",
-        "kind": "figure",
-        "height": 420,
-        "html": "<h3>每月月供从哪里来</h3><div class=\"fields\"><label>演示年利率／%<input id=\"rate\" type=\"number\" value=\"3\" min=\"0\" max=\"20\" step=\"0.1\"></label></div><div class=\"metrics\"><div class=\"metric\"><span>每月月供／元</span><strong id=\"payment\"></strong></div></div><p class=\"formula\">月利率 r = 年利率 / 12；期数 n = 360<br>A = P r / [1 − (1+r)⁻ⁿ]；r = 0 时 A = P/n</p><nav><button id=\"zero\">零利率</button><button id=\"reset\">恢复 3%</button></nav><p id=\"status\"></p>",
-        "css": ":root{--accent:#7a6c44;--tint:#f7f4e9}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));function render(){const r=num('#rate',0,20)/1200,v=r?1500000*r/(1-Math.pow(1+r,-360)):1500000/360;txt('#payment',fmt(v,2));txt('#status','演示月供 '+fmt(v,2)+' 元');world.emit('payment',v.toFixed(8))}listen(render);$('#zero').onclick=()=>{$('#rate').value=0;render()};$('#reset').onclick=()=>{$('#rate').value=3;render()};render();"
+        "title": "每个月，同一笔月供分给谁",
+        "html": "<small>原文虚构家庭 · 等额本息</small><h3>月供不变，本金和利息会换位置</h3><label>观察第几个月<input id=\"month\" type=\"range\" min=\"1\" max=\"360\" value=\"1\"></label><svg class=\"visual\" viewBox=\"0 0 620 180\"></svg><output id=\"status\"></output><button id=\"last\">看看最后一期</button><button id=\"reset\">回到第一期</button><p class=\"note\">P=1,500,000，月利率r=3%÷12，n=360；M=P×r÷[1−(1+r)^−n]。按未舍入月供递推本金余额，显示金额四舍五入。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");const r=.03/12,m=15e5*r/(1-(1+r)**-360);function draw(){const n=+q(\"#month\").value;let balance=15e5;for(let i=1;i<n;i++)balance-=m-balance*r;const interest=balance*r,principal=m-interest;q(\"svg\").innerHTML='<text x=\"10\" y=\"25\">\\u7B2C'+n+'\\u671F</text><rect x=\"10\" y=\"50\" width=\"'+600*interest/m+'\" height=\"60\" fill=\"#b47755\"/><rect x=\"'+(10+600*interest/m)+'\" y=\"50\" width=\"'+600*principal/m+'\" height=\"60\" fill=\"#316454\"/><text x=\"10\" y=\"150\">\\u68D5\\u8272\\u5229\\u606F '+interest.toFixed(2)+' \\u5143</text><text x=\"330\" y=\"150\">\\u7EFF\\u8272\\u672C\\u91D1 '+principal.toFixed(2)+\" \\u5143</text>\";q(\"#status\").textContent=\"\\u6708\\u4F9B \"+m.toFixed(2)+\" \\u5143 \\xB7 \\u7B2C\"+n+\"\\u671F\\u5229\\u606F \"+interest.toFixed(2)+\" \\u5143\"}__name(draw,\"draw\");q(\"#month\").oninput=draw;q(\"#last\").onclick=()=>{q(\"#month\").value=360;draw()};q(\"#reset\").onclick=()=>{q(\"#month\").value=1;draw()};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#315448;--paper:#f3f2e9}",
+        "height": 380,
+        "kind": "experience"
       },
       {
-        "id": "family-ledger",
-        "afterParagraphId": "ledger-p1",
-        "title": "相同月供，不同生活冲击",
-        "kind": "figure",
-        "height": 420,
-        "html": "<h3>相同月供，不同生活冲击</h3><label>观察到第几个月<input id=\"month\" type=\"range\" min=\"0\" max=\"12\" value=\"0\"></label><div class=\"metrics\"><div class=\"metric\"><span>正常情景余额</span><strong id=\"normal\"></strong></div><div class=\"metric\"><span>所选情景余额</span><strong id=\"shock\"></strong></div></div><nav><button id=\"appliance\">首月家电 2 万</button><button id=\"income\">第4–6月收入减半</button><button id=\"reset\">回到第0月</button></nav><div id=\"bars\"></div><p id=\"status\"></p><p class=\"note\">初始储备15万；每月收入2.5万，日常开支1万。事件均为演示假设；上方利率变化同步调整月供。</p>",
-        "css": ":root{--accent:#7a6c44;--tint:#f7f4e9}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
-        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));let pay=6324.060505,event='appliance';function render(){const n=num('#month',0,12),base=150000+n*(25000-10000-pay),loss=event==='appliance'?(n>=1?20000:0):Math.max(0,Math.min(n-3,3))*12500,v=base-loss;txt('#normal',fmt(base));txt('#shock',fmt(v));$('#bars').innerHTML=bar('正常',base,260000,fmt(base))+bar('事件后',v,260000,fmt(v),true);txt('#status','第 '+n+' 月；事件累计减少现金 '+fmt(loss)+' 元')}$('#month').oninput=render;$('#appliance').onclick=()=>{event='appliance';render()};$('#income').onclick=()=>{event='income';render()};$('#reset').onclick=()=>{event='appliance';$('#month').value=0;render()};world.onState(s=>{if(s.payment){pay=Number(s.payment);render()}});render();"
+        "id": "cash-reserve",
+        "afterParagraphId": "ledger-p2",
+        "title": "让生活继续一个月",
+        "html": "<small>原文账本＋新增情景：家电20,000元、旅行15,000元</small><h3>房贷之外，缓冲还能撑多久</h3><div class=\"row\"><button id=\"normal\">正常收入过一月</button><button id=\"lost\">收入中断一月</button><button id=\"appliance\">添置家电</button><button id=\"travel\">旅行一次</button><button id=\"reset\">重新记账</button></div><svg class=\"visual\" viewBox=\"0 0 620 160\"></svg><output id=\"status\"></output><ol id=\"log\"></ol><p class=\"note\">初始储备150,000元；月收入25,000元、开支10,000元、月供按上式计算。现金可为负，不把欠款裁成零。储备月数按收入完全中断、只付日常开支与房贷计算。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");const m=15e5*.0025/(1-1.0025**-360);let cash=15e4,month=0,events=[];function draw(){q(\"svg\").innerHTML='<path d=\"M310 35v95\" stroke=\"#7c9080\"/><rect x=\"'+(cash>=0?310:310-Math.min(280,-cash/15e4*280))+'\" y=\"60\" width=\"'+Math.min(280,Math.abs(cash)/15e4*280)+'\" height=\"45\" fill=\"'+(cash>=0?\"#3a715e\":\"#b95f4e\")+'\"/><text x=\"10\" y=\"145\">\\u8D1F\\u50A8\\u5907\\uFF1A\\u9700\\u989D\\u5916\\u8D44\\u91D1</text><text x=\"345\" y=\"145\">\\u6B63\\u50A8\\u5907\\uFF1A\\u73B0\\u91D1\\u7F13\\u51B2</text>';q(\"#status\").textContent=\"\\u7B2C\"+month+\"\\u6708 \\xB7 \\u73B0\\u91D1 \"+cash.toFixed(2)+\" \\u5143 \\xB7 \\u7F13\\u51B2 \"+Math.max(0,cash/(1e4+m)).toFixed(1)+\" \\u4E2A\\u6708\";q(\"#log\").innerHTML=events.slice(-4).map(t=>\"<li>\"+t+\"</li>\").join(\"\")}__name(draw,\"draw\");q(\"#normal\").onclick=()=>{month++;cash+=15e3-m;events.push(\"\\u7B2C\"+month+\"\\u6708\\u6B63\\u5E38\\u6536\\u5165\\uFF0C\\u51C0\\u4F59 \"+(15e3-m).toFixed(2));draw()};q(\"#lost\").onclick=()=>{month++;cash-=1e4+m;events.push(\"\\u7B2C\"+month+\"\\u6708\\u6536\\u5165\\u4E2D\\u65AD\\uFF0C\\u652F\\u51FA \"+(1e4+m).toFixed(2));draw()};q(\"#appliance\").onclick=()=>{cash-=2e4;events.push(\"\\u5BB6\\u7535 \\u221220,000\");draw()};q(\"#travel\").onclick=()=>{cash-=15e3;events.push(\"\\u65C5\\u884C \\u221215,000\");draw()};q(\"#reset\").onclick=()=>{cash=15e4;month=0;events=[];draw()};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#315448;--paper:#f3f2e9}#log{font-size:12px}",
+        "height": 530,
+        "kind": "experience"
       }
     ],
-    "bindings": [
-      {
-        "id": "payment",
-        "paragraphId": "ledger-p1",
-        "label": "月供",
-        "initial": "6324.060505",
-        "hidden": true
-      }
-    ],
-    "libraryReferences": [],
     "scene": [
       {
         "action": "focus",
         "target": "ledger-p0",
-        "title": "沿正文理解",
-        "text": "核对月供 → 比较逐月情景 → 观察现金缓冲。"
+        "title": "每个月，同一笔月供分给谁",
+        "text": "固定月供拆成两块可变面积，利息下降与本金上升一目了然。"
       },
       {
         "action": "reveal",
-        "target": "ledger-formula",
-        "title": "每月月供从哪里来",
-        "text": "修改演示年利率，检查等额本息与零利率的不同计算分支。",
-        "demo": {
-          "event": "click",
-          "selector": "#zero"
-        }
+        "target": "mortgage-strips",
+        "title": "亲手试一次",
+        "text": "拖动月份查看同一笔付款内部的变化，避免把利息当成每期固定。"
+      },
+      {
+        "action": "focus",
+        "target": "ledger-p2",
+        "title": "让生活继续一个月",
+        "text": "让每次生活事件真正扣减现金并留下明细，区分月度盈余与累计缓冲。"
       },
       {
         "action": "reveal",
-        "target": "family-ledger",
-        "title": "相同月供，不同生活冲击",
-        "text": "并列比较正常收入、一次家电开支与三个月收入减半；逐月查看余额。",
-        "demo": {
-          "event": "input",
-          "selector": "#month",
-          "value": "1"
-        }
-      },
-      {
-        "action": "restore",
-        "target": "ledger-p1",
-        "title": "回到原文",
-        "text": "把比较结果带回作者的论点；可以复位并重新尝试。"
+        "target": "cash-reserve",
+        "title": "亲手试一次",
+        "text": "按月推进或添加一次性支出，现金条左右跨过零点，复位可重跑另一种选择。"
       }
     ],
     "design": {
-      "version": "explanation-v4.2026-09-14",
-      "intent": "在同一组家庭假设下，连接等额本息公式、收支明细和现金储备变化。",
-      "readingFlow": "核对月供 → 比较逐月情景 → 观察现金缓冲。",
-      "voice": "保留原文语气，补充内容使用可核对的解释。",
+      "version": "session-repair-2026-09-14",
+      "intent": "把月供拆成利息与本金，再按月消费现金储备，比较看似付得起与真实缓冲。",
+      "readingFlow": "第一段推导月供 → 生活事件段按月记账；默认家庭与情景开支分开标记。",
+      "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
-          "#7a6c44",
-          "#f7f4e9",
-          "#243b3b"
+          "#183a35",
+          "#f2f5ed",
+          "#d98b51"
         ],
-        "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
-        "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
-        "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+        "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+        "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+        "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
       },
       "decisions": [
         {
-          "title": "围绕问题安排操作",
-          "reason": "在同一组家庭假设下，连接等额本息公式、收支明细和现金储备变化。",
-          "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
-        },
-        {
-          "title": "保留事实边界",
-          "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
-          "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+          "title": "操作必须改变可见关系",
+          "reason": "把月供拆成利息与本金，再按月消费现金储备，比较看似付得起与真实缓冲。",
+          "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
         }
       ],
       "components": [
         {
-          "blockId": "ledger-formula",
-          "purpose": "修改演示年利率，检查等额本息与零利率的不同计算分支。",
-          "whyHere": "此处原文刚提出“每月月供从哪里来”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "修改演示年利率，检查等额本息与零利率的不同计算分支。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "mortgage-strips",
+          "purpose": "固定月供拆成两块可变面积，利息下降与本金上升一目了然。",
+          "whyHere": "紧接对应原文：这是一户虚构家庭的账本。每月税后收入 25,000 元，日常开支 10,000 元，另有 150,000 元现金储备。假设贷款 1,500,000 元，年利率 3%，期限 30 年，采用等额本息。",
+          "interaction": "拖动月份查看同一笔付款内部的变化，避免把利息当成每期固定。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "演示月供 4,166.67 元",
-            "演示月供 6,324.06 元"
+            "#reset → 月供 6324.06 元 · 第1期利息 3750.00 元"
           ]
         },
         {
-          "blockId": "family-ledger",
-          "purpose": "并列比较正常收入、一次家电开支与三个月收入减半；逐月查看余额。",
-          "whyHere": "此处原文刚提出“相同月供，不同生活冲击”涉及的关系，读者可以就地核对，再继续阅读。",
-          "interaction": "并列比较正常收入、一次家电开支与三个月收入减半；逐月查看余额。",
-          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "blockId": "cash-reserve",
+          "purpose": "让每次生活事件真正扣减现金并留下明细，区分月度盈余与累计缓冲。",
+          "whyHere": "紧接对应原文：我想比较的不是哪种选择适合所有人，而是在同一组假设下，几种决定会怎样改变这户家庭的现金缓冲。所有数字都是演示假设，不代表真实家庭或当前市场报价。",
+          "interaction": "按月推进或添加一次性支出，现金条左右跨过零点，复位可重跑另一种选择。",
+          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
           "checks": [
-            "138,676",
-            "第 1 月；事件累计减少现金 0 元",
-            "第 6 月；事件累计减少现金 37,500 元",
-            "150,000"
+            "#appliance → 第0月 · 现金 130000.00 元 · 缓冲 8.0 个月",
+            "#lost → 第1月 · 现金 113675.94 元 · 缓冲 7.0 个月",
+            "#reset → 第0月 · 现金 150000.00 元 · 缓冲 9.2 个月"
           ]
         }
       ]
@@ -151,10 +126,10 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-a5d41faa-3b93-48c9-98b4-4c5a47373eb8",
+      "runId": "codex-c39b1d37-a156-4b4a-b545-997b7299093e",
       "sourceHash": "4c87e89698e270e077557afdb64ac2bb2cea00af9dd7f3b7a3986ebe666192a4",
-      "createdAt": "2026-09-14T12:39:57.571Z",
-      "baselineVersion": "explanation-v4",
+      "createdAt": "2026-09-14T15:33:54.043Z",
+      "baselineVersion": "expressive-v7.2026-09-14",
       "prompt": "按作者要求加工；内部备注留存在本地工作台。"
     }
   }

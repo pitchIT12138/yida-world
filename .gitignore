@@ -16,3 +16,6 @@ artifacts/*.local.*
 artifacts/*
 !artifacts/baseline-history/
 !artifacts/candidates/
+
+# Agent tooling is local; the release repository contains product files only.
+.codex/

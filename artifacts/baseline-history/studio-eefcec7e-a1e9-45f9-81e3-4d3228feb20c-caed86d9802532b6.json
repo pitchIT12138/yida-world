@@ -1,0 +1,206 @@
+{
+  "sourceHash": "d3aafc9c6ec5b892de7e0bd5c0d4daca54f476b88f9c9d7cfe67b3387a193498",
+  "design": {
+    "version": "session-repair-2026-09-14",
+    "intent": "保留用户指定的原图滑动比较，增加并排核对构图，避免非同一时刻截图造成误判；疑义两组继续显示原图。",
+    "readingFlow": "十一组逐段阅读，九组在滑动与并排间比较，方向疑义组保留原图说明。",
+    "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
+    "style": {
+      "palette": [
+        "#183a35",
+        "#f2f5ed",
+        "#d98b51"
+      ],
+      "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+      "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+      "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
+    },
+    "decisions": [
+      {
+        "title": "操作必须改变可见关系",
+        "reason": "保留用户指定的原图滑动比较，增加并排核对构图，避免非同一时刻截图造成误判；疑义两组继续显示原图。",
+        "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "dlss-pair-1",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#side → 当前：并排原图，可核对构图差异",
+          "#wipe → 当前：滑动对比"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-2",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#side → 当前：并排原图，可核对构图差异",
+          "#wipe → 当前：滑动对比"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-3",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#side → 当前：并排原图，可核对构图差异",
+          "#wipe → 当前：滑动对比"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-4",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#side → 当前：并排原图，可核对构图差异",
+          "#wipe → 当前：滑动对比"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-5",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#side → 当前：并排原图，可核对构图差异",
+          "#wipe → 当前：滑动对比"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-6",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "本组方向待核对，继续保留原图与说明，不建立虚假开关对照。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#why → 本组延迟标记与作者判别规则不一致，保留原图待核对。"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-7",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "本组方向待核对，继续保留原图与说明，不建立虚假开关对照。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#why → 本组延迟标记与作者判别规则不一致，保留原图待核对。"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-8",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#side → 当前：并排原图，可核对构图差异",
+          "#wipe → 当前：滑动对比"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-9",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#side → 当前：并排原图，可核对构图差异",
+          "#wipe → 当前：滑动对比"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-10",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#side → 当前：并排原图，可核对构图差异",
+          "#wipe → 当前：滑动对比"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-11",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#side → 当前：并排原图，可核对构图差异",
+          "#wipe → 当前：滑动对比"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "dlss-pair-1": "b61893ada0eea0564b700c9b6a8c92b660280c2073c4feca5b2b460286956114",
+    "dlss-pair-2": "83e60fe9b9aa155b97a67e520ca5b6d48998ea7ab40bb1377a6a43eeaa5aa9a8",
+    "dlss-pair-3": "d7cffb2c28246acd3562c20db939dd218fd18bec5ee16ae98a6db49f0a4172f5",
+    "dlss-pair-4": "fdcff11e22f330ac5e0c48e298a24ca90f80578264560d367bf5f4176c59eca7",
+    "dlss-pair-5": "3ffaa7537be983a431e7fe6820fdbef4a8ed53f99fae3bd86bb9f212e2a1378b",
+    "dlss-pair-6": "101b63c4971867501ee9eb01c9ab361de0d7b82c03230f1b52963686b44ed15a",
+    "dlss-pair-7": "19e053036de14b559a7108ce86476ed3971d20d1cd3d47da9a1b758670c7e3f1",
+    "dlss-pair-8": "d7bb0b7830b7a4310d7f9d83d2e8da1218a16f793755b4c3131256ecaf280973",
+    "dlss-pair-9": "5ae6c956869c9b1e1dd2c6f8d644079ff23be8c2fc646fc9d2c5fe984a0132fc",
+    "dlss-pair-10": "e442e5a09b1d468d50a5088d1e2068c855cff306593da74e9783088d161c260f",
+    "dlss-pair-11": "bf0cbe525256c1a4a31666f4a08e2326028894e486320c570b0ccc8a11446a56"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-b649cde8-9a38-4b3e-8aa3-3f12ccacf110",
+    "sourceHash": "d3aafc9c6ec5b892de7e0bd5c0d4daca54f476b88f9c9d7cfe67b3387a193498",
+    "createdAt": "2026-09-14T15:36:22.635Z",
+    "baselineVersion": "expressive-v7.2026-09-14",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}
