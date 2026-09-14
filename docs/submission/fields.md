@@ -3,6 +3,8 @@
 - 项目名称：一答一世界（5 字，无表情符号）
 - 团队：网页复健中心
 - 主题：知识炼金场、跨次元游乐场
+- 作品链接：https://yida-world.zackguo.chatgpt.site
+- 知乎登录回调地址：https://yida-world.zackguo.chatgpt.site/api/auth/callback
 - 一句话：让文字没有说完的，变成一次亲手探索。
 - 产品说明计划书：复制同目录 product-plan.md。
 - 封面：cover.png，1600 × 900，16:9。
@@ -10,4 +12,4 @@
 - GitHub：首发仓库为私有，不填写为公众可访问链接。
 - 视频：本轮交付脚本，暂不填写视频链接。
 
-作品链接与精确 OAuth 回调地址在实际部署成功后写入 release-result.md。最终黑客松表单发布由项目负责人操作。
+实际接入状态与未完成项见 release-result.md。最终黑客松表单发布由项目负责人操作。

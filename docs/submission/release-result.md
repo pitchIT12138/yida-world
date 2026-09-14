@@ -34,8 +34,22 @@ https://yida-world.zackguo.chatgpt.site/api/auth/callback
 
 公开页在 740px、360px 下通过游客阅读、真实回答优先、DLSS 分隔线两端/中点、键盘、触摸复位、原文恢复；17 篇媒体记录的 25 张图 SHA-256 与本地完全一致。证据：`artifacts/reviews/release-production/evidence.json`。
 
-`npm run check` 无错误，`npm test` 140 项通过，`npm run test:studio` 通过，`npm run build` 通过。身份与额度测试使用明确的测试身份；没有把它们记录为真实知乎登录。
+`npm run check` 无错误，`npm test` 143 项通过，`npm run test:studio` 通过，`npm run build` 通过。身份与额度测试使用明确的测试身份；没有把它们记录为真实知乎登录。
 
 私有后台首次运行：34858813114。重复触发：34859311651。日志和源快照保存在 GitHub Actions 及本地 `artifacts/pipeline-first-run`、`artifacts/pipeline-dedup-run`。
 
-生成策略 v7 为修复增加模型自写局部 JSON 补丁，避免重写正确代码；补丁不能修改来源或溯源，应用后仍进行结构、语法和浏览器校验。每任务两次修复的额度不变。
+生成策略 v7 为修复增加模型自写局部 JSON 补丁，避免重写正确代码；对可明确定位的缺失数组闭合符做有记录的兼容恢复，代码字符串不改变；补丁不能修改来源或溯源，应用后仍进行结构、语法和浏览器校验。每任务两次修复的额度不变。
+
+第二篇真实生产尝试《职场：如何让老板给我升职加薪？》在验收输出解析阶段失败，随后整篇修复也未通过。运行 34859390380 保留候选和原因，没有上架。验收服务现已区分自身输出失败和作品错误，不会拿验收 JSON 格式错误要求重写作品。
+
+生产基线重复上传实测返回 preserved=true；公开基线与原图未被替换。证据：`artifacts/reviews/release-production/duplicate-upload.json`。
+
+## 最终后台验收结论
+
+生成策略 v7 的真实运行 34860107692 仍失败：初始产物漏掉块高度，模型补丁用 replace 修改不存在的字段被拒绝，最后一次补丁未补上高度。任务共两次修复，未继续绕过额度。相关原文、原始模型输出和失败原因保存于 `artifacts/pipeline-v7/`。本轮尚无通过自动验收并上架的新作，成功上架全流程仍是未完成项。
+
+公开阅读版已经部署两次，上一发布版本可回退。最终产品代码版本对应 eebaa8b939febe9eac3a93d8adc0cc4df1176ac1；之后的提交只更新本交付文档。公开产品仍为 17 篇已验收的既有回答。
+
+后台管理入口（私有）：https://github.com/pitchIT12138/yida-world/actions
+
+知乎外部配置尚未提供，真实登录、个人创作端到端、热榜与本人全文同步尚未完成。网站可公开阅读，不能把本次交付视为整个首发计划全部验收完成。
