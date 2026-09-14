@@ -1,4 +1,5 @@
 import {parse} from 'acorn';
+import {applyArtifactPatches,PATCH_INSTRUCTION} from './artifact-patch';
 import {profile,callModel,type RuntimeEnv} from './model';
 import {SYSTEM_PROMPT} from './prompt';
 import {selectBaseline} from './baseline';
@@ -12,7 +13,8 @@ export async function generateArtifact(input:GenerationInput,env:RuntimeEnv,opti
  const scope=input.selectedParagraphIds.length?input.selectedParagraphIds:input.source.paragraphs.map(p=>p.id);
  const current=input.current?{...input.current,blocks:input.current.blocks.filter(b=>scope.includes(b.afterParagraphId)),bindings:input.current.bindings.filter(b=>scope.includes(b.paragraphId))}:undefined;
  const base={source:input.source,previousVersion:input.previous,allowedParagraphIds:scope,current,instruction:input.instruction,designBaseline:baseline,designPolicyVersion:DESIGN_POLICY_VERSION,interactionLibrary:selectInteractions(input.source.title+' '+input.instruction)};
- let prompt=JSON.stringify(input.repair?{...base,candidate:input.repair.candidate,runtimeError:input.repair.message}:base),repairs=options.repairs||0;
+ let prompt=JSON.stringify(input.repair?{...base,candidate:input.repair.candidate,runtimeError:input.repair.message,repairFormat:PATCH_INSTRUCTION}:base),repairs=options.repairs||0;
+ let repairBase:unknown=input.repair?.candidate;
  const usage:Record<string,number>={...input.repair?.candidate.provenance.usage};
  options.onStatus?.({type:'status',stage:'generating',message:'正在理解论点、设计操作与反馈，再编写交互…'});
  for(;;){
@@ -21,7 +23,7 @@ export async function generateArtifact(input:GenerationInput,env:RuntimeEnv,opti
   await options.onOutput?.(response.text,response.usage);
   for(const [k,v]of Object.entries(response.usage))usage[k]=(usage[k]||0)+v;
   try{
-   const artifact=parseModelJSON(response.text) as AnswerArtifact;if(!artifact?.design)throw Error('缺少设计记录');
+   const parsed=parseModelJSON(response.text) as any;const artifact=(parsed?.patches?applyArtifactPatches(repairBase,parsed.patches):parsed) as AnswerArtifact;repairBase=artifact;if(!artifact?.design)throw Error('缺少设计记录');
    // A demo is already represented by reveal + demo in the Runtime protocol.
    // Canonicalize this unambiguous transport alias, never rewrite generated code.
    const normalized:string[]=[];
@@ -33,7 +35,7 @@ export async function generateArtifact(input:GenerationInput,env:RuntimeEnv,opti
   }catch(e){
    if(repairs>=2)throw e;await options.onRepair?.();repairs++;
    options.onStatus?.({type:'status',stage:'repairing',message:`正在修复结构或语法问题（${repairs}/2）…`});
-   prompt=JSON.stringify({...base,previousOutput:response.text,validationError:e instanceof Error?e.message:'结构无效'});
+   prompt=JSON.stringify({...base,...(repairBase?{candidate:repairBase,repairFormat:PATCH_INSTRUCTION}:{previousOutput:response.text}),validationError:e instanceof Error?e.message:'结构无效'});
   }
  }
 }

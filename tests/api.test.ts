@@ -43,7 +43,7 @@ describe('real generation transport with explicitly mocked provider',()=>{
     const result=events(await(await post({...input,source:changed,previous})).text()).at(-1);
     const request=JSON.parse(fetcher.mock.calls[0][1].body),context=JSON.parse(request.messages[1].content);
     expect(context.source.title).toBe(changed.title);expect(context.previousVersion).toEqual(previous);
-    expect(context.designBaseline.intent).toBe(previous.artifact.design!.intent);expect(context.designPolicyVersion).toBe('expressive-v6.2026-09-14');
+    expect(context.designBaseline.intent).toBe(previous.artifact.design!.intent);expect(context.designPolicyVersion).toBe('expressive-v7.2026-09-14');
     expect(result.type).toBe('result');
   });
   it('repairs malformed output at most twice, then reports failure',async()=>{
