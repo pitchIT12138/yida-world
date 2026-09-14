@@ -75,7 +75,7 @@ app.route('/api/manual-browser',manualBrowserRoutes);
 app.get('/api/content/:kind/:id?',async c=>{
   const kind=c.req.param('kind'),id=c.req.param('id');
   if(!['knowledge','story'].includes(kind)||id&&!/^\d{1,30}$/.test(id))return c.json({error:'内容地址无效'},400);
-  const key=id?'story/'+id:kind+'/list',cached=contentCache.get(key);
+  const key=id?kind+'/'+id:kind+'/list',cached=contentCache.get(key);
   if(cached && cached.until>Date.now())return c.json(cached.data);
   const abort=AbortSignal.timeout(20000);
   try{

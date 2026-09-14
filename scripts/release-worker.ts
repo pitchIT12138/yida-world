@@ -18,7 +18,7 @@ try{
  // Explicitly choose from official lists. Never turn their summaries into source bodies.
  const kind=process.env.CONTENT_KIND==='knowledge'?'knowledge':'story';const list=await (await fetch('https://api.zhihu.com/km-indep-home/hackathon/v2/'+kind+'/list')).json();if(!Array.isArray(list))throw Error('官方内容列表无效');
  const selected=process.env.WORK_ID?list.filter(x=>String(x.work_id)===process.env.WORK_ID):list.slice(0,1);
- for(const item of selected){const id=String(item.work_id);if(!/^\d{1,30}$/.test(id))continue;const url='https://api.zhihu.com/km-indep-home/hackathon/v2/story/'+id;const response=await fetch(url,{signal:AbortSignal.timeout(20000)});if(!response.ok)throw Error('官方正文读取失败');const raw=await response.json();if(typeof raw.content!=='string'||raw.content.length<100)throw Error('接口未提供可用正文');
+ for(const item of selected){const id=String(item.work_id);if(!/^\d{1,30}$/.test(id))continue;const url='https://api.zhihu.com/km-indep-home/hackathon/v2/'+kind+'/'+id;const response=await fetch(url,{signal:AbortSignal.timeout(20000)});if(!response.ok)throw Error('官方正文读取失败');const raw=await response.json();if(typeof raw.content!=='string'||raw.content.length<100)throw Error('接口未提供可用正文');
   const answer={source:fromContent(raw,kind)};if(!answer)throw Error('正文转换失败');
   // fromContent is a legacy excerpt adapter. Preserve every returned paragraph for new production.
   const parsed=(/<(?:p|img|div|figure|table|h[1-6])\b/i.test(raw.content)?richSource:plainSource)(raw.content,{title:raw.chapter_name||item.title,author:raw.author_name||'作者未提供',method:'official'});
