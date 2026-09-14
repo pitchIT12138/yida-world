@@ -26,6 +26,6 @@ GitHub 手动工作流暂停，历史失败记录全部保留，定时触发未�
 
 ## 验收证据及剩余事项
 
-`npm run check`：0 错误；`npm test`：149 项通过；`npm run test:studio`：通过。离线原图折叠、缺图回退、原文切换、360px 触摸复位通过。产品阅读的按需原图加载、长文位置及 740/360px 溢出检查通过。逐篇证据在 `artifacts/reviews/<真实 runId>/`，Studio 保存了检查结果。`npm run build` 已通过；42 个独立画面完成检查，故事显隐和 SVG 变化、老龄化最大值边界另有实际断言。新版正在发布，实际发布结果另行记录。
+`npm run check`：0 错误；`npm test`：149 项通过；`npm run test:studio`：通过。离线原图折叠、缺图回退、原文切换、360px 触摸复位通过。产品阅读的按需原图加载、长文位置及 740/360px 溢出检查通过。逐篇证据在 `artifacts/reviews/<真实 runId>/`，Studio 保存了检查结果。`npm run build` 已通过；42 个独立画面完成检查，故事显隐和 SVG 变化、老龄化最大值边界另有实际断言。17 篇新版已成功发布，产品源码为 f7eff2aa5badba8064bcd418549c080c9f51de8c。Sites 保留上一公开版本作为回退。正式站点 740/360px 游客阅读、DLSS 两端/中点/键盘/触摸、原文恢复及全部 17 篇的 25 张原图 SHA-256 校验通过，证据见 `artifacts/reviews/release-production/evidence.json`。
 
-仍需真实 OAuth 回调、个人生成保存、两个真实账号隔离、后台一次成功发布与重复触发。既有公共版本继续可读；尚未将整个首发计划标记完成。前一轮发布与失败历史见 `docs/releases/2026-09-14-first-attempt.md`。黑客松最终发布按钮由用户操作。
+仍需真实 OAuth 回调、个人生成保存、两个真实账号隔离、后台一次成功发布与重复触发。17 篇新版公共版本已经上线；尚未将整个首发计划标记完成。前一轮发布与失败历史见 `docs/releases/2026-09-14-first-attempt.md`。黑客松最终发布按钮由用户操作。
