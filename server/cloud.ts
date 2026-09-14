@@ -27,6 +27,6 @@ export class CloudWorkspace implements WorkspaceStore {
 }
 export async function reserveGeneration(db:D1Database,owner:string,kind:'user'|'editor',id:string,sourceId:string,sourceHash:string,fingerprint:string,bodyKey=''){
  const currentDay=day();const result=await db.prepare(`INSERT OR IGNORE INTO jobs(id,owner,day,kind,status,fingerprint,source_id,source_hash,body_key,repairs,created_at)
- SELECT ?,?,?,?,'queued',?,?,?,?,0,? WHERE (SELECT count(*) FROM jobs WHERE day=? AND kind=?)<? AND (SELECT count(*) FROM jobs WHERE day=? AND kind=? AND owner=?)<?`).bind(id,owner,currentDay,kind,fingerprint,sourceId,sourceHash,bodyKey,new Date().toISOString(),currentDay,kind,kind==='user'?20:6,currentDay,kind,owner,kind==='user'?3:6).run();
+ SELECT ?,?,?,?,'queued',?,?,?,?,0,? WHERE (SELECT count(*) FROM jobs WHERE day=? AND kind=?)<? AND (SELECT count(*) FROM jobs WHERE day=? AND kind=? AND owner=?)<?`).bind(id,owner,currentDay,kind,fingerprint,sourceId,sourceHash,bodyKey,new Date().toISOString(),currentDay,kind,kind==='user'?100:6,currentDay,kind,owner,kind==='user'?10:6).run();
  return result.meta.changes===1;
 }

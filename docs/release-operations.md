@@ -18,4 +18,4 @@ GitHub Actions Secrets：DEEPSEEK_API_KEY、RUNNER_TOKEN、可选 ZHIHU_ACCESS_S
 
 本地 Studio 和上云工作区独立；内部备注、清洗记录和未入选草稿不公开。本地数据库已有一致性备份，目录 .data/release-backups。公开精选媒体在部署后用 scripts/seed-release.ts 迁移，逐篇核对返回计数。
 
-任务上限：普通用户 3 次/日，全站普通用户 20 次/日，后台内容 6 篇/日；日界按 Asia/Shanghai。失败任务也计入额度，每任务最多两次修复。本文数值与 server/cloud.ts 保持一致。
+任务上限：普通用户 10 次/日，全站普通用户 100 次/日，后台内容 6 篇/日；日界按 Asia/Shanghai。失败任务也计入额度，每任务最多两次修复。本文数值与 server/cloud.ts 保持一致。

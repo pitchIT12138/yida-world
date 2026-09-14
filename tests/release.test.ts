@@ -13,10 +13,17 @@ describe('release storage and identity',()=>{
   await expect(a.save(value,0,'import')).rejects.toThrow();await a.save(value,1,'generation');expect(await a.versions(source.id)).toHaveLength(2);expect((await a.version(source.id,1))?.source).toEqual(source);
  });
  it('enforces user and global quotas atomically across instances',async()=>{
-  const {DB}=cloudFixture();for(let i=0;i<3;i++)expect(await reserveGeneration(DB,'a','user','a'+i,'x','h','a'+i)).toBe(true);
-  expect(await reserveGeneration(DB,'a','user','a4','x','h','a4')).toBe(false);
-  for(let i=0;i<17;i++)expect(await reserveGeneration(DB,'owner'+i,'user','b'+i,'x','h','b'+i)).toBe(true);
+  const {DB,sqlite}=cloudFixture();
+  expect(await reserveGeneration(DB,'a','user','a0','x','h','a0')).toBe(true);
+  expect(await reserveGeneration(DB,'a','user','a0','x','h','a0')).toBe(false);
+  for(let i=1;i<10;i++)expect(await reserveGeneration(DB,'a','user','a'+i,'x','h','a'+i)).toBe(true);
+  expect(await reserveGeneration(DB,'a','user','a10','x','h','a10')).toBe(false);
+  for(let i=0;i<90;i++)expect(await reserveGeneration(DB,'owner'+i,'user','b'+i,'x','h','b'+i)).toBe(true);
   expect(await reserveGeneration(DB,'other','user','extra','x','h','extra')).toBe(false);
+  expect(sqlite.prepare("SELECT count(*) AS n FROM jobs WHERE kind='user'").get()?.n).toBe(100);
+  // User and background production budgets remain separate.
+  for(let i=0;i<6;i++)expect(await reserveGeneration(DB,'@editor','editor','e'+i,'x','h','e'+i)).toBe(true);
+  expect(await reserveGeneration(DB,'@editor','editor','e6','x','h','e6')).toBe(false);
  });
  it('keeps large provider ids lossless and rejects error profiles',()=>{expect(parseProfile('{"uid":1747681485547843585,"fullname":"作者"}').id).toBe('zhihu:1747681485547843585');expect(()=>parseProfile('{"code":404,"message":"not found"}')).toThrow()});
  it('requires a real session for cloud workspace and rejects cross-origin writes',async()=>{
