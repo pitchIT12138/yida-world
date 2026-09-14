@@ -43,9 +43,10 @@ export type GenerationInput = {
   instruction: string; tier: ModelTier; repair?: { message: string; candidate: AnswerArtifact; ticket: string };
 };
 export type GenerationEvent =
-  | { type: 'status'; stage: string; message: string }
+  | { type: 'status'; stage: string; message: string; elapsedMs?:number }
   | { type: 'result'; artifact: AnswerArtifact; repairTicket?: string }
   | { type: 'error'; message: string; code: string };
+export type GenerationSnapshot = {runId:string;requestId:string;startedAt:number;updatedAt:number;deadlineAt:number;event:GenerationEvent};
 export type PublicConfig = { authRequired?:boolean; loginConfigured?:boolean; user?:{id:string;name:string;avatar:string}|null; workspaceEnabled?:boolean; generationEnabled: boolean; tiers: ModelTier[]; timeoutMs: number; reason?: string };
 export type ContentSummary = { work_id: string; title: string; description?: string; labels?: string[] };
 export type ContentDetail = { work_id: string; chapter_name: string; author_name?: string; introduction?: string; content: string };

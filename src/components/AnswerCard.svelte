@@ -69,7 +69,7 @@
     if(!config.generationEnabled){error=config.reason||'生成暂不可用';return}
     historyOpen=false;const sourceAtStart=JSON.stringify(answer.source),run=new AbortController();controller=run;busy=true;error='';status='正在连接生成服务…';
     try{
-      const artifact=await generateChecked({source:answer.source,current:answer.artifact,previous:answer.artifact?undefined:answer.reference,selectedParagraphIds:selected,instruction:instruction.trim(),tier:effectiveTier},run.signal,s=>{if(controller===run)status=s});
+      const artifact=await generateChecked({source:answer.source,current:answer.artifact,previous:answer.artifact?undefined:answer.reference,selectedParagraphIds:selected,instruction:instruction.trim(),tier:effectiveTier},run.signal,s=>{if(controller===run)status=s},config.timeoutMs);
       if(controller!==run||run.signal.aborted)return;
       if(JSON.stringify(answer.source)!==sourceAtStart)throw new Error('生成期间原文已更新，请基于新原文重新生成。');
       onupdate(artifact);bindings={};expanded=true;editing=false;selected=[];selecting=false;onnotice('新的表达已提交后台保存，上一版保留在历史中。');

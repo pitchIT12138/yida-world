@@ -21,7 +21,9 @@ export async function generateArtifact(input:GenerationInput,env:RuntimeEnv,opti
  const stamp=async()=>({method:'api' as const,runId:options.runId,sourceHash,model:p.model,tier:input.tier,createdAt:new Date().toISOString(),prompt:input.instruction,reasoningEffort:p.reasoningEffort,baselineVersion:baseline?.version||DESIGN_POLICY_VERSION,baselineHash:await digest(JSON.stringify(baseline||DESIGN_POLICY_VERSION)),elapsedMs:Date.now()-start+(input.repair?.candidate.provenance.elapsedMs||0),usage:{...usage},repairCount:repairs,normalizations:[...normalizations]});
  const consume=async(error:unknown,candidate?:unknown)=>{if(repairs>=2)throw new ArtifactRejected(String(error),candidate);await options.onRepair?.();repairs++;status('repairing','正在局部修复（'+repairs+'/2），保留已完成代码…')};
  const request=async(stage:string,context:unknown,tokens:number)=>{
-  let response;try{response=await callModel(p,SYSTEM_PROMPT,JSON.stringify(context),options.signal,tokens)}catch(e){if(e instanceof ModelServiceError&&e.output)await options.onOutput?.(e.output.text,e.output.usage,stage+':incomplete');throw e}
+  const label=stage==='design'?'设计阅读路线':stage==='repair'?'修复交互':'编写交互代码';
+  status('model_waiting','正在'+label+'，等待模型返回…');
+  let response;try{response=await callModel(p,SYSTEM_PROMPT,JSON.stringify(context),options.signal,tokens,()=>status('model_responding','模型已响应，正在接收'+label+'的结果…'))}catch(e){if(e instanceof ModelServiceError&&e.output)await options.onOutput?.(e.output.text,e.output.usage,stage+':incomplete');throw e}
   await options.onOutput?.(response.text,response.usage,stage);for(const [k,v]of Object.entries(response.usage))usage[k]=(usage[k]||0)+v;
   return response.text;
  };

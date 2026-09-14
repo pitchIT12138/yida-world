@@ -12,7 +12,7 @@ export function profile(env: RuntimeEnv, tier: string): ModelProfile | undefined
   return {base:base.replace(/\/$/,''),key,model,provider,reasoningEffort};
 }
 export class ModelServiceError extends Error { constructor(message:string,public output?:{text:string;usage:Record<string,number>}){super(message);this.name='ModelServiceError'} }
-export async function callModel(p:ModelProfile,system:string,input:string,signal:AbortSignal,maxTokens:number):Promise<{text:string;usage:Record<string,number>}>{
+export async function callModel(p:ModelProfile,system:string,input:string,signal:AbortSignal,maxTokens:number,onResponse?:()=>void):Promise<{text:string;usage:Record<string,number>}>{
   const anthropic=p.provider==='anthropic';
   const url=p.base+(anthropic?'/messages':'/chat/completions');
   const headers:Record<string,string>={'Content-Type':'application/json'};
@@ -24,6 +24,7 @@ export async function callModel(p:ModelProfile,system:string,input:string,signal
     await response.body?.cancel();
     throw new ModelServiceError(response.status===429?'模型服务限流或额度不足，请稍后重试':response.status===401||response.status===403?'模型服务鉴权失败，请检查服务端配置':'模型服务请求失败（HTTP '+response.status+'）');
   }
+  onResponse?.();
   const length=Number(response.headers.get('content-length'));
   if(length>1000000){await response.body?.cancel();throw new ModelServiceError('模型结果超出大小限制')}
   const reader=response.body!.getReader();let raw='',bytes=0;const dec=new TextDecoder();

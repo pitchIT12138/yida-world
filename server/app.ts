@@ -1,6 +1,7 @@
 import {identity,runner,authRoutes,authConfigured} from './auth';
 import {CloudWorkspace,reserveGeneration} from './cloud';
 import {generateArtifact,ArtifactRejected} from './generation';
+import {generationProgress,progressKey} from './generation-progress';
 import {releaseRoutes} from './release';
 import { Hono } from 'hono';
 import { profile, type RuntimeEnv } from './model';
@@ -90,6 +91,23 @@ app.get('/api/content/:kind/:id?',async c=>{
     return c.json(data);
   }catch{return c.json({error:'知乎内容暂时无法读取，请稍后重试，或粘贴已有原文。'},502)}
 });
+// Polling is read-only and owner-bound; it never starts a model call or consumes quota.
+app.get('/api/generation/:id',async c=>{
+ const id=c.req.param('id');if(!/^[a-f0-9-]{36}$/.test(id))return c.json({error:'任务不存在'},404);
+ const user=await identity(c.req.raw,c.env),trusted=await runner(c.req.raw,c.env);
+ if(c.env.AUTH_REQUIRED==='true'&&!user&&!trusted)return c.json({error:'登录已过期，请重新登录后查看任务。'},401);
+ if(!c.env.DB||!c.env.MEDIA)return c.json({error:'当前环境不支持任务查询'},404);
+ const owner=trusted?'@editor':user?.id||'local';
+ const job=await c.env.DB.prepare('SELECT status,created_at,error FROM jobs WHERE id=? AND owner=?').bind(id,owner).first<{status:string;created_at:string;error:string|null}>();
+ if(!job)return c.json({error:'任务不存在'},404);
+ if(job.status==='failed')return c.json({runId:id,requestId:c.req.query('requestId'),event:{type:'error',code:'GENERATION_FAILED',message:job.error||'任务未完成，原文已保留。'}});
+ const stored=await c.env.MEDIA.get(progressKey(owner,id));
+ if(stored){const snapshot=await stored.json<import('../src/lib/types').GenerationSnapshot>();
+  if(snapshot.event.type==='status'&&Date.now()>snapshot.deadlineAt+10000)return c.json({...snapshot,event:{type:'error',code:'TIMEOUT',message:'后台任务已超过等待时限，原文和上一版已保留。'}});
+  return c.json(snapshot);
+ }
+ return c.json({runId:id,startedAt:Date.parse(job.created_at),updatedAt:Date.parse(job.created_at),deadlineAt:Date.parse(job.created_at)+600000,event:job.status==='failed'?{type:'error',code:'GENERATION_FAILED',message:job.error||'任务未完成，原文已保留。'}:{type:'status',stage:job.status,message:job.status==='generated'?'此前任务已生成，但旧版本没有保存可恢复的结果。':'网站已接收，正在准备任务状态…'}});
+});
 app.post('/api/generate',async c=>{
   let input:GenerationInput;
   try{input=validateInput(await readJSON(c.req.raw))}catch(e){return c.json({error:e instanceof Error?e.message:'请求格式不正确'},400)}
@@ -103,7 +121,10 @@ app.post('/api/generate',async c=>{
   if(rate&&rate.until>now&&rate.count>=max)return c.json({error:'生成请求较多，请一分钟后重试。'},429);
   if(requests.size>2000)for(const [k,v]of requests)if(v.until<now)requests.delete(k);
   requests.set(rateKey,{until:rate&&rate.until>now?rate.until:now+60000,count:rate&&rate.until>now?rate.count+1:1});
-  let runId=crypto.randomUUID() as string,repairs=0;
+  const requestedId=c.req.header('X-Generation-Request');
+  if(requestedId&&!/^[a-f0-9-]{36}$/.test(requestedId))return c.json({error:'任务标识无效'},400);
+  let runId=requestedId||crypto.randomUUID() as string,repairs=0;
+  if(!input.repair&&c.env.DB&&await c.env.DB.prepare('SELECT id FROM jobs WHERE id=?').bind(runId).first())return c.json({error:'该任务已经提交，请查询原任务状态。'},409);
   try{
     if(input.repair){
       const proof=await verifyTicket(input.repair.ticket,p.key);
@@ -111,24 +132,32 @@ app.post('/api/generate',async c=>{
       validateArtifact(input.repair.candidate,input.source);
       if(typeof input.repair.message!=='string'||input.repair.message.length>600)throw Error('修复反馈格式不正确');
       runId=proof.runId;repairs=proof.repairs+1;
-      if(c.env.DB){const r=await c.env.DB.prepare('UPDATE jobs SET repairs=repairs+1 WHERE id=? AND owner=? AND repairs=?').bind(runId,owner,proof.repairs).run();if(!r.meta.changes)throw Error('修复凭证已使用')}
+      if(c.env.DB){const r=await c.env.DB.prepare("UPDATE jobs SET repairs=repairs+1,status='queued',error=NULL WHERE id=? AND owner=? AND repairs=?").bind(runId,owner,proof.repairs).run();if(!r.meta.changes)throw Error('修复凭证已使用')}
       else {if(usedTickets.has(input.repair.ticket))throw Error('修复凭证已使用');usedTickets.add(input.repair.ticket)}
     }else if(c.env.DB&&!await reserveGeneration(c.env.DB,owner,trusted?'editor':'user',runId,input.source.id,await hash(input.source),runId))return c.json({error:'今日生成额度已用完，已有内容仍可阅读。'},429);
   }catch(e){return c.json({error:e instanceof Error?e.message:'修复请求无效'},400)}
-  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),bounded(c.env.GENERATION_TIMEOUT_MS,300000,1000,600000));
+  const timeout=bounded(c.env.GENERATION_TIMEOUT_MS,300000,1000,600000),controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeout);
+  let heartbeat:ReturnType<typeof setInterval>|undefined;
   const disconnect=()=>controller.abort();c.req.raw.signal.addEventListener('abort',disconnect,{once:true});
   const stream=new ReadableStream<Uint8Array>({
     start(output){let closed=false;const send=(event:GenerationEvent)=>{if(!closed)try{output.enqueue(encoder.encode('data: '+JSON.stringify(event)+'\n\n'))}catch{closed=true;controller.abort()}};
+      const progress=generationProgress(c.env,owner,runId,requestedId||runId,timeout,send);
+      heartbeat=setInterval(()=>{void progress.heartbeat()},5000);
       void(async()=>{try{
-        const result=await generateArtifact(input,c.env,{signal:controller.signal,runId,repairs,onStatus:send,onOutput:async(text,usage,stage)=>{if(c.env.MEDIA)await c.env.MEDIA.put('private-generation/'+owner+'/'+runId+'/'+crypto.randomUUID()+'.json',JSON.stringify({stage,text,usage,at:new Date().toISOString()}))},onRepair:async()=>{if(c.env.DB){const r=await c.env.DB.prepare('UPDATE jobs SET repairs=repairs+1 WHERE id=? AND repairs<2').bind(runId).run();if(!r.meta.changes)throw Error('已达到两次修复上限')}}});
+        await progress.update({type:'status',stage:'accepted',message:'网站已接收请求，正在连接模型…'});
+        const result=await generateArtifact(input,c.env,{signal:controller.signal,runId,repairs,onStatus:event=>{void progress.update(event)},onOutput:async(text,usage,stage)=>{if(c.env.MEDIA)await c.env.MEDIA.put('private-generation/'+owner+'/'+runId+'/'+crypto.randomUUID()+'.json',JSON.stringify({stage,text,usage,at:new Date().toISOString()}))},onRepair:async()=>{if(c.env.DB){const r=await c.env.DB.prepare('UPDATE jobs SET repairs=repairs+1 WHERE id=? AND repairs<2').bind(runId).run();if(!r.meta.changes)throw Error('已达到两次修复上限')}}});
         const repairTicket=result.repairs<2?await ticket({until:Date.now()+300000,owner,runId,repairs:result.repairs,inputHash:await hash(requestHashInput(input)),candidateHash:await hash(result.artifact)},p.key):undefined;
+        await progress.update({type:'result',artifact:result.artifact,repairTicket});
         if(c.env.DB)await c.env.DB.prepare("UPDATE jobs SET status='generated' WHERE id=?").bind(runId).run();
-        send({type:'result',artifact:result.artifact,repairTicket});
-      }catch(e){if(c.env.DB)await c.env.DB.prepare("UPDATE jobs SET status='failed' WHERE id=?").bind(runId).run();send({type:'error',code:controller.signal.aborted?'TIMEOUT':e instanceof ArtifactRejected?'CONTENT_REJECTED':'MODEL_SERVICE_FAILED',message:controller.signal.aborted?'生成超时或已取消，上一版保持不变。':e instanceof Error?e.message:'生成失败'});}
-      finally{clearTimeout(timer);c.req.raw.signal.removeEventListener('abort',disconnect);if(!closed){closed=true;try{output.close()}catch{}}}})();
-    },cancel(){controller.abort();clearTimeout(timer)}
+      }catch(e){
+        const failure:GenerationEvent={type:'error',code:controller.signal.aborted?'TIMEOUT':e instanceof ArtifactRejected?'CONTENT_REJECTED':'MODEL_SERVICE_FAILED',message:controller.signal.aborted?'生成超时或已取消，上一版保持不变。':e instanceof Error?e.message:'生成失败'};
+        try{await progress.update(failure)}catch{send(failure)}
+        try{if(c.env.DB)await c.env.DB.prepare("UPDATE jobs SET status='failed',error=? WHERE id=?").bind(failure.message,runId).run()}catch{console.error('generation_status_write_failed',runId)}
+      }
+      finally{clearInterval(heartbeat);clearTimeout(timer);c.req.raw.signal.removeEventListener('abort',disconnect);if(!closed){closed=true;try{output.close()}catch{}}}})();
+    },cancel(){controller.abort();clearTimeout(timer);clearInterval(heartbeat)}
   });
-  return new Response(stream,{headers:{'Content-Type':'text/event-stream; charset=utf-8','Cache-Control':'no-store','X-Accel-Buffering':'no'}});
+  return new Response(stream,{headers:{'Content-Type':'text/event-stream; charset=utf-8','Cache-Control':'no-store, no-transform','X-Accel-Buffering':'no','Content-Encoding':'identity','X-Generation-Run-Id':runId}});
 });
 app.get('/api/health',c=>c.json({ok:true}));
 app.all('/api/*',c=>c.json({error:'接口不存在'},404));
