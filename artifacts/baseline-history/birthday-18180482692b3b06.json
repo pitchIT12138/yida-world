@@ -1,0 +1,70 @@
+{
+  "sourceHash": "a65c16652907e229fc57419798da1af6c97367609455812b3aed08bf920d2e19",
+  "design": {
+    "version": "explanation-v4.2026-09-14",
+    "intent": "比较“任意两人”与“有人和我相同”的差别，并用重复实验核对理论。",
+    "readingFlow": "两种问题 → 组合与补集 → 随机实验。",
+    "voice": "保留原文语气，补充内容使用可核对的解释。",
+    "style": {
+      "palette": [
+        "#3a7188",
+        "#edf5fa",
+        "#243b3b"
+      ],
+      "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+      "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+      "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+    },
+    "decisions": [
+      {
+        "title": "围绕问题安排操作",
+        "reason": "比较“任意两人”与“有人和我相同”的差别，并用重复实验核对理论。",
+        "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+      },
+      {
+        "title": "保留事实边界",
+        "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+        "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "birthday-compare",
+        "purpose": "调节总人数，同时计算任意碰撞和与指定一人相同的概率。",
+        "whyHere": "此处原文刚提出“同一间房，两个不同的问题”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "调节总人数，同时计算任意碰撞和与指定一人相同的概率。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "97.0%",
+          "0.0%",
+          "23 人有 253 组配对；指定一人只有 22 组"
+        ]
+      },
+      {
+        "blockId": "birthday-experiment",
+        "purpose": "在当前人数下重复1000次房间实验，比较频率与理论值；换人数后清空旧实验。",
+        "whyHere": "此处原文刚提出“一次发生，不等于概率就是100%”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "在当前人数下重复1000次房间实验，比较频率与理论值；换人数后清空旧实验。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "人数 23；已模拟 1000 间房",
+          "人数 23；已模拟 0 间房"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "birthday-compare": "881dde1175ed939667b80a8d8923d8255eb4c1cef6686c2dd4ff3d0eabfba9f7",
+    "birthday-experiment": "a73170d9feda40f134186cf0453f08bf7185f4a45201a802f1cdd802b17f408a"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-e1cb7cd3-e050-434e-bced-a29da7d93d52",
+    "sourceHash": "a65c16652907e229fc57419798da1af6c97367609455812b3aed08bf920d2e19",
+    "createdAt": "2026-09-14T12:39:54.112Z",
+    "baselineVersion": "explanation-v4",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

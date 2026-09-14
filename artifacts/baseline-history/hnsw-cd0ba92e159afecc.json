@@ -1,0 +1,59 @@
+{
+  "sourceHash": "8057b35e82a715f777ed7cf0b062b450669adc3a687ef7350aa03a185750a471",
+  "design": {
+    "version": "explanation-v4.2026-09-14",
+    "intent": "在显式小图上逐步计算距离，比较分层路径和线性扫描的访问量。",
+    "readingFlow": "选择查询位置 → 高层找方向 → 低层细找 → 对照扫描及近似边界。",
+    "voice": "保留原文语气，补充内容使用可核对的解释。",
+    "style": {
+      "palette": [
+        "#745788",
+        "#f5eff9",
+        "#243b3b"
+      ],
+      "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+      "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+      "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+    },
+    "decisions": [
+      {
+        "title": "围绕问题安排操作",
+        "reason": "在显式小图上逐步计算距离，比较分层路径和线性扫描的访问量。",
+        "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+      },
+      {
+        "title": "保留事实边界",
+        "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+        "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "hnsw-route",
+        "purpose": "在一维教学图中选择查询点，逐步看候选距离、访问节点及层级下降。",
+        "whyHere": "此处原文刚提出“每一步为什么向这个点走”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "在一维教学图中选择查询点，逐步看候选距离、访问节点及层级下降。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "查询 76；结果 80；距离 4",
+          "第 1 步：从上层入口0开始",
+          "查询 10；结果 10；距离 0",
+          "第 1 步：从上层入口0开始"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "hnsw-route": "f4cf5cc9eeba60aa51d3418730bb589196b02a88cc156b85179252aca4e3666e"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-b30f0133-dadf-4685-a9b4-1f4ffca94c2c",
+    "sourceHash": "8057b35e82a715f777ed7cf0b062b450669adc3a687ef7350aa03a185750a471",
+    "createdAt": "2026-09-14T12:39:53.736Z",
+    "baselineVersion": "explanation-v4",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

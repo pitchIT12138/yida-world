@@ -1,0 +1,49 @@
+{
+  "checkedAt": "2026-09-14T12:48:37.424Z",
+  "results": [
+    {
+      "width": 740,
+      "blockId": "recruit-years",
+      "action": "click",
+      "selector": "#coverage",
+      "expect": {
+        "selector": "#status",
+        "text": "2025→2026：覆盖比例下降 0.38 个百分点"
+      },
+      "observed": "2025→2026：覆盖比例下降 0.38 个百分点"
+    },
+    {
+      "width": 740,
+      "blockId": "recruit-years",
+      "action": "click",
+      "selector": "#mean",
+      "expect": {
+        "selector": "#status",
+        "text": "2025→2026：平均分下降 2.07 分"
+      },
+      "observed": "2025→2026：平均分下降 2.07 分"
+    },
+    {
+      "width": 360,
+      "blockId": "recruit-years",
+      "action": "click",
+      "selector": "#coverage",
+      "expect": {
+        "selector": "#status",
+        "text": "2025→2026：覆盖比例下降 0.38 个百分点"
+      },
+      "observed": "2025→2026：覆盖比例下降 0.38 个百分点"
+    },
+    {
+      "width": 360,
+      "blockId": "recruit-years",
+      "action": "click",
+      "selector": "#mean",
+      "expect": {
+        "selector": "#status",
+        "text": "2025→2026：平均分下降 2.07 分"
+      },
+      "observed": "2025→2026：平均分下降 2.07 分"
+    }
+  ]
+}

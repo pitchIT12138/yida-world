@@ -1,0 +1,19 @@
+import {mkdir} from 'node:fs/promises';
+import {chromium} from 'playwright';
+import {frameDocument} from '../src/lib/runtime';
+import type {AnswerArtifact,SourceAsset} from '../src/lib/types';
+export type InteractionCheck={blockId:string;action:'click'|'fill'|'check'|'range'|'press';selector:string;value?:string;expect:{selector:string;text:string}};
+export async function verifyInteractive(artifact:AnswerArtifact,checks:InteractionCheck[],assets:SourceAsset[]=[],outDir?:string){
+ if(!checks.length)throw Error('必须提供实际交互及预期输出检查');
+ for(const c of checks)if(!c?.expect||typeof c.expect.text!=='string'||typeof c.expect.selector!=='string')throw Error('检查必须包含精确的预期文本');
+ const browser=await chromium.launch({headless:true});const results:unknown[]=[];
+ try{for(const width of [740,360]){
+ const page=await browser.newPage({viewport:{width,height:1000},hasTouch:width===360});
+ await page.route('http://studio.verify/',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><body></body>'}));await page.goto('http://studio.verify/');
+ await page.evaluate(initial=>{const w=window as any;w.messages=[];w.articleState=initial;window.addEventListener('message',e=>{w.messages.push(e.data);const d=e.data;if(d?.type==='binding'&&d.value&&d.value.key in w.articleState){w.articleState[d.value.key]=d.value.value;for(const f of document.querySelectorAll('iframe'))f.contentWindow?.postMessage({channel:f.id,type:'state',value:w.articleState},'*')}if(d?.type==='ready')document.getElementById(d.blockId)&&((document.getElementById(d.blockId) as HTMLIFrameElement).contentWindow?.postMessage({channel:d.blockId,type:'state',value:w.articleState},'*'))})},Object.fromEntries(artifact.bindings.map(b=>[b.id,b.initial])));
+ for(const block of artifact.blocks){await page.evaluate(({doc,id})=>{const f=document.createElement('iframe');f.id=id;f.setAttribute('sandbox','allow-scripts');f.style.cssText='width:100%;border:0;height:800px';f.srcdoc=doc;document.body.append(f)},{doc:frameDocument(block,block.id,'http://studio.verify',assets),id:block.id});await page.waitForFunction(id=>(window as any).messages.some((m:any)=>m.blockId===id&&m.type==='ready'),block.id,{timeout:8000})}
+ for(const c of checks){if(!artifact.blocks.some(b=>b.id===c.blockId))throw Error('检查引用了不存在的组件');const frame=page.frameLocator('iframe[id="'+c.blockId+'"]'),target=frame.locator(c.selector);if(c.action==='click'){if(width===360)await target.tap();else await target.click();}else if(c.action==='fill')await target.fill(c.value||'');else if(c.action==='check')await target.check();else if(c.action==='press')await target.press(c.value||'ArrowRight');else if(c.action==='range')await target.evaluate((el,value)=>{(el as HTMLInputElement).value=value;el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}))},c.value||'0');else throw Error('未知检查操作');await frame.locator(c.expect.selector).filter({hasText:c.expect.text}).waitFor({timeout:8000});const observed=(await frame.locator(c.expect.selector).innerText()).trim();if(observed!==c.expect.text)throw Error('输出不符：'+observed);results.push({width,...c,observed})}
+ for(const block of artifact.blocks){const frame=page.frameLocator('iframe[id="'+block.id+'"]');const overflow=await frame.locator('body').evaluate(el=>el.scrollWidth>el.clientWidth+2);if(overflow)throw Error('窄屏溢出：'+block.id);if(block.mediaUrls?.length){await page.waitForFunction(id=>(window as any).messages.some((m:any)=>m.blockId===id&&m.type==='media-ready'),block.id,{timeout:15000})}}
+ await page.waitForTimeout(100);const errors=await page.evaluate(()=>(window as any).messages.filter((m:any)=>m.type==='error'));if(errors.length)throw Error(JSON.stringify(errors));if(outDir){await mkdir(outDir,{recursive:true});await page.screenshot({path:outDir+'/preview-'+width+'.png',fullPage:true})}await page.close();
+ }}finally{await browser.close()}return {checkedAt:new Date().toISOString(),results};
+}

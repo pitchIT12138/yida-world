@@ -1,0 +1,95 @@
+{
+  "checkedAt": "2026-09-14T12:48:33.890Z",
+  "results": [
+    {
+      "width": 740,
+      "blockId": "dcf-present",
+      "action": "click",
+      "selector": "#zero",
+      "expect": {
+        "selector": "#status",
+        "text": "零折现：现值等于累计净现金流"
+      },
+      "observed": "零折现：现值等于累计净现金流"
+    },
+    {
+      "width": 740,
+      "blockId": "dcf-present",
+      "action": "click",
+      "selector": "#zero",
+      "expect": {
+        "selector": "#pv",
+        "text": "1,971,000"
+      },
+      "observed": "1,971,000"
+    },
+    {
+      "width": 740,
+      "blockId": "dcf-present",
+      "action": "fill",
+      "selector": "#years",
+      "expect": {
+        "selector": "#pv",
+        "text": "65,700"
+      },
+      "value": "1",
+      "observed": "65,700"
+    },
+    {
+      "width": 740,
+      "blockId": "dcf-present",
+      "action": "click",
+      "selector": "#reset",
+      "expect": {
+        "selector": "#pv",
+        "text": "1,136,087"
+      },
+      "observed": "1,136,087"
+    },
+    {
+      "width": 360,
+      "blockId": "dcf-present",
+      "action": "click",
+      "selector": "#zero",
+      "expect": {
+        "selector": "#status",
+        "text": "零折现：现值等于累计净现金流"
+      },
+      "observed": "零折现：现值等于累计净现金流"
+    },
+    {
+      "width": 360,
+      "blockId": "dcf-present",
+      "action": "click",
+      "selector": "#zero",
+      "expect": {
+        "selector": "#pv",
+        "text": "1,971,000"
+      },
+      "observed": "1,971,000"
+    },
+    {
+      "width": 360,
+      "blockId": "dcf-present",
+      "action": "fill",
+      "selector": "#years",
+      "expect": {
+        "selector": "#pv",
+        "text": "65,700"
+      },
+      "value": "1",
+      "observed": "65,700"
+    },
+    {
+      "width": 360,
+      "blockId": "dcf-present",
+      "action": "click",
+      "selector": "#reset",
+      "expect": {
+        "selector": "#pv",
+        "text": "1,136,087"
+      },
+      "observed": "1,136,087"
+    }
+  ]
+}

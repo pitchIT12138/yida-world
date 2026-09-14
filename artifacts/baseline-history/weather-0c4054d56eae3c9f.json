@@ -1,0 +1,62 @@
+{
+  "sourceHash": "ec3a79f0261f1d6d9a21feb9f31735cfa3fc3a061c3c5d07d07c4bec63de758b",
+  "design": {
+    "version": "explanation-v4.2026-09-14",
+    "intent": "把额外干扰转成真实点击路径，对照完成相同任务的成本。",
+    "readingFlow": "保持“看天气”任务 → 体验三个版本 → 对照完成路径。",
+    "voice": "保留原文语气，补充内容使用可核对的解释。",
+    "style": {
+      "palette": [
+        "#4e7b92",
+        "#edf6fa",
+        "#243b3b"
+      ],
+      "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+      "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+      "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+    },
+    "decisions": [
+      {
+        "title": "围绕问题安排操作",
+        "reason": "把额外干扰转成真实点击路径，对照完成相同任务的成本。",
+        "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+      },
+      {
+        "title": "保留事实边界",
+        "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+        "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "weather-phone",
+        "purpose": "选择一个版本，实际走完打开与关闭步骤，再比较历史完成次数。",
+        "whyHere": "此处原文刚提出“任务相同，路径为何变长”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "选择一个版本，实际走完打开与关闭步骤，再比较历史完成次数。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "任务完成：1 次点击",
+          "任务：确认是否带伞",
+          "任务：确认是否带伞",
+          "任务：确认是否带伞",
+          "任务：确认是否带伞",
+          "任务完成：4 次点击",
+          "任务：确认是否带伞"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "weather-phone": "ace1e8121899eb4dc624751a3421c7177e529941ccd29ad80705a352326bc75e"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-a485962f-ea00-431e-959e-125b9f1a1bcc",
+    "sourceHash": "ec3a79f0261f1d6d9a21feb9f31735cfa3fc3a061c3c5d07d07c4bec63de758b",
+    "createdAt": "2026-09-14T12:39:55.193Z",
+    "baselineVersion": "explanation-v4",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

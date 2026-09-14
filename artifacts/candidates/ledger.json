@@ -1,0 +1,160 @@
+{
+  "source": {
+    "id": "ledger",
+    "title": "买完房的第一个月，账本才刚刚开始。",
+    "author": "周末记账的人",
+    "bio": "日子是一个月一个月过的",
+    "avatar": "周",
+    "origin": "original",
+    "paragraphs": [
+      {
+        "id": "ledger-p0",
+        "text": "这是一户虚构家庭的账本。每月税后收入 25,000 元，日常开支 10,000 元，另有 150,000 元现金储备。假设贷款 1,500,000 元，年利率 3%，期限 30 年，采用等额本息。"
+      },
+      {
+        "id": "ledger-p1",
+        "text": "只看月供，可能觉得“付得起”。但真正住进去以后，生活继续发生：家电要添置，家庭会旅行，也可能遇到几个月收入变化。"
+      },
+      {
+        "id": "ledger-p2",
+        "text": "我想比较的不是哪种选择适合所有人，而是在同一组假设下，几种决定会怎样改变这户家庭的现金缓冲。所有数字都是演示假设，不代表真实家庭或当前市场报价。"
+      }
+    ]
+  },
+  "artifact": {
+    "version": 1,
+    "answerId": "ledger",
+    "explanation": "在同一组家庭假设下，连接等额本息公式、收支明细和现金储备变化。",
+    "blocks": [
+      {
+        "id": "ledger-formula",
+        "afterParagraphId": "ledger-p0",
+        "title": "每月月供从哪里来",
+        "kind": "figure",
+        "height": 420,
+        "html": "<h3>每月月供从哪里来</h3><div class=\"fields\"><label>演示年利率／%<input id=\"rate\" type=\"number\" value=\"3\" min=\"0\" max=\"20\" step=\"0.1\"></label></div><div class=\"metrics\"><div class=\"metric\"><span>每月月供／元</span><strong id=\"payment\"></strong></div></div><p class=\"formula\">月利率 r = 年利率 / 12；期数 n = 360<br>A = P r / [1 − (1+r)⁻ⁿ]；r = 0 时 A = P/n</p><nav><button id=\"zero\">零利率</button><button id=\"reset\">恢复 3%</button></nav><p id=\"status\"></p>",
+        "css": ":root{--accent:#7a6c44;--tint:#f7f4e9}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
+        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));function render(){const r=num('#rate',0,20)/1200,v=r?1500000*r/(1-Math.pow(1+r,-360)):1500000/360;txt('#payment',fmt(v,2));txt('#status','演示月供 '+fmt(v,2)+' 元');world.emit('payment',v.toFixed(8))}listen(render);$('#zero').onclick=()=>{$('#rate').value=0;render()};$('#reset').onclick=()=>{$('#rate').value=3;render()};render();"
+      },
+      {
+        "id": "family-ledger",
+        "afterParagraphId": "ledger-p1",
+        "title": "相同月供，不同生活冲击",
+        "kind": "figure",
+        "height": 420,
+        "html": "<h3>相同月供，不同生活冲击</h3><label>观察到第几个月<input id=\"month\" type=\"range\" min=\"0\" max=\"12\" value=\"0\"></label><div class=\"metrics\"><div class=\"metric\"><span>正常情景余额</span><strong id=\"normal\"></strong></div><div class=\"metric\"><span>所选情景余额</span><strong id=\"shock\"></strong></div></div><nav><button id=\"appliance\">首月家电 2 万</button><button id=\"income\">第4–6月收入减半</button><button id=\"reset\">回到第0月</button></nav><div id=\"bars\"></div><p id=\"status\"></p><p class=\"note\">初始储备15万；每月收入2.5万，日常开支1万。事件均为演示假设；上方利率变化同步调整月供。</p>",
+        "css": ":root{--accent:#7a6c44;--tint:#f7f4e9}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
+        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));let pay=6324.060505,event='appliance';function render(){const n=num('#month',0,12),base=150000+n*(25000-10000-pay),loss=event==='appliance'?(n>=1?20000:0):Math.max(0,Math.min(n-3,3))*12500,v=base-loss;txt('#normal',fmt(base));txt('#shock',fmt(v));$('#bars').innerHTML=bar('正常',base,260000,fmt(base))+bar('事件后',v,260000,fmt(v),true);txt('#status','第 '+n+' 月；事件累计减少现金 '+fmt(loss)+' 元')}$('#month').oninput=render;$('#appliance').onclick=()=>{event='appliance';render()};$('#income').onclick=()=>{event='income';render()};$('#reset').onclick=()=>{event='appliance';$('#month').value=0;render()};world.onState(s=>{if(s.payment){pay=Number(s.payment);render()}});render();"
+      }
+    ],
+    "bindings": [
+      {
+        "id": "payment",
+        "paragraphId": "ledger-p1",
+        "label": "月供",
+        "initial": "6324.060505",
+        "hidden": true
+      }
+    ],
+    "libraryReferences": [],
+    "scene": [
+      {
+        "action": "focus",
+        "target": "ledger-p0",
+        "title": "沿正文理解",
+        "text": "核对月供 → 比较逐月情景 → 观察现金缓冲。"
+      },
+      {
+        "action": "reveal",
+        "target": "ledger-formula",
+        "title": "每月月供从哪里来",
+        "text": "修改演示年利率，检查等额本息与零利率的不同计算分支。",
+        "demo": {
+          "event": "click",
+          "selector": "#zero"
+        }
+      },
+      {
+        "action": "reveal",
+        "target": "family-ledger",
+        "title": "相同月供，不同生活冲击",
+        "text": "并列比较正常收入、一次家电开支与三个月收入减半；逐月查看余额。",
+        "demo": {
+          "event": "input",
+          "selector": "#month",
+          "value": "1"
+        }
+      },
+      {
+        "action": "restore",
+        "target": "ledger-p1",
+        "title": "回到原文",
+        "text": "把比较结果带回作者的论点；可以复位并重新尝试。"
+      }
+    ],
+    "design": {
+      "version": "explanation-v4.2026-09-14",
+      "intent": "在同一组家庭假设下，连接等额本息公式、收支明细和现金储备变化。",
+      "readingFlow": "核对月供 → 比较逐月情景 → 观察现金缓冲。",
+      "voice": "保留原文语气，补充内容使用可核对的解释。",
+      "style": {
+        "palette": [
+          "#7a6c44",
+          "#f7f4e9",
+          "#243b3b"
+        ],
+        "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+        "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+        "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+      },
+      "decisions": [
+        {
+          "title": "围绕问题安排操作",
+          "reason": "在同一组家庭假设下，连接等额本息公式、收支明细和现金储备变化。",
+          "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+        },
+        {
+          "title": "保留事实边界",
+          "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+          "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+        }
+      ],
+      "components": [
+        {
+          "blockId": "ledger-formula",
+          "purpose": "修改演示年利率，检查等额本息与零利率的不同计算分支。",
+          "whyHere": "此处原文刚提出“每月月供从哪里来”涉及的关系，读者可以就地核对，再继续阅读。",
+          "interaction": "修改演示年利率，检查等额本息与零利率的不同计算分支。",
+          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "checks": [
+            "演示月供 4,166.67 元",
+            "演示月供 6,324.06 元"
+          ]
+        },
+        {
+          "blockId": "family-ledger",
+          "purpose": "并列比较正常收入、一次家电开支与三个月收入减半；逐月查看余额。",
+          "whyHere": "此处原文刚提出“相同月供，不同生活冲击”涉及的关系，读者可以就地核对，再继续阅读。",
+          "interaction": "并列比较正常收入、一次家电开支与三个月收入减半；逐月查看余额。",
+          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "checks": [
+            "138,676",
+            "第 1 月；事件累计减少现金 0 元",
+            "第 6 月；事件累计减少现金 37,500 元",
+            "150,000"
+          ]
+        }
+      ]
+    },
+    "provenance": {
+      "method": "codex",
+      "tier": "session",
+      "model": "Codex 当前会话（未记录具体模型 ID）",
+      "runId": "codex-a5d41faa-3b93-48c9-98b4-4c5a47373eb8",
+      "sourceHash": "4c87e89698e270e077557afdb64ac2bb2cea00af9dd7f3b7a3986ebe666192a4",
+      "createdAt": "2026-09-14T12:39:57.571Z",
+      "baselineVersion": "explanation-v4",
+      "prompt": "按当前原文与作者要求重构，区分原文事实、补充计算和情景假设，保留图片来源，逐篇实际验收。"
+    }
+  }
+}

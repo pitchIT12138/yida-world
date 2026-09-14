@@ -1,0 +1,70 @@
+{
+  "sourceHash": "9ad523f3b0b23ca4fa77f0e9da3f3c4a99cfebb7992bb0eb45110f977c71ddad",
+  "design": {
+    "version": "explanation-v4.2026-09-14",
+    "intent": "用可复算的租金账目区分倍数、毛回报和净回报，再检验租金变化的后果。",
+    "readingFlow": "口径换算 → 作者案例收支拆分 → 租金下行情景。",
+    "voice": "保留原文语气，补充内容使用可核对的解释。",
+    "style": {
+      "palette": [
+        "#34635b",
+        "#edf5ef",
+        "#243b3b"
+      ],
+      "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+      "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+      "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+    },
+    "decisions": [
+      {
+        "title": "围绕问题安排操作",
+        "reason": "用可复算的租金账目区分倍数、毛回报和净回报，再检验租金变化的后果。",
+        "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+      },
+      {
+        "title": "保留事实边界",
+        "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+        "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "rent-ratio",
+        "purpose": "保持月租一致，比较房价／月租倍数与年毛收益率。",
+        "whyHere": "此处原文刚提出“1:200 到底表示什么”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "保持月租一致，比较房价／月租倍数与年毛收益率。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "150 倍对应 8.00% 年毛收益率",
+          "200 倍对应 6.00% 年毛收益率"
+        ]
+      },
+      {
+        "blockId": "rent-net",
+        "purpose": "分别扣除空置、房产税与其他运营成本；检验租金下降而成本不变的情景。",
+        "whyHere": "此处原文刚提出“从毛租金到可留下的钱”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "分别扣除空置、房产税与其他运营成本；检验租金下降而成本不变的情景。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "年净运营收入 107,960",
+          "年净运营收入 -13,000",
+          "年净运营收入 121,400"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "rent-ratio": "68aea6f052a3a896e88dad860a9b461d7a28e936cbf6d349a79a47226646ff3d",
+    "rent-net": "cb5de0ac6ed8f2a12b94d84823b4e2e57876c3c97ecd7eadac5f8000c76adc03"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-52a8d397-f689-4501-b54a-14320a800597",
+    "sourceHash": "9ad523f3b0b23ca4fa77f0e9da3f3c4a99cfebb7992bb0eb45110f977c71ddad",
+    "createdAt": "2026-09-14T12:39:54.501Z",
+    "baselineVersion": "explanation-v4",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

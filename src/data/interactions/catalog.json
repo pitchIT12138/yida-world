@@ -1,0 +1,371 @@
+[
+  {
+    "id": "aggregate-comparison",
+    "version": "1",
+    "title": "同口径年度指标比较",
+    "tags": [
+      "统计",
+      "均值",
+      "中位数",
+      "年度"
+    ],
+    "goal": "同口径年度指标比较，让读者操作并核对结果。",
+    "when": "有逐年同口径汇总数据，指标单位可以分别显示。",
+    "avoid": "汇总值不能还原个体分布、录取概率；不同口径不强行比较。",
+    "guidance": "使用当前文章事实替换示例数据，重新关联段落；检查默认值、边界和复位。汇总值不能还原个体分布、录取概率；不同口径不强行比较。",
+    "parameters": [
+      {
+        "name": "年份",
+        "description": "按当前文章核实并填写年份"
+      },
+      {
+        "name": "数据系列",
+        "description": "按当前文章核实并填写数据系列"
+      },
+      {
+        "name": "单位",
+        "description": "按当前文章核实并填写单位"
+      },
+      {
+        "name": "坐标上限",
+        "description": "按当前文章核实并填写坐标上限"
+      }
+    ],
+    "checks": [
+      "操作默认、边界与复位；窄屏可读；补充数据有说明。"
+    ],
+    "source": {
+      "answerId": "studio-53d8ab39-7517-4a98-bc62-ede592b2c041",
+      "runId": "codex-1054cf34-fb95-438a-9ad1-2dfa98ca84fa"
+    },
+    "blocks": [
+      {
+        "id": "recruit-years",
+        "afterParagraphId": "p-e8630d9c-8a66-4a9d-94f6-e8631de4b3ac",
+        "title": "均值下降，130分覆盖比例也会上升吗",
+        "kind": "figure",
+        "height": 420,
+        "html": "<h3>均值下降，130分覆盖比例也会上升吗</h3><nav><button id=\"mean\">平均分</button><button id=\"median\">中位数</button><button id=\"coverage\">130分覆盖比例</button></nav><div id=\"bars\"></div><p id=\"status\"></p><p class=\"note\">数据来自作者统计，不代表所有国考岗位；覆盖比例是岗位分数线统计，不是某位考生的进面或录取概率。缺少岗位明细，不能推算其他分数。</p>",
+        "css": ":root{--accent:#5b5c91;--tint:#f2f1fa}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
+        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));const data={mean:[124.48,124.17,122.1],median:[125.7,125.1,123],coverage:[80.72,86.86,86.48]};function render(k){const unit=k==='coverage'?'%':'分',max=k==='coverage'?100:150;$('#bars').innerHTML=data[k].map((v,i)=>bar(String(2024+i),v,max,v.toFixed(2)+unit)).join('');txt('#status',k==='coverage'?'2025→2026：覆盖比例下降 0.38 个百分点':k==='mean'?'2025→2026：平均分下降 2.07 分':'2025→2026：中位数下降 2.10 分')}Object.keys(data).forEach(k=>$('#'+k).onclick=()=>render(k));render('mean');"
+      }
+    ],
+    "bindings": [],
+    "scene": [
+      {
+        "action": "reveal",
+        "target": "recruit-years",
+        "title": "均值下降，130分覆盖比例也会上升吗",
+        "text": "在相同纵轴上比较三个年份的平均值、中位数与130分覆盖岗位比例。",
+        "demo": {
+          "event": "click",
+          "selector": "#coverage"
+        }
+      }
+    ]
+  },
+  {
+    "id": "discounted-cash-flow",
+    "version": "1",
+    "title": "逐年现金流折现",
+    "tags": [
+      "DCF",
+      "现金流",
+      "折现"
+    ],
+    "goal": "逐年现金流折现，让读者操作并核对结果。",
+    "when": "具有明确年末现金流、折现率与年数假设。",
+    "avoid": "不是人的价值、投资建议或贷款报价；缺失参数必须标示为假设。",
+    "guidance": "使用当前文章事实替换示例数据，重新关联段落；检查默认值、边界和复位。不是人的价值、投资建议或贷款报价；缺失参数必须标示为假设。",
+    "parameters": [
+      {
+        "name": "首年收入",
+        "description": "按当前文章核实并填写首年收入"
+      },
+      {
+        "name": "首年支出",
+        "description": "按当前文章核实并填写首年支出"
+      },
+      {
+        "name": "增长率",
+        "description": "按当前文章核实并填写增长率"
+      },
+      {
+        "name": "折现率",
+        "description": "按当前文章核实并填写折现率"
+      },
+      {
+        "name": "年数",
+        "description": "按当前文章核实并填写年数"
+      }
+    ],
+    "checks": [
+      "操作默认、边界与复位；窄屏可读；补充数据有说明。"
+    ],
+    "source": {
+      "answerId": "studio-3d0c8ad5-ea44-4f61-9530-f086b7135a6f",
+      "runId": "codex-39698068-9eaf-42b5-ab89-1c199839c089"
+    },
+    "blocks": [
+      {
+        "id": "dcf-present",
+        "afterParagraphId": "p-0500dfc7-a89e-4d03-8922-fffc0428eeb5",
+        "title": "未来收入，今天值多少",
+        "kind": "figure",
+        "height": 420,
+        "html": "<h3>未来收入，今天值多少</h3><p class=\"note\">补充模型：原文公式与折现率在粘贴中缺失。4% 是演示假设；年末收款，支出随收入按同一增长率变化。</p><div class=\"fields\"><label>首年收入／元<input id=\"income\" type=\"number\" value=\"65700\" min=\"0\" max=\"1000000\" step=\"1\"></label><label>首年支出／元<input id=\"cost\" type=\"number\" value=\"0\" min=\"0\" max=\"1000000\" step=\"1\"></label><label>年增长率／%<input id=\"growth\" type=\"number\" value=\"0\" min=\"-10\" max=\"20\" step=\"0.5\"></label><label>折现率／%<input id=\"rate\" type=\"number\" value=\"4\" min=\"0\" max=\"30\" step=\"0.5\"></label><label>年数<input id=\"years\" type=\"number\" value=\"30\" min=\"1\" max=\"60\" step=\"1\"></label></div><div class=\"metrics\"><div class=\"metric\"><span>累计净现金流／元</span><strong id=\"total\"></strong></div><div class=\"metric\"><span>折现现值／元</span><strong id=\"pv\"></strong></div></div><div id=\"bars\"></div><p class=\"formula\">CFₜ = (收入 − 支出) × (1 + g)ᵗ⁻¹<br>PV = Σ CFₜ ÷ (1 + r)ᵗ</p><details><summary>逐年展开计算</summary><div class=\"scroll\"><table><thead><tr><th>年</th><th>净现金流</th><th>现值</th></tr></thead><tbody id=\"rows\"></tbody></table></div></details><nav><button id=\"zero\">试试 0% 折现率</button><button id=\"reset\">恢复演示假设</button></nav><p id=\"status\" aria-live=\"polite\"></p><p class=\"note\">这是现金流估值，不能给人定价。<a target=\"_blank\" href=\"https://pages.stern.nyu.edu/~adamodar/pdfiles/papers/pv.pdf\">公式依据：NYU 现值基础</a></p>",
+        "css": ":root{--accent:#8a663b;--tint:#faf4e8}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
+        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));function render(){const cash=num('#income',0,1e6)-num('#cost',0,1e6),g=num('#growth',-10,20)/100,r=num('#rate',0,30)/100,n=Math.round(num('#years',1,60));let sum=0,pv=0,rows='';for(let t=1;t<=n;t++){const cf=cash*Math.pow(1+g,t-1),v=cf/Math.pow(1+r,t);sum+=cf;pv+=v;rows+='<tr><td>'+t+'</td><td>'+fmt(cf)+'</td><td>'+fmt(v)+'</td></tr>'}txt('#total',fmt(sum));txt('#pv',fmt(pv));$('#rows').innerHTML=rows;const m=Math.max(Math.abs(sum),Math.abs(pv),1);$('#bars').innerHTML=bar('累计净现金流',Math.abs(sum),m,fmt(sum))+bar('今天的现值',Math.abs(pv),m,fmt(pv),true);txt('#status',r===0&&g===0?'零折现：现值等于累计净现金流':'按 '+(r*100).toFixed(1)+'% 折现，现值 '+fmt(pv)+' 元')}listen(render);$('#zero').onclick=()=>{$('#rate').value=0;render()};$('#reset').onclick=()=>{['income','cost','growth','rate','years'].forEach((s,i)=>$('#'+s).value=[65700,0,0,4,30][i]);render()};render();"
+      }
+    ],
+    "bindings": [],
+    "scene": [
+      {
+        "action": "reveal",
+        "target": "dcf-present",
+        "title": "未来收入，今天值多少",
+        "text": "改变收入、支出、增长、折现率和年限；逐年核对现金流与现值。",
+        "demo": {
+          "event": "click",
+          "selector": "#zero"
+        }
+      }
+    ]
+  },
+  {
+    "id": "image-comparison",
+    "version": "1",
+    "title": "图片原位滑动比较",
+    "tags": [
+      "图片",
+      "滑动",
+      "前后",
+      "对比"
+    ],
+    "goal": "图片原位滑动比较，让读者操作并核对结果。",
+    "when": "同视角图片存在可核验方向标签，源图已保存。",
+    "avoid": "未知方向、不同视角或不同裁切不能强标前后；不能据截图推断性能。",
+    "guidance": "使用当前文章事实替换示例数据，重新关联段落；检查默认值、边界和复位。未知方向、不同视角或不同裁切不能强标前后；不能据截图推断性能。",
+    "parameters": [
+      {
+        "name": "图片URL",
+        "description": "按当前文章核实并填写图片URL"
+      },
+      {
+        "name": "左右标签",
+        "description": "按当前文章核实并填写左右标签"
+      },
+      {
+        "name": "观察重点",
+        "description": "按当前文章核实并填写观察重点"
+      }
+    ],
+    "checks": [
+      "操作默认、边界与复位；窄屏可读；补充数据有说明。"
+    ],
+    "source": {
+      "answerId": "studio-eefcec7e-a1e9-45f9-81e3-4d3228feb20c",
+      "runId": "codex-540f1bf6-68c9-43d4-ae4f-9734aea5d90d"
+    },
+    "blocks": [
+      {
+        "id": "dlss-pair-1",
+        "afterParagraphId": "p-a18fa6bc-1858-4130-ae4a-8f8768f081d0",
+        "title": "隧道入口：阴影与暖光",
+        "kind": "figure",
+        "height": 420,
+        "html": "<h3>隧道入口：阴影与暖光</h3><p class=\"note\">按原文 LAT 判别：A 47.4 ms（关闭），B 52.1 ms（开启）。截图非同一时刻；不用于精确性能基准。</p><div id=\"compare\"><img data-source-image=\"https://pica.zhimg.com/v2-a79ffe9199ef06aced0c356756a59626_r.jpg\" alt=\"原图 A，关闭效果\"><img id=\"after\" data-source-image=\"https://pica.zhimg.com/v2-62257ce85c299799cff08e4b7745c836_r.jpg\" alt=\"原图 B，开启效果\"><div id=\"line\" aria-hidden=\"true\"></div><span class=\"label left\">A · 关闭</span><span class=\"label right\">B · 开启</span></div><label>拖动分界线<input id=\"position\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" value=\"50\"></label><nav><button id=\"before\">只看 A</button><button id=\"both\">恢复中点</button><button id=\"after-only\">只看 B</button></nav><p id=\"status\" aria-live=\"polite\"></p>",
+        "css": ":root{--accent:#5f6c38;--tint:#f2f5e9}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}#compare{position:relative;aspect-ratio:16/9;overflow:hidden;touch-action:pan-y;cursor:ew-resize}#compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}#line{position:absolute;top:0;bottom:0;left:50%;width:2px;background:white;box-shadow:0 0 3px black}.label{position:absolute;top:6px;background:#111b;color:white;padding:2px 6px;font-size:12px}.left{left:6px}.right{right:6px}",
+        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));function render(){const v=num('#position',0,100);$('#after').style.clipPath='inset(0 0 0 '+v+'%)';$('#line').style.left=v+'%';txt('#status','A 区域 '+v+'%；B 区域 '+(100-v)+'%')}$('#position').oninput=render;$('#before').onclick=()=>{$('#position').value=100;render()};$('#after-only').onclick=()=>{$('#position').value=0;render()};$('#both').onclick=()=>{$('#position').value=50;render()};const box=$('#compare');function move(e){const r=box.getBoundingClientRect();$('#position').value=Math.round((e.clientX-r.left)/r.width*100);render()}box.onpointerdown=e=>{box.setPointerCapture(e.pointerId);move(e)};box.onpointermove=e=>{if(box.hasPointerCapture(e.pointerId))move(e)};render();",
+        "mediaUrls": [
+          "https://pica.zhimg.com/v2-a79ffe9199ef06aced0c356756a59626_r.jpg",
+          "https://pica.zhimg.com/v2-62257ce85c299799cff08e4b7745c836_r.jpg"
+        ],
+        "replaceParagraphIds": [
+          "p-61f109bc-b506-4d43-b68c-5f3f4dbf760e",
+          "p-a18fa6bc-1858-4130-ae4a-8f8768f081d0"
+        ]
+      }
+    ],
+    "bindings": [],
+    "scene": [
+      {
+        "action": "reveal",
+        "target": "dlss-pair-1",
+        "title": "隧道入口：阴影与暖光",
+        "text": "拖动或用方向键改变分界线，直接比较同一位置，按钮可以复位。",
+        "demo": {
+          "event": "click",
+          "selector": "#before"
+        }
+      }
+    ]
+  },
+  {
+    "id": "latency-comparison",
+    "version": "1",
+    "title": "串行与批量的延迟比较",
+    "tags": [
+      "延迟",
+      "往返",
+      "批量",
+      "比较",
+      "性能"
+    ],
+    "goal": "分离往返成本与执行成本",
+    "when": "比较两种执行方式且成本模型已知",
+    "avoid": "依赖命令或并发资源争抢不能套用独立批量假设",
+    "guidance": "修改命令数、RTT、处理时间或切换假设，横条、公式和下方边界工具同步。；整数有界输入；串行n×RTT+n×p，一批RTT+n×p；横条都除以串行总时间。",
+    "source": {
+      "answerId": "redis",
+      "runId": "codex-2c186581-43a4-4efa-b071-a8f580391ef0"
+    },
+    "parameters": [
+      {
+        "name": "命令数、RTT、处理时间",
+        "description": "根据文章替换默认值、单位与快捷场景，不把示例值当真实测量"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "redis-compare",
+        "afterParagraphId": "redis-p1",
+        "title": "相同的命令，等待占了多少？",
+        "kind": "figure",
+        "height": 570,
+        "css": "body{padding:16px 2px;color:#253849;font-size:15px}h3{font-size:19px;line-height:1.4;margin:0 0 16px}p{margin:12px 0;line-height:1.65}.muted{color:#556b7c;font-size:14px}.controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 18px}button{border:1px solid #b6c8d5;background:#fff;color:#1d536f;border-radius:5px;padding:7px 12px;min-height:40px}button.primary{background:#17638a;color:#fff;border-color:#17638a}input[type=number]{width:80px;border:1px solid #8fa7b8;border-radius:4px;padding:6px;color:#172f40;background:#fff}input[type=range]{accent-color:#17638a;max-width:100%;width:180px}label{display:flex;align-items:center;gap:8px;flex-wrap:wrap}strong.number{display:block;font-size:30px;line-height:1.3;color:#174e72;font-variant-numeric:tabular-nums;margin:10px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}.column{border-top:2px solid #a4bac9;padding-top:12px;min-width:0}.column p{margin:6px 0}.formula{font-family:ui-monospace,monospace;font-size:14px;overflow-wrap:anywhere}.note{border-left:3px solid #a4bac9;padding:8px 12px;background:#f3f7fa}.result{font-size:17px;color:#164f71;font-weight:600}.meter{height:14px;background:#e4edf3;position:relative;border-radius:2px;margin:8px 0}.meter span{display:block;height:100%;background:#32759b}.meter i{position:absolute;top:-4px;bottom:-4px;width:2px;background:#243848;left:50%}.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:14px}.legend span:before{content:'';display:inline-block;width:12px;height:12px;background:#32759b;margin-right:5px}.legend .work{background:transparent}.legend .work:before{background:#b89950}.bar{display:flex;height:22px;background:#eef2f5;margin:8px 0 4px}.wait{background:#32759b}.work{background:#b89950}.bar-label{display:flex;justify-content:space-between;gap:10px}.bar-label b{font-variant-numeric:tabular-nums}.settings{display:grid;gap:10px}.settings label{justify-content:space-between;max-width:420px}input[type=checkbox]{width:18px;height:18px;accent-color:#17638a}.check{align-items:flex-start;flex-wrap:nowrap}output{font-variant-numeric:tabular-nums}@media(max-width:430px){.columns{gap:12px}.column{font-size:14px}strong.number{font-size:27px}.controls{gap:8px}body{padding:12px 2px}h3{font-size:18px}}",
+        "html": "<h3>相同的命令，等待占了多少？</h3><div class=\"settings\"><label>命令数 n<input id=\"commands\" type=\"number\" min=\"1\" max=\"30\" value=\"6\"></label><label>一次往返 RTT（ms）<input id=\"rtt\" type=\"number\" min=\"1\" max=\"200\" value=\"80\"></label><label>每条处理 p（ms）<input id=\"processing\" type=\"number\" min=\"1\" max=\"50\" value=\"2\"></label></div><div class=\"controls\"><button id=\"original\" type=\"button\">原文参数</button><button id=\"low\" type=\"button\">低延迟假设</button><button id=\"heavy\" type=\"button\">处理较重假设</button></div><div class=\"legend\"><span>等待往返</span><span class=\"work\">处理命令</span></div><div aria-live=\"polite\"><p class=\"bar-label\">逐条等待 <b id=\"serial\">492 ms</b></p><div class=\"bar\" aria-hidden=\"true\"><span class=\"wait\" id=\"serial-wait\"></span><span class=\"work\" id=\"serial-work\"></span></div><p class=\"formula\" id=\"serial-formula\"></p><p class=\"bar-label\">一批发送 <b id=\"pipeline\">92 ms</b></p><div class=\"bar\" aria-hidden=\"true\"><span class=\"wait\" id=\"pipe-wait\"></span><span class=\"work\" id=\"pipe-work\"></span></div><p class=\"formula\" id=\"pipe-formula\"></p><p id=\"saving\" class=\"result\"></p></div><p class=\"note\">两条横条使用同一刻度。处理的命令数相同，减少的是等待往返次数。此处假设命令独立、单批串行处理，无额外开销；参数是演示假设，并非实测。</p>",
+        "js": "const q=s=>document.querySelector(s);let last='';function bounded(id,max){const input=q(id),value=Number(input.value);const result=Math.min(max,Math.max(1,Number.isFinite(value)?Math.round(value):1));input.value=String(result);return result}function draw(){const n=bounded('#commands',30),rtt=bounded('#rtt',200),p=bounded('#processing',50),work=n*p,serial=n*rtt+work,pipeline=rtt+work;q('#serial').textContent=serial+' ms';q('#pipeline').textContent=pipeline+' ms';q('#serial-formula').textContent=n+' × '+rtt+' + '+n+' × '+p+' = '+serial+' ms';q('#pipe-formula').textContent=rtt+' + '+n+' × '+p+' = '+pipeline+' ms';q('#serial-wait').style.width=(n*rtt/serial*100)+'%';q('#serial-work').style.width=(work/serial*100)+'%';q('#pipe-wait').style.width=(rtt/serial*100)+'%';q('#pipe-work').style.width=(work/serial*100)+'%';q('#saving').textContent='省去 '+(n-1)+' 次往返，节省 '+(serial-pipeline)+' ms；用时比 '+(serial/pipeline).toFixed(2)+' 倍。';const value=JSON.stringify({n,rtt,p});if(last!==value){last=value;world.emit('pipeline-assumptions',value)}}for(const id of ['#commands','#rtt','#processing']){q(id).addEventListener('input',()=>{if(q(id).value!=='')draw()});q(id).addEventListener('change',draw)}function preset(rtt,p){q('#commands').value='6';q('#rtt').value=String(rtt);q('#processing').value=String(p);draw()}q('#original').addEventListener('click',()=>preset(80,2));q('#low').addEventListener('click',()=>preset(1,2));q('#heavy').addEventListener('click',()=>preset(10,50));draw();"
+      }
+    ],
+    "bindings": [
+      {
+        "id": "pipeline-assumptions",
+        "paragraphId": "redis-p1",
+        "label": "共同参数",
+        "initial": "{\"n\":6,\"rtt\":80,\"p\":2}",
+        "hidden": true
+      }
+    ],
+    "scene": [
+      {
+        "action": "reveal",
+        "target": "redis-compare",
+        "title": "492与92是怎样算出来的",
+        "text": "共同刻度下，金色处理部分长度相同，蓝色等待减少400ms。公式紧跟横条，避免只记住加速倍数。",
+        "demo": {
+          "event": "click",
+          "selector": "#original"
+        }
+      },
+      {
+        "action": "highlight",
+        "target": "redis-compare",
+        "title": "网络已经很快时，还能省多少",
+        "text": "RTT改为1ms：逐条18ms，一批13ms，节省5ms。收益依赖假设，不能把原文倍数套到所有情况。",
+        "demo": {
+          "event": "click",
+          "selector": "#low"
+        }
+      },
+      {
+        "action": "restore",
+        "target": "redis-compare",
+        "title": "用原文参数继续检验批次",
+        "text": "恢复6条、80ms、2ms，下方自动同步参数。",
+        "demo": {
+          "event": "click",
+          "selector": "#original"
+        }
+      }
+    ],
+    "checks": [
+      "原文参数492/92ms，节省400ms，处理部分都为12ms。",
+      "低延迟18/13ms；处理较重360/310ms；1条时两者相等。",
+      "320px无溢出，公式和完整数值可见。"
+    ]
+  },
+  {
+    "id": "pair-probability",
+    "version": "1",
+    "title": "两个事件的概率比较",
+    "tags": [
+      "概率",
+      "生日",
+      "比较",
+      "参数实验"
+    ],
+    "goal": "区分任意两人同日与指定一人同日",
+    "when": "事件定义容易混淆且有明确概率模型",
+    "avoid": "非独立或非均匀分布时不可直接沿用公式",
+    "guidance": "修改人数2–60或选择23/50，两个概率同步更新，下方实验跟随人数。；无碰撞概率连乘取补集；与我同日用独立事件补集；仅发出变化的人数。",
+    "source": {
+      "answerId": "birthday",
+      "runId": "codex-d33783ce-a96d-4099-942a-6a1bae150dd4"
+    },
+    "parameters": [
+      {
+        "name": "人数与天数",
+        "description": "调整输入范围和天数时同步修改公式与假设说明"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "birthday-compare",
+        "afterParagraphId": "birthday-p1",
+        "title": "同样的人数，两个不同的问题",
+        "kind": "figure",
+        "height": 450,
+        "css": "body{padding:16px 2px;color:#253849;font-size:15px}h3{font-size:19px;line-height:1.4;margin:0 0 16px}p{margin:12px 0;line-height:1.65}.muted{color:#556b7c;font-size:14px}.controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 18px}button{border:1px solid #b6c8d5;background:#fff;color:#1d536f;border-radius:5px;padding:7px 12px;min-height:40px}button.primary{background:#17638a;color:#fff;border-color:#17638a}input[type=number]{width:80px;border:1px solid #8fa7b8;border-radius:4px;padding:6px;color:#172f40;background:#fff}input[type=range]{accent-color:#17638a;max-width:100%;width:180px}label{display:flex;align-items:center;gap:8px;flex-wrap:wrap}strong.number{display:block;font-size:30px;line-height:1.3;color:#174e72;font-variant-numeric:tabular-nums;margin:10px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}.column{border-top:2px solid #a4bac9;padding-top:12px;min-width:0}.column p{margin:6px 0}.formula{font-family:ui-monospace,monospace;font-size:14px;overflow-wrap:anywhere}.note{border-left:3px solid #a4bac9;padding:8px 12px;background:#f3f7fa}.result{font-size:17px;color:#164f71;font-weight:600}.meter{height:14px;background:#e4edf3;position:relative;border-radius:2px;margin:8px 0}.meter span{display:block;height:100%;background:#32759b}.meter i{position:absolute;top:-4px;bottom:-4px;width:2px;background:#243848;left:50%}.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:14px}.legend span:before{content:'';display:inline-block;width:12px;height:12px;background:#32759b;margin-right:5px}.legend .work{background:transparent}.legend .work:before{background:#b89950}.bar{display:flex;height:22px;background:#eef2f5;margin:8px 0 4px}.wait{background:#32759b}.work{background:#b89950}.bar-label{display:flex;justify-content:space-between;gap:10px}.bar-label b{font-variant-numeric:tabular-nums}.settings{display:grid;gap:10px}.settings label{justify-content:space-between;max-width:420px}input[type=checkbox]{width:18px;height:18px;accent-color:#17638a}.check{align-items:flex-start;flex-wrap:nowrap}output{font-variant-numeric:tabular-nums}@media(max-width:430px){.columns{gap:12px}.column{font-size:14px}strong.number{font-size:27px}.controls{gap:8px}body{padding:12px 2px}h3{font-size:18px}}",
+        "html": "<h3>同样的人数，两个不同的问题</h3><div class=\"controls\"><label>总人数 n（包括我）<input id=\"n\" type=\"number\" min=\"2\" max=\"60\" value=\"23\"></label><button id=\"reset\" type=\"button\">回到 23 人</button><button id=\"fifty\" type=\"button\">试试 50 人</button></div><div class=\"columns\" aria-live=\"polite\"><div class=\"column\"><b>任意两人同日</b><strong class=\"number\" id=\"any\">50.7%</strong><p><span id=\"pairs\">253</span> 对可比较的人</p><div class=\"meter\"><span id=\"anybar\"></span></div><p class=\"formula\">1 − ∏(1 − i/365)<br>i 从 0 到 n−1</p></div><div class=\"column\"><b>至少一人与我同日</b><strong class=\"number\" id=\"me\">5.9%</strong><p><span id=\"others\">22</span> 人分别与我比较</p><div class=\"meter\"><span id=\"mebar\"></span></div><p class=\"formula\">1 − (364/365)<sup>n−1</sup></p></div></div><p class=\"note\">两两组合数增长更快，但各对是否同日并不相互独立。不能直接把“组合数 ÷ 365”当成概率。</p><p class=\"muted\">沿用原文假设：生日独立、365 天等可能、忽略闰日。下方实验跟随这里的人数。</p>",
+        "js": "const q=s=>document.querySelector(s);let n=23,last='';function draw(){const value=Number(q('#n').value);n=Math.max(2,Math.min(60,Number.isFinite(value)?Math.round(value):23));q('#n').value=String(n);let unique=1;for(let i=0;i<n;i++)unique*=1-i/365;const any=1-unique,me=1-Math.pow(364/365,n-1);q('#any').textContent=(any*100).toFixed(1)+'%';q('#me').textContent=(me*100).toFixed(1)+'%';q('#pairs').textContent=String(n*(n-1)/2);q('#others').textContent=String(n-1);q('#anybar').style.width=any*100+'%';q('#mebar').style.width=me*100+'%';if(String(n)!==last){last=String(n);world.emit('birthday-n',last)}}q('#n').addEventListener('input',()=>{if(q('#n').value!=='')draw()});q('#n').addEventListener('change',draw);q('#reset').addEventListener('click',()=>{q('#n').value='23';draw()});q('#fifty').addEventListener('click',()=>{q('#n').value='50';draw()});draw();"
+      }
+    ],
+    "bindings": [
+      {
+        "id": "birthday-n",
+        "paragraphId": "birthday-p1",
+        "label": "实验人数",
+        "initial": "23",
+        "hidden": true
+      }
+    ],
+    "scene": [
+      {
+        "action": "reveal",
+        "target": "birthday-compare",
+        "title": "让两个问题同时可见",
+        "text": "同样23人，任意两人约50.7%，有人与我同日约5.9%。并排显示，避免切换时记错比较对象。",
+        "demo": {
+          "event": "click",
+          "selector": "#reset"
+        }
+      },
+      {
+        "action": "highlight",
+        "target": "birthday-compare",
+        "title": "人数怎样改变比较机会？",
+        "text": "50人有1225对，但只需比较49人与我是否同日。公式计算概率，组合数负责解释增长。",
+        "demo": {
+          "event": "click",
+          "selector": "#fifty"
+        }
+      },
+      {
+        "action": "restore",
+        "target": "birthday-compare",
+        "title": "回到原文的23人",
+        "text": "重置人数后，下方清空50人的实验，防止不同假设混算。",
+        "demo": {
+          "event": "click",
+          "selector": "#reset"
+        }
+      }
+    ],
+    "checks": [
+      "23人：253对、22人，50.7%与5.9%。",
+      "50人：1225对、49人，97.0%与12.6%。",
+      "2与60边界可用；320px无横向溢出。"
+    ]
+  }
+]

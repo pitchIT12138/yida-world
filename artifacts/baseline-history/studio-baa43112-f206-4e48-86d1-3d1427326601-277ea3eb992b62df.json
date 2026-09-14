@@ -1,0 +1,105 @@
+{
+  "sourceHash": "bbffbd1e1db1fcae61ffa0aa6204f7c0c3da13581ec08d6317ff364a4b44e20e",
+  "design": {
+    "version": "explanation-v4.2026-09-14",
+    "intent": "分开人口结构、统计口径与养老情景，用有限数据解释哪些关系可以计算、哪些预测无法复现。",
+    "readingFlow": "年份结构 → 生育时滞 → 三种供养口径 → 制度情景 → 生产率。",
+    "voice": "保留原文语气，补充内容使用可核对的解释。",
+    "style": {
+      "palette": [
+        "#516ca0",
+        "#eff3fb",
+        "#243b3b"
+      ],
+      "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+      "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+      "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+    },
+    "decisions": [
+      {
+        "title": "围绕问题安排操作",
+        "reason": "分开人口结构、统计口径与养老情景，用有限数据解释哪些关系可以计算、哪些预测无法复现。",
+        "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+      },
+      {
+        "title": "保留事实边界",
+        "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+        "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "age-structure",
+        "purpose": "在三个已提供年份间切换，比较绝对人口和相同刻度的老年人口占比。",
+        "whyHere": "此处原文刚提出“总量变化小，结构变化大”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "在三个已提供年份间切换，比较绝对人口和相同刻度的老年人口占比。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "2035年：60+ 4.48 亿，16–59岁 7.82 亿",
+          "2025年：60+ 3.23 亿，16–59岁 8.51 亿"
+        ]
+      },
+      {
+        "blockId": "age-birth",
+        "purpose": "切换原文三种生育情景，观察儿童变化与2035年既有成人队列的区别。",
+        "whyHere": "此处原文刚提出“多出生的孩子，何时成为劳动力”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "切换原文三种生育情景，观察儿童变化与2035年既有成人队列的区别。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "60+占比 33.0%；劳动年龄人口保持 7.98 亿",
+          "60+占比 32.6%；劳动年龄人口保持 7.98 亿"
+        ]
+      },
+      {
+        "blockId": "age-ratios",
+        "purpose": "分别查看年龄比和实际参保人员比，避免用人口年龄直接代替养老金缴费人数。",
+        "whyHere": "此处原文刚提出““几个人养一个人”有三种口径”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "分别查看年龄比和实际参保人员比，避免用人口年龄直接代替养老金缴费人数。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "2.59 : 1",
+          "4.33 : 1"
+        ]
+      },
+      {
+        "blockId": "age-support",
+        "purpose": "用原文2035年人数区间直接复算供养比；另用示意转移量检验延迟退休的双边作用。",
+        "whyHere": "此处原文刚提出“缴费者与领取者同时变化”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "用原文2035年人数区间直接复算供养比；另用示意转移量检验延迟退休的双边作用。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "缴费 4.05 亿；领取 2.10 亿",
+          "缴费 3.95 亿；领取 2.20 亿"
+        ]
+      },
+      {
+        "blockId": "age-productivity",
+        "purpose": "保持分配比例等其他条件不变，计算每位领取者对应产出的相对变化。",
+        "whyHere": "此处原文刚提出“人数比下降，生产率能补多少”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "保持分配比例等其他条件不变，计算每位领取者对应产出的相对变化。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "十年增长 44.4%，产出指数 100.0",
+          "十年增长 0.0%，产出指数 69.2"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "age-structure": "88ddabfc5b044579c3fb0e5404fbea6fd08ea9fc24fd66cd060b4e2d940d2b09",
+    "age-birth": "9feafd15cea636b27822fccc32faeebccdf3019bf16d347dfe183855f143d482",
+    "age-ratios": "e891ca9c9ea317baf0375c0f3111a75349b0316a82f61513c7e7ed56eed896da",
+    "age-support": "130b0092aa1fa9e8893ba5724341a2b8525b1c0e7d13c15702456a9a72c0353a",
+    "age-productivity": "c314432fbcba23b793fccaf66023e297c0dd7f93d9601fe04d6d1a2b06e15629"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-c9f95243-fbd1-4f31-aef9-000f7942c84c",
+    "sourceHash": "bbffbd1e1db1fcae61ffa0aa6204f7c0c3da13581ec08d6317ff364a4b44e20e",
+    "createdAt": "2026-09-14T12:55:14.852Z",
+    "baselineVersion": "explanation-v4",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

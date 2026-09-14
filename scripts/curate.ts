@@ -1,0 +1,18 @@
+import {mkdir,writeFile,readFile}from 'node:fs/promises';
+import {seedAnswers}from '../src/data/seeds';
+import {validateSource,validateArtifact}from '../src/lib/validation';
+import {argument,requestGeneration}from './generation-api';
+const selected=argument('answer','hnsw'),tier=argument('tier','frontier');
+if(!['balanced','frontier'].includes(tier))throw new Error('tier must be balanced or frontier');
+const file=argument('file');
+const existing=file?JSON.parse(await readFile(file,'utf8')):undefined;
+const source=existing?validateSource(existing.source):seedAnswers.find(a=>a.source.id===selected)?.source;
+if(!source)throw new Error('找不到原文。可选 ID：'+seedAnswers.map(a=>a.source.id).join(', '));
+const current=existing?.artifact?validateArtifact(existing.artifact,source):undefined;
+const instruction=argument('instruction','阅读原文，为最值得强化的部分创造适合作者语气的可执行表达。视觉与交互全部用代码生成，不使用外部素材。');
+const artifact=await requestGeneration(argument('base','http://127.0.0.1:5173'),{source,current,selectedParagraphIds:[],instruction,tier:tier as 'balanced'|'frontier'});
+await mkdir('artifacts/candidates',{recursive:true});
+const output='artifacts/candidates/'+source.id+'-'+artifact.provenance.runId+'.json';
+await writeFile(output,JSON.stringify({source,artifact},null,2));
+console.log('已保存真实模型产物：'+output);
+console.log('尚未计为精选。请在页面导入，完成运行检查和人工交互验收，再执行 promote。');

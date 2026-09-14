@@ -1,0 +1,68 @@
+{
+  "id": "discounted-cash-flow",
+  "version": "1",
+  "title": "逐年现金流折现",
+  "tags": [
+    "DCF",
+    "现金流",
+    "折现"
+  ],
+  "goal": "逐年现金流折现，让读者操作并核对结果。",
+  "when": "具有明确年末现金流、折现率与年数假设。",
+  "avoid": "不是人的价值、投资建议或贷款报价；缺失参数必须标示为假设。",
+  "guidance": "使用当前文章事实替换示例数据，重新关联段落；检查默认值、边界和复位。不是人的价值、投资建议或贷款报价；缺失参数必须标示为假设。",
+  "parameters": [
+    {
+      "name": "首年收入",
+      "description": "按当前文章核实并填写首年收入"
+    },
+    {
+      "name": "首年支出",
+      "description": "按当前文章核实并填写首年支出"
+    },
+    {
+      "name": "增长率",
+      "description": "按当前文章核实并填写增长率"
+    },
+    {
+      "name": "折现率",
+      "description": "按当前文章核实并填写折现率"
+    },
+    {
+      "name": "年数",
+      "description": "按当前文章核实并填写年数"
+    }
+  ],
+  "checks": [
+    "操作默认、边界与复位；窄屏可读；补充数据有说明。"
+  ],
+  "source": {
+    "answerId": "studio-3d0c8ad5-ea44-4f61-9530-f086b7135a6f",
+    "runId": "codex-39698068-9eaf-42b5-ab89-1c199839c089"
+  },
+  "blocks": [
+    {
+      "id": "dcf-present",
+      "afterParagraphId": "p-0500dfc7-a89e-4d03-8922-fffc0428eeb5",
+      "title": "未来收入，今天值多少",
+      "kind": "figure",
+      "height": 420,
+      "html": "<h3>未来收入，今天值多少</h3><p class=\"note\">补充模型：原文公式与折现率在粘贴中缺失。4% 是演示假设；年末收款，支出随收入按同一增长率变化。</p><div class=\"fields\"><label>首年收入／元<input id=\"income\" type=\"number\" value=\"65700\" min=\"0\" max=\"1000000\" step=\"1\"></label><label>首年支出／元<input id=\"cost\" type=\"number\" value=\"0\" min=\"0\" max=\"1000000\" step=\"1\"></label><label>年增长率／%<input id=\"growth\" type=\"number\" value=\"0\" min=\"-10\" max=\"20\" step=\"0.5\"></label><label>折现率／%<input id=\"rate\" type=\"number\" value=\"4\" min=\"0\" max=\"30\" step=\"0.5\"></label><label>年数<input id=\"years\" type=\"number\" value=\"30\" min=\"1\" max=\"60\" step=\"1\"></label></div><div class=\"metrics\"><div class=\"metric\"><span>累计净现金流／元</span><strong id=\"total\"></strong></div><div class=\"metric\"><span>折现现值／元</span><strong id=\"pv\"></strong></div></div><div id=\"bars\"></div><p class=\"formula\">CFₜ = (收入 − 支出) × (1 + g)ᵗ⁻¹<br>PV = Σ CFₜ ÷ (1 + r)ᵗ</p><details><summary>逐年展开计算</summary><div class=\"scroll\"><table><thead><tr><th>年</th><th>净现金流</th><th>现值</th></tr></thead><tbody id=\"rows\"></tbody></table></div></details><nav><button id=\"zero\">试试 0% 折现率</button><button id=\"reset\">恢复演示假设</button></nav><p id=\"status\" aria-live=\"polite\"></p><p class=\"note\">这是现金流估值，不能给人定价。<a target=\"_blank\" href=\"https://pages.stern.nyu.edu/~adamodar/pdfiles/papers/pv.pdf\">公式依据：NYU 现值基础</a></p>",
+      "css": ":root{--accent:#8a663b;--tint:#faf4e8}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
+      "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));function render(){const cash=num('#income',0,1e6)-num('#cost',0,1e6),g=num('#growth',-10,20)/100,r=num('#rate',0,30)/100,n=Math.round(num('#years',1,60));let sum=0,pv=0,rows='';for(let t=1;t<=n;t++){const cf=cash*Math.pow(1+g,t-1),v=cf/Math.pow(1+r,t);sum+=cf;pv+=v;rows+='<tr><td>'+t+'</td><td>'+fmt(cf)+'</td><td>'+fmt(v)+'</td></tr>'}txt('#total',fmt(sum));txt('#pv',fmt(pv));$('#rows').innerHTML=rows;const m=Math.max(Math.abs(sum),Math.abs(pv),1);$('#bars').innerHTML=bar('累计净现金流',Math.abs(sum),m,fmt(sum))+bar('今天的现值',Math.abs(pv),m,fmt(pv),true);txt('#status',r===0&&g===0?'零折现：现值等于累计净现金流':'按 '+(r*100).toFixed(1)+'% 折现，现值 '+fmt(pv)+' 元')}listen(render);$('#zero').onclick=()=>{$('#rate').value=0;render()};$('#reset').onclick=()=>{['income','cost','growth','rate','years'].forEach((s,i)=>$('#'+s).value=[65700,0,0,4,30][i]);render()};render();"
+    }
+  ],
+  "bindings": [],
+  "scene": [
+    {
+      "action": "reveal",
+      "target": "dcf-present",
+      "title": "未来收入，今天值多少",
+      "text": "改变收入、支出、增长、折现率和年限；逐年核对现金流与现值。",
+      "demo": {
+        "event": "click",
+        "selector": "#zero"
+      }
+    }
+  ]
+}

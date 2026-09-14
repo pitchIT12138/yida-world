@@ -1,0 +1,14 @@
+import type {Answer} from './types';
+import {escapeHTML,mapMediaHTML} from './rich-source';
+import {frameDocument} from './runtime';
+import {replacementBlock,artifactLinks} from './block-media';
+export function offlineReading(answer:Answer,paths:Map<string,string>){
+ const a=answer.artifact,initial=JSON.stringify(Object.fromEntries(a?.bindings.map(b=>[b.id,b.initial])||[])).replace(/</g,'\\u003c');
+ const script=`const state=${initial};let original=false;const frames=()=>Array.from(document.querySelectorAll('iframe'));function send(f){f.contentWindow.postMessage({channel:f.id,type:'state',value:state},'*')}addEventListener('message',e=>{const f=frames().find(f=>f.contentWindow===e.source&&f.id===e.data?.channel);if(!f)return;const d=e.data;if(d.type==='ready')send(f);if(d.type==='binding'&&Object.hasOwn(state,d.value?.key)){state[d.value.key]=String(d.value.value).slice(0,160);frames().forEach(send);document.querySelectorAll('[data-binding]').forEach(el=>el.textContent=state[el.dataset.binding])}if(d.type==='error')f.dataset.failed='yes';if(d.type==='media-ready'||d.type==='error'){f.dataset.loaded=d.type==='media-ready'&&f.dataset.failed!=='yes'?'yes':'no';document.querySelectorAll('[data-original]').forEach(el=>{if(el.dataset.original===f.id)el.open=original||f.dataset.loaded!=='yes'})}if(d.type==='resize'&&Number.isFinite(d.value))f.style.height=Math.max(36,Math.min(1000,d.value))+'px'});document.getElementById('source-toggle').onclick=()=>{original=!original;document.getElementById('source-toggle').textContent=original?'显示交互':'只看原文';frames().forEach(f=>f.hidden=original);document.querySelectorAll('[data-binding]').forEach(el=>el.parentElement.hidden=original);document.querySelectorAll('[data-original]').forEach(el=>el.open=original||document.getElementById(el.dataset.original)?.dataset.loaded!=='yes')};`;
+ const content=answer.source.paragraphs.map(p=>{
+  const html=p.html?mapMediaHTML(p.html,u=>paths.get(u)||u,u=>answer.assets?.find(a=>a.url===u)?.mime):'<p>'+escapeHTML(p.text).replace(/\n/g,'<br>')+'</p>';
+  const replacement=replacementBlock(a,p.id);
+  return (replacement?'<details open data-original="'+replacement.id+'"><summary>查看对比原图</summary>'+html+'</details>':html)+(a?.bindings.filter(b=>b.paragraphId===p.id&&!b.hidden).map(b=>'<p>'+escapeHTML(b.label)+'：<strong data-binding="'+b.id+'">'+escapeHTML(b.initial)+'</strong></p>').join('')||'')+(a?.blocks.filter(b=>b.afterParagraphId===p.id).map(b=>'<iframe loading="lazy" id="'+b.id+'" title="'+escapeHTML(b.title)+'" sandbox="allow-scripts" style="width:100%;border:0;height:'+b.height+'px" srcdoc="'+escapeHTML(frameDocument(b,b.id,'null',answer.assets))+'"></iframe>').join('')||'');
+ }).join('\n');
+ return '<button id="source-toggle">只看原文</button><script>'+script+'</script>'+content+artifactLinks(a).map(l=>'<p><a href="'+escapeHTML(l.url)+'" target="_blank" rel="noopener noreferrer">'+escapeHTML(l.title)+'</a></p>').join('');
+}

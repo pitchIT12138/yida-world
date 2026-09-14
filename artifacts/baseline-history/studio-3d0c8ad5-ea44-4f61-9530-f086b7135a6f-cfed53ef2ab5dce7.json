@@ -1,0 +1,71 @@
+{
+  "sourceHash": "bace68a43458ae7517ae15ff2e3a730b48b7c075421878da2d738909dc308320",
+  "design": {
+    "version": "explanation-v4.2026-09-14",
+    "intent": "把劳动现金流的假设、逐年折现和现值放在同一条可核对的阅读路线中。",
+    "readingFlow": "先复算小时工资，再逐年折现，最后区分财务模型与人的价值。",
+    "voice": "保留原文语气，补充内容使用可核对的解释。",
+    "style": {
+      "palette": [
+        "#8a663b",
+        "#faf4e8",
+        "#243b3b"
+      ],
+      "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+      "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+      "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+    },
+    "decisions": [
+      {
+        "title": "围绕问题安排操作",
+        "reason": "把劳动现金流的假设、逐年折现和现值放在同一条可核对的阅读路线中。",
+        "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+      },
+      {
+        "title": "保留事实边界",
+        "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+        "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "dcf-income",
+        "purpose": "改变工时或工作天数，检查年收入如何变化。",
+        "whyHere": "此处原文刚提出“从小时工资到年现金流”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "改变工时或工作天数，检查年收入如何变化。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "年收入 45,000 元",
+          "年收入 65,700 元"
+        ]
+      },
+      {
+        "blockId": "dcf-present",
+        "purpose": "改变收入、支出、增长、折现率和年限；逐年核对现金流与现值。",
+        "whyHere": "此处原文刚提出“未来收入，今天值多少”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "改变收入、支出、增长、折现率和年限；逐年核对现金流与现值。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "零折现：现值等于累计净现金流",
+          "1,971,000",
+          "65,700",
+          "1,136,087"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "dcf-income": "34566ab2149d2b25c942eb5c80ce792199e25affd6e31ac5f534e94792915067",
+    "dcf-present": "093105125a647e7900409feff26dc4a9cafdbcd91936c6d926db579d5a82e7da"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-39698068-9eaf-42b5-ab89-1c199839c089",
+    "sourceHash": "bace68a43458ae7517ae15ff2e3a730b48b7c075421878da2d738909dc308320",
+    "createdAt": "2026-09-14T12:45:02.027Z",
+    "baselineVersion": "explanation-v4",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

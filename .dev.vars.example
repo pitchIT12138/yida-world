@@ -1,0 +1,33 @@
+# Copy to .dev.vars (ignored by Git). Hosted values are configured as Site secrets.
+GENERATION_ENABLED=true
+# Economic slot: later choose DeepSeek or a Qwen3 provider.
+# Use that provider's documented API base and exact model identifier.
+BALANCED_API_BASE=
+BALANCED_API_KEY=
+BALANCED_MODEL=
+BALANCED_PROVIDER=openai-compatible
+# Optional: only for providers supporting reasoning_effort. DeepSeek preview used none.
+BALANCED_REASONING_EFFORT=
+# High-capability slot: later configure the Astral relay.
+# Relay URL, exact model identifier and protocol are intentionally not assumed.
+FRONTIER_API_BASE=
+FRONTIER_API_KEY=
+FRONTIER_MODEL=
+FRONTIER_PROVIDER=openai-compatible
+GENERATION_TIMEOUT_MS=120000
+MAX_OUTPUT_TOKENS=12000
+REQUESTS_PER_MINUTE=4
+# Optional deployed webpage renderer. Local npm run collector connects automatically.
+COLLECTOR_URL=
+COLLECTOR_TOKEN=
+# Optional provider-specific monthly/daily spending caps must also be set at the provider.
+
+# Production login / cloud task integration (server only)
+ZHIHU_APP_ID=
+ZHIHU_APP_KEY=
+ZHIHU_REDIRECT_URI=
+ZHIHU_ACCESS_SECRET=
+ZHIHU_OWNER_NAME=
+ZHIHU_OWN_CONTENT_URLS=
+RUNNER_TOKEN=
+RELEASE_URL=

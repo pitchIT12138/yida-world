@@ -1,0 +1,51 @@
+name: Collect and verify interactive answers
+on:
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: Official content collection
+        type: choice
+        options: [story, knowledge]
+        default: story
+      work_id:
+        description: Optional work ID from the selected official list
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: content-production
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      RELEASE_URL: ${{ vars.RELEASE_URL }}
+      RUNNER_TOKEN: ${{ secrets.RUNNER_TOKEN }}
+      BALANCED_API_BASE: https://api.deepseek.com
+      BALANCED_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+      BALANCED_MODEL: deepseek-flash
+      BALANCED_PROVIDER: openai-compatible
+      BALANCED_REASONING_EFFORT: none
+      MAX_OUTPUT_TOKENS: '20000'
+      ZHIHU_ACCESS_SECRET: ${{ secrets.ZHIHU_ACCESS_SECRET }}
+      ZHIHU_OWN_CONTENT_URLS: ${{ vars.ZHIHU_OWN_CONTENT_URLS }}
+      ZHIHU_OWNER_NAME: ${{ vars.ZHIHU_OWNER_NAME }}
+      CONTENT_KIND: ${{ inputs.kind }}
+      WORK_ID: ${{ inputs.work_id }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npx tsx scripts/release-worker.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: content-production-evidence
+          path: artifacts/pipeline/
+          retention-days: 30
+# Scheduled runs deliberately disabled for launch. Enabling requires an explicit operations decision.

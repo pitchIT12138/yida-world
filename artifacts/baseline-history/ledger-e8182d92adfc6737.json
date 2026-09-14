@@ -1,0 +1,71 @@
+{
+  "sourceHash": "4c87e89698e270e077557afdb64ac2bb2cea00af9dd7f3b7a3986ebe666192a4",
+  "design": {
+    "version": "explanation-v4.2026-09-14",
+    "intent": "在同一组家庭假设下，连接等额本息公式、收支明细和现金储备变化。",
+    "readingFlow": "核对月供 → 比较逐月情景 → 观察现金缓冲。",
+    "voice": "保留原文语气，补充内容使用可核对的解释。",
+    "style": {
+      "palette": [
+        "#7a6c44",
+        "#f7f4e9",
+        "#243b3b"
+      ],
+      "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+      "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+      "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+    },
+    "decisions": [
+      {
+        "title": "围绕问题安排操作",
+        "reason": "在同一组家庭假设下，连接等额本息公式、收支明细和现金储备变化。",
+        "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+      },
+      {
+        "title": "保留事实边界",
+        "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+        "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "ledger-formula",
+        "purpose": "修改演示年利率，检查等额本息与零利率的不同计算分支。",
+        "whyHere": "此处原文刚提出“每月月供从哪里来”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "修改演示年利率，检查等额本息与零利率的不同计算分支。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "演示月供 4,166.67 元",
+          "演示月供 6,324.06 元"
+        ]
+      },
+      {
+        "blockId": "family-ledger",
+        "purpose": "并列比较正常收入、一次家电开支与三个月收入减半；逐月查看余额。",
+        "whyHere": "此处原文刚提出“相同月供，不同生活冲击”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "并列比较正常收入、一次家电开支与三个月收入减半；逐月查看余额。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "138,676",
+          "第 1 月；事件累计减少现金 0 元",
+          "第 6 月；事件累计减少现金 37,500 元",
+          "150,000"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "ledger-formula": "1de8da788ce7d0055f2c4246c00b1b6de4752f14577529fe96f1358ba4e44c18",
+    "family-ledger": "82c54b724b6cea20676e8f3d9a25083636e4c1d00fc487a0cfc97439a288f945"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-a5d41faa-3b93-48c9-98b4-4c5a47373eb8",
+    "sourceHash": "4c87e89698e270e077557afdb64ac2bb2cea00af9dd7f3b7a3986ebe666192a4",
+    "createdAt": "2026-09-14T12:39:57.571Z",
+    "baselineVersion": "explanation-v4",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

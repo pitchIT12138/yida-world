@@ -1,0 +1,69 @@
+{
+  "sourceHash": "2206ee3ff1f37126179afdc8f4070291416415b4653177ffd2fccd45ea04fbf5",
+  "design": {
+    "version": "explanation-v4.2026-09-14",
+    "intent": "沿故事中的误认比较人物可见信息与读者额外信息，让反差来自原文线索。",
+    "readingFlow": "有限视野 → 房间选择的信息差 → 亲密称呼与恐怖身份的反差。",
+    "voice": "保留原文语气，补充内容使用可核对的解释。",
+    "style": {
+      "palette": [
+        "#7a506c",
+        "#f7eff5",
+        "#243b3b"
+      ],
+      "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+      "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+      "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+    },
+    "decisions": [
+      {
+        "title": "围绕问题安排操作",
+        "reason": "沿故事中的误认比较人物可见信息与读者额外信息，让反差来自原文线索。",
+        "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+      },
+      {
+        "title": "保留事实边界",
+        "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+        "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "story-view",
+        "purpose": "切换人物与读者视角；每次只显示当前叙事时点已经提供的线索。",
+        "whyHere": "此处原文刚提出“同一场景，两份信息”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "切换人物与读者视角；每次只显示当前叙事时点已经提供的线索。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "读者比人物更早知道“身份误认”这一叙事前提",
+          "人物的信息来自模糊轮廓与听到的解释"
+        ]
+      },
+      {
+        "blockId": "story-room",
+        "purpose": "并列人物对家的渴望与弹幕对危险的认识，回看导致误判的证据。",
+        "whyHere": "此处原文刚提出“为什么同一间房会引出相反判断”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "并列人物对家的渴望与弹幕对危险的认识，回看导致误判的证据。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "弹幕把同样的选择解释为“危险”：读者看到了额外信息。",
+          "她把环境线索解释为“回家”：期待改变了阅读。"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "story-view": "19b0990934a2627d0fd8f1f2cb6e86cfc26cbe58a63e094dd5eea823374c927f",
+    "story-room": "6bb5222f063a10b7f93bb600d003d1b5a4899a826e2e9cdd2dcad8c0398a1ff6"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-6b660fc2-36aa-4c7f-ada6-9094920e0053",
+    "sourceHash": "2206ee3ff1f37126179afdc8f4070291416415b4653177ffd2fccd45ea04fbf5",
+    "createdAt": "2026-09-14T12:39:53.335Z",
+    "baselineVersion": "explanation-v4",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

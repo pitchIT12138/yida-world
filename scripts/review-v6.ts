@@ -1,0 +1,3 @@
+import {readFile,writeFile} from 'node:fs/promises';import {parse} from 'dotenv';import {reviewCandidate} from './release-review';
+const env=parse(await readFile('.dev.vars','utf8'));
+for(const id of ['studio-baa43112-f206-4e48-86d1-3d1427326601','story-1747681485547843585']){const dir='artifacts/release-upgrades/'+id+'/v6';const d=JSON.parse(await readFile(dir+'/candidate.json','utf8'));const h=JSON.parse(await readFile('.data/handoffs/'+id+'.json','utf8'));try{const e=await reviewCandidate(d.source,d.artifact,h.answer.assets||[],env,dir);await writeFile(dir+'/evidence.json',JSON.stringify(e,null,2));console.log(id,e.content.verdict,e.content.findings)}catch(e){await writeFile(dir+'/review-failure.json',JSON.stringify({error:String(e)}));console.log(id,String(e))}}

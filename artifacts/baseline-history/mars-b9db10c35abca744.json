@@ -1,0 +1,71 @@
+{
+  "sourceHash": "f953e8841fd93857b77cf653bafd44fdba79d14ed300509dc9736badf7caa07a",
+  "design": {
+    "version": "explanation-v4.2026-09-14",
+    "intent": "把距离变成单程与往返时间，再体验发送、抵达和收到回复三个不同状态。",
+    "readingFlow": "计算光程 → 逐步推进一次通信 → 理解往返等待。",
+    "voice": "保留原文语气，补充内容使用可核对的解释。",
+    "style": {
+      "palette": [
+        "#a66445",
+        "#faf1eb",
+        "#243b3b"
+      ],
+      "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+      "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+      "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+    },
+    "decisions": [
+      {
+        "title": "围绕问题安排操作",
+        "reason": "把距离变成单程与往返时间，再体验发送、抵达和收到回复三个不同状态。",
+        "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+      },
+      {
+        "title": "保留事实边界",
+        "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+        "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "mars-light",
+        "purpose": "改变教学距离，比较单程和最低往返传播时间。",
+        "whyHere": "此处原文刚提出“光速很快，等待仍然很长”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "改变教学距离，比较单程和最低往返传播时间。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "单程 167 秒；往返 334 秒",
+          "单程 751 秒；往返 1501 秒"
+        ]
+      },
+      {
+        "blockId": "mars-community",
+        "purpose": "手动推进传播时间，区分消息发出、对方收到和回复抵达。",
+        "whyHere": "此处原文刚提出““发出”与“对方收到”隔着一段光程”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "手动推进传播时间，区分消息发出、对方收到和回复抵达。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "传播中：地球还没有收到",
+          "地球已收到；回复正在返回",
+          "火星已收到回复",
+          "尚未发送"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "mars-light": "d73e02647003a3a49b1c6f1c5adb8490a10a7a221463debcfdd4b17a54f1f75e",
+    "mars-community": "3a8b234375f96b28e884ea3eef62e7212169a571a5853910ba1be62fce8fa429"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-6a3df76f-65e5-4336-891d-dca5c5362939",
+    "sourceHash": "f953e8841fd93857b77cf653bafd44fdba79d14ed300509dc9736badf7caa07a",
+    "createdAt": "2026-09-14T12:39:56.611Z",
+    "baselineVersion": "explanation-v4",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

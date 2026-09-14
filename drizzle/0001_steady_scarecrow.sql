@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `jobs_fingerprint` ON `jobs` (`kind`,`fingerprint`);

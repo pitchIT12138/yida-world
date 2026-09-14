@@ -1,0 +1,10 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>QR import fixture</title><body><button id="open">打开导入</button><main id="target"></main><pre id="saved"></pre><script type="module">
+import {mount,unmount} from 'svelte';
+import Composer from '/src/components/Composer.svelte';
+import '/src/style.css';
+let component;
+document.getElementById('open').onclick=()=>{
+  if(component)return;
+  component=mount(Composer,{target:document.getElementById('target'),props:{onadd(answer){document.getElementById('saved').textContent=JSON.stringify(answer.source)},onimport:async()=>{},onclose:async()=>{await unmount(component);component=undefined}}});
+};
+</script></body></html>

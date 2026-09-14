@@ -1,0 +1,6 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Manual window integration fixture</title><body><main style="max-width:1040px;margin:24px auto" id="target"></main><script type="module">
+import {mount} from 'svelte';
+import ManualBrowser from '/src/components/ManualBrowser.svelte';
+import '/src/style.css';
+mount(ManualBrowser,{target:document.getElementById('target')});
+</script></body></html>

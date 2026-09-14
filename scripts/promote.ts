@@ -1,0 +1,18 @@
+import {publicCandidate} from '../server/curation';
+import {readFile,mkdir,writeFile}from 'node:fs/promises';
+import {createHash}from 'node:crypto';
+import {validateSource,validateArtifact}from '../src/lib/validation';
+import {argument}from './generation-api';
+const file=argument('file'),review=argument('review');
+if(!file||!review)throw new Error('必须提供 --file 以及 --review，记录实际操作检查结果。');
+const item=JSON.parse(await readFile(file,'utf8'));
+const published=publicCandidate(item);
+validateSource(item.source);validateArtifact(item.artifact,item.source);
+if(/test|fixture|mock/i.test(item.artifact.provenance.model+' '+item.artifact.provenance.runId))throw new Error('测试数据不得加入精选');
+const fingerprint=createHash('sha256').update(JSON.stringify(item.source)).digest('hex');
+if(fingerprint!==item.artifact.provenance.sourceHash)throw new Error('原文指纹不一致');
+await mkdir('src/data/generated',{recursive:true});
+await mkdir('artifacts/reviews',{recursive:true});
+await writeFile('src/data/generated/'+item.source.id+'.json',JSON.stringify(published,null,2));
+await writeFile('artifacts/reviews/'+item.artifact.provenance.runId+'.json',JSON.stringify({runId:item.artifact.provenance.runId,review,reviewedAt:new Date().toISOString(),artifactHash:createHash('sha256').update(JSON.stringify(published.artifact)).digest('hex')},null,2));
+console.log('已加入精选。内部提示已移除，人工检查记录单独保存。');

@@ -1,0 +1,71 @@
+{
+  "sourceHash": "a08546a68a06da50b9690592317f40624b1c3c40ca170ef32bfbe97c075a32a8",
+  "design": {
+    "version": "explanation-v3.2026-09-07",
+    "intent": "让读者核对Pipeline节省的是往返等待，并检验收益的参数与依赖边界。",
+    "readingFlow": "原文定义命令与成本 → 公式之后同刻度拆分两种耗时 → 末段之后改变批次与依赖检验适用范围。",
+    "voice": "用可核对的计算与实验解释原文，保留作者的简洁语气。",
+    "style": {
+      "palette": [
+        "#253849",
+        "#17638a",
+        "#b89950",
+        "#f3f7fa"
+      ],
+      "typography": "正文15px，标签至少14px，关键结果27–30px；公式与数值使用等宽或表格数字。",
+      "surface": "平面排版、细分隔线与共用刻度，把空间留给参数、结论和适用范围。",
+      "motion": "参数变化立即更新；实验由点击触发，无循环动画。"
+    },
+    "decisions": [
+      {
+        "title": "先让计算关系可比较",
+        "reason": "用户要求提高信息含量。旧版物件场景占据空间，却限制了对假设和结论的检验；本轮保留原文与有效公式，重新组织交互。",
+        "tradeoff": "减少物件操作的趣味，换取同一眼能核对的输入、结果和依据。"
+      },
+      {
+        "title": "让第二处交互检验第一处结论",
+        "reason": "原文定义命令与成本 → 公式之后同刻度拆分两种耗时 → 末段之后改变批次与依赖检验适用范围。",
+        "tradeoff": "通过声明的共享状态保持参数一致，不重复设置；随机实验明确区别于理论值，假设扩展明确标注。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "redis-compare",
+        "purpose": "相同工作量下拆开等待和处理，计算节省时间的来源。",
+        "whyHere": "先读完原文两种公式，再通过可修改参数核对公式。",
+        "interaction": "修改命令数、RTT、处理时间或切换假设，横条、公式和下方边界工具同步。",
+        "implementation": "整数有界输入；串行n×RTT+n×p，一批RTT+n×p；横条都除以串行总时间。",
+        "checks": [
+          "原文参数492/92ms，节省400ms，处理部分都为12ms。",
+          "低延迟18/13ms；处理较重360/310ms；1条时两者相等。",
+          "320px无溢出，公式和完整数值可见。"
+        ]
+      },
+      {
+        "blockId": "redis-boundary",
+        "purpose": "检验批次大小与结果依赖如何改变往返数。",
+        "whyHere": "原文强调真实性能限制，此处用明确标注的简化延伸解释一个适用边界。",
+        "interaction": "批次1–n；依赖选项使有效批次为1；恢复按钮回到独立且一批。",
+        "implementation": "往返数ceil(n/b)；共享参数仅从声明binding读取，参数变化重置批次和依赖。",
+        "checks": [
+          "原文参数b=2为252ms，b=1为492ms，b=6为92ms。",
+          "勾选返回依赖后492ms，解除/重置恢复批量；上方参数同步。"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "redis-compare": "88a2110cc548f0f1aea24e3c2e793e0d95de772532fdbdaff29dc2b339e6e062",
+    "redis-boundary": "b61fac925cbfd994c98ebf3ffa38c86b494a11e0654afba0085d0a37cac8e297"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-2c186581-43a4-4efa-b071-a8f580391ef0",
+    "sourceHash": "a08546a68a06da50b9690592317f40624b1c3c40ca170ef32bfbe97c075a32a8",
+    "createdAt": "2026-09-07T09:23:17.238Z",
+    "baselineVersion": "explanation-v3",
+    "prompt": "用户要求持续打磨示例，提高信息含量，移除默认拟物倾向。按 explanation-v3 重读原文，比较计算关系、检验假设、展示依据和适用范围；保留原文。当前 Codex 会话实际创作，不是模型 API 调用。"
+  }
+}

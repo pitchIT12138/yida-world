@@ -1,0 +1,9 @@
+import {readFile,writeFile} from 'node:fs/promises';import {parse} from 'dotenv';import {generateArtifact} from '../server/generation';
+const dir='artifacts/release-upgrades/studio-3d0c8ad5-ea44-4f61-9530-f086b7135a6f/v7';const env=parse(await readFile('.dev.vars','utf8'));const request=JSON.parse(await readFile(dir+'/request.json','utf8')),old=JSON.parse(await readFile(dir+'/candidate.json','utf8'));const message=`这是本任务最后一次修复（2/2）。保留两块结构和视觉，修复已核对的实际错误：
+1 工资条 .ps-line 是硬编码15×12×365，参数改后必须一起更新；工资annualIncome按精确小数传递。用户输入input时就联动，空值/非法值明确待输入，避免显示与计算分离；不能仅change/Enter才传递。统一年收入、支出范围0..10000000，容纳工资最大8784000，勿静默截断。
+2 收入框手动改动后标明手动模式，新的工资输入事件到来必须退出manual并应用最新annualIncome，去除if(manual)return。reset更新lastAnnualIncome=65700并协同工资条恢复。
+3 SVG负值柱现在从y214再向下160超出height260，必须把0轴居中，正负各自按可见半高缩放。无效x1字符串x-(half+bw)必须用数值计算。保证负现金流、负PV在可见区域，标明年份和数值。
+4 状态文字有“30…现值”的省略占位，改为真实n年和真实值。0%按钮只更改折现率，不同时把增长率清零。
+5 每个输入代表的值和计算值一致，超界值回填，空值不默认为0。年限1..60整数，r0..30%，g-10..10%。点击复位后所有参数与年选择恢复，模式恢复工资联动，避免旧lastAnnualIncome忽略下一次事件。
+6 保留准确年末折现、4%演示假设、不是人的价值、移动端金额完整不逐字换行。仅修复以上问题，不加新机制。返回完整artifact JSON，所有scene.action使用合法值。`;
+await writeFile(dir+'/candidate-before-repair.json',JSON.stringify(old,null,2));await writeFile(dir+'/repair-request.json',JSON.stringify({runId:request.runId,message},null,2));let n=0;try{const result=await generateArtifact({...request.input,repair:{ticket:'internal-server',candidate:old.artifact,message}},env,{runId:request.runId,repairs:2,signal:AbortSignal.timeout(300000),onOutput:async(text,usage)=>{await writeFile(dir+'/repair-model-'+(++n)+'.json',JSON.stringify({text,usage,runId:request.runId}))}});await writeFile(dir+'/candidate.json',JSON.stringify({source:old.source,artifact:result.artifact},null,2));console.log('DCF repaired')}catch(e){await writeFile(dir+'/repair-failure.json',JSON.stringify({error:String(e)}));console.log(String(e))}

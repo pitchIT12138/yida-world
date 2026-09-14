@@ -1,0 +1,159 @@
+{
+  "source": {
+    "id": "mars",
+    "title": "谢邀。人在火星，刚下火箭。",
+    "author": "火星驻站观察员",
+    "bio": "本条回答可能晚到几分钟",
+    "avatar": "火",
+    "origin": "original",
+    "paragraphs": [
+      {
+        "id": "mars-p0",
+        "text": "地球到火星的距离一直在变化。电磁信号以光速传播，一次单程通信通常也要数分钟到二十多分钟，无法做到地球互联网里那样即时来回。"
+      },
+      {
+        "id": "mars-p1",
+        "text": "为了讨论得具体，假设这次两地相距 2.25 亿千米，按每秒 299,792.458 千米计算单程延迟。现在，你在火星发出一句“谢邀”，地球上的人什么时候能看到？"
+      },
+      {
+        "id": "mars-p2",
+        "text": "如果把等待压缩成演示时间，请明确标注加速倍数。我想讨论的不是一条距离曲线，而是延迟会怎样改变我们说话、回复和使用社区的习惯。"
+      }
+    ]
+  },
+  "artifact": {
+    "version": 1,
+    "answerId": "mars",
+    "explanation": "把距离变成单程与往返时间，再体验发送、抵达和收到回复三个不同状态。",
+    "blocks": [
+      {
+        "id": "mars-light",
+        "afterParagraphId": "mars-p1",
+        "title": "光速很快，等待仍然很长",
+        "kind": "figure",
+        "height": 420,
+        "html": "<h3>光速很快，等待仍然很长</h3><div class=\"fields\"><label>距离／百万千米<input id=\"distance\" type=\"number\" value=\"225\" min=\"50\" max=\"400\" step=\"1\"></label></div><div class=\"metrics\"><div class=\"metric\"><span>单程传播</span><strong id=\"one\"></strong></div><div class=\"metric\"><span>最低往返</span><strong id=\"round\"></strong></div></div><div id=\"bars\"></div><p class=\"formula\">t = 距离 ÷ 299,792.458 km/s；立即回复的往返 = 2t</p><nav><button id=\"near\">50 百万千米情景</button><button id=\"reset\">恢复 225</button></nav><p id=\"status\"></p><p class=\"note\">距离是教学假设，未查询当日星历；不含设备处理、思考或输入时间。</p>",
+        "css": ":root{--accent:#a66445;--tint:#faf1eb}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
+        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));function render(){const d=num('#distance',50,400),t=d*1e6/299792.458;txt('#one',(t/60).toFixed(2)+' 分钟');txt('#round',(2*t/60).toFixed(2)+' 分钟');$('#bars').innerHTML=bar('单程',t,t*2,(t/60).toFixed(2)+'分')+bar('往返',t*2,t*2,(2*t/60).toFixed(2)+'分',true);txt('#status','单程 '+Math.round(t)+' 秒；往返 '+Math.round(t*2)+' 秒');world.emit('distance',String(d))}listen(render);$('#near').onclick=()=>{$('#distance').value=50;render()};$('#reset').onclick=()=>{$('#distance').value=225;render()};render();"
+      },
+      {
+        "id": "mars-community",
+        "afterParagraphId": "mars-p2",
+        "title": "“发出”与“对方收到”隔着一段光程",
+        "kind": "figure",
+        "height": 420,
+        "html": "<h3>“发出”与“对方收到”隔着一段光程</h3><nav><button id=\"send\">发出「谢邀」</button><button id=\"advance\">推进到下一次抵达</button><button id=\"reset\">重新开始</button></nav><div id=\"bars\"></div><p id=\"status\"></p><p class=\"note\">本地手动时间轴，点击跳到传播节点，不是实时网络消息。对方收到即回复，尚未计入思考时间。</p>",
+        "css": ":root{--accent:#a66445;--tint:#faf1eb}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
+        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));let stage=0,d=225;function render(){const t=d*1e6/299792.458;txt('#status',['尚未发送','传播中：地球还没有收到','地球已收到；回复正在返回','火星已收到回复'][stage]);$('#bars').innerHTML=bar('已推进传播时间',Math.max(0,stage-1)*t,2*t,Math.round(Math.max(0,stage-1)*t)+'秒');$('#advance').disabled=stage===0||stage===3;$('#send').disabled=stage!==0}$('#send').onclick=()=>{stage=1;render()};$('#advance').onclick=()=>{stage=Math.min(3,stage+1);render()};$('#reset').onclick=()=>{stage=0;render()};world.onState(s=>{if(s.distance&&Number(s.distance)!==d){d=Number(s.distance);stage=0;render()}});render();"
+      }
+    ],
+    "bindings": [
+      {
+        "id": "distance",
+        "paragraphId": "mars-p2",
+        "label": "距离",
+        "initial": "225",
+        "hidden": true
+      }
+    ],
+    "libraryReferences": [],
+    "scene": [
+      {
+        "action": "focus",
+        "target": "mars-p1",
+        "title": "沿正文理解",
+        "text": "计算光程 → 逐步推进一次通信 → 理解往返等待。"
+      },
+      {
+        "action": "reveal",
+        "target": "mars-light",
+        "title": "光速很快，等待仍然很长",
+        "text": "改变教学距离，比较单程和最低往返传播时间。",
+        "demo": {
+          "event": "click",
+          "selector": "#near"
+        }
+      },
+      {
+        "action": "reveal",
+        "target": "mars-community",
+        "title": "“发出”与“对方收到”隔着一段光程",
+        "text": "手动推进传播时间，区分消息发出、对方收到和回复抵达。",
+        "demo": {
+          "event": "click",
+          "selector": "#send"
+        }
+      },
+      {
+        "action": "restore",
+        "target": "mars-p2",
+        "title": "回到原文",
+        "text": "把比较结果带回作者的论点；可以复位并重新尝试。"
+      }
+    ],
+    "design": {
+      "version": "explanation-v4.2026-09-14",
+      "intent": "把距离变成单程与往返时间，再体验发送、抵达和收到回复三个不同状态。",
+      "readingFlow": "计算光程 → 逐步推进一次通信 → 理解往返等待。",
+      "voice": "保留原文语气，补充内容使用可核对的解释。",
+      "style": {
+        "palette": [
+          "#a66445",
+          "#faf1eb",
+          "#243b3b"
+        ],
+        "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+        "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+        "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+      },
+      "decisions": [
+        {
+          "title": "围绕问题安排操作",
+          "reason": "把距离变成单程与往返时间，再体验发送、抵达和收到回复三个不同状态。",
+          "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+        },
+        {
+          "title": "保留事实边界",
+          "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+          "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+        }
+      ],
+      "components": [
+        {
+          "blockId": "mars-light",
+          "purpose": "改变教学距离，比较单程和最低往返传播时间。",
+          "whyHere": "此处原文刚提出“光速很快，等待仍然很长”涉及的关系，读者可以就地核对，再继续阅读。",
+          "interaction": "改变教学距离，比较单程和最低往返传播时间。",
+          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "checks": [
+            "单程 167 秒；往返 334 秒",
+            "单程 751 秒；往返 1501 秒"
+          ]
+        },
+        {
+          "blockId": "mars-community",
+          "purpose": "手动推进传播时间，区分消息发出、对方收到和回复抵达。",
+          "whyHere": "此处原文刚提出““发出”与“对方收到”隔着一段光程”涉及的关系，读者可以就地核对，再继续阅读。",
+          "interaction": "手动推进传播时间，区分消息发出、对方收到和回复抵达。",
+          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "checks": [
+            "传播中：地球还没有收到",
+            "地球已收到；回复正在返回",
+            "火星已收到回复",
+            "尚未发送"
+          ]
+        }
+      ]
+    },
+    "provenance": {
+      "method": "codex",
+      "tier": "session",
+      "model": "Codex 当前会话（未记录具体模型 ID）",
+      "runId": "codex-6a3df76f-65e5-4336-891d-dca5c5362939",
+      "sourceHash": "f953e8841fd93857b77cf653bafd44fdba79d14ed300509dc9736badf7caa07a",
+      "createdAt": "2026-09-14T12:39:56.611Z",
+      "baselineVersion": "explanation-v4",
+      "prompt": "按当前原文与作者要求重构，区分原文事实、补充计算和情景假设，保留图片来源，逐篇实际验收。"
+    }
+  }
+}

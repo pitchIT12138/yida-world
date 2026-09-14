@@ -1,0 +1,18 @@
+node_modules/
+dist/
+.dev.vars
+.env
+.env.*
+!.env.example
+!.dev.vars.example
+.DS_Store
+.cache/
+test-results/
+artifacts/*.local.*
+
+.data/
+
+# Local generation attempts and private source handoffs remain local.
+artifacts/*
+!artifacts/baseline-history/
+!artifacts/candidates/

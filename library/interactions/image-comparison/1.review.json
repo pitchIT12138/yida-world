@@ -1,0 +1,117 @@
+{
+  "checkedAt": "2026-09-14T12:48:30.763Z",
+  "results": [
+    {
+      "width": 740,
+      "blockId": "dlss-pair-1",
+      "action": "click",
+      "selector": "#before",
+      "expect": {
+        "selector": "#status",
+        "text": "A 区域 100%；B 区域 0%"
+      },
+      "observed": "A 区域 100%；B 区域 0%"
+    },
+    {
+      "width": 740,
+      "blockId": "dlss-pair-1",
+      "action": "click",
+      "selector": "#after-only",
+      "expect": {
+        "selector": "#status",
+        "text": "A 区域 0%；B 区域 100%"
+      },
+      "observed": "A 区域 0%；B 区域 100%"
+    },
+    {
+      "width": 740,
+      "blockId": "dlss-pair-1",
+      "action": "click",
+      "selector": "#both",
+      "expect": {
+        "selector": "#status",
+        "text": "A 区域 50%；B 区域 50%"
+      },
+      "observed": "A 区域 50%；B 区域 50%"
+    },
+    {
+      "width": 740,
+      "blockId": "dlss-pair-1",
+      "action": "press",
+      "selector": "#position",
+      "expect": {
+        "selector": "#status",
+        "text": "A 区域 51%；B 区域 49%"
+      },
+      "value": "ArrowRight",
+      "observed": "A 区域 51%；B 区域 49%"
+    },
+    {
+      "width": 740,
+      "blockId": "dlss-pair-1",
+      "action": "click",
+      "selector": "#both",
+      "expect": {
+        "selector": "#status",
+        "text": "A 区域 50%；B 区域 50%"
+      },
+      "observed": "A 区域 50%；B 区域 50%"
+    },
+    {
+      "width": 360,
+      "blockId": "dlss-pair-1",
+      "action": "click",
+      "selector": "#before",
+      "expect": {
+        "selector": "#status",
+        "text": "A 区域 100%；B 区域 0%"
+      },
+      "observed": "A 区域 100%；B 区域 0%"
+    },
+    {
+      "width": 360,
+      "blockId": "dlss-pair-1",
+      "action": "click",
+      "selector": "#after-only",
+      "expect": {
+        "selector": "#status",
+        "text": "A 区域 0%；B 区域 100%"
+      },
+      "observed": "A 区域 0%；B 区域 100%"
+    },
+    {
+      "width": 360,
+      "blockId": "dlss-pair-1",
+      "action": "click",
+      "selector": "#both",
+      "expect": {
+        "selector": "#status",
+        "text": "A 区域 50%；B 区域 50%"
+      },
+      "observed": "A 区域 50%；B 区域 50%"
+    },
+    {
+      "width": 360,
+      "blockId": "dlss-pair-1",
+      "action": "press",
+      "selector": "#position",
+      "expect": {
+        "selector": "#status",
+        "text": "A 区域 51%；B 区域 49%"
+      },
+      "value": "ArrowRight",
+      "observed": "A 区域 51%；B 区域 49%"
+    },
+    {
+      "width": 360,
+      "blockId": "dlss-pair-1",
+      "action": "click",
+      "selector": "#both",
+      "expect": {
+        "selector": "#status",
+        "text": "A 区域 50%；B 区域 50%"
+      },
+      "observed": "A 区域 50%；B 区域 50%"
+    }
+  ]
+}

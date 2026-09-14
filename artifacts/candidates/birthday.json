@@ -1,0 +1,158 @@
+{
+  "source": {
+    "id": "birthday",
+    "title": "一个房间只要 23 个人，就值得猜一猜。",
+    "author": "概率便利店",
+    "bio": "把直觉放进小实验",
+    "avatar": "概",
+    "origin": "original",
+    "paragraphs": [
+      {
+        "id": "birthday-p0",
+        "text": "假设每个人的生日独立、均匀地分布在一年 365 天，不考虑闰日。23 个人里，至少两个人同一天生日的概率就超过一半。"
+      },
+      {
+        "id": "birthday-p1",
+        "text": "我们经常把问题理解成“有没有人和我同一天生日”，但真正的问题是“任意两个人”。随着人越来越多，可比较的两两组合增加得比人数快得多。"
+      },
+      {
+        "id": "birthday-p2",
+        "text": "这很适合做成一次小实验：让人一个一个走进房间，出现重复生日时停下来。重复几次，亲眼看看随机结果与理论概率的区别。"
+      }
+    ]
+  },
+  "artifact": {
+    "version": 1,
+    "answerId": "birthday",
+    "explanation": "比较“任意两人”与“有人和我相同”的差别，并用重复实验核对理论。",
+    "blocks": [
+      {
+        "id": "birthday-compare",
+        "afterParagraphId": "birthday-p1",
+        "title": "同一间房，两个不同的问题",
+        "kind": "figure",
+        "height": 420,
+        "html": "<h3>同一间房，两个不同的问题</h3><div class=\"fields\"><label>房间总人数<input id=\"n\" type=\"number\" value=\"23\" min=\"1\" max=\"100\" step=\"1\"></label></div><div class=\"metrics\"><div class=\"metric\"><span>任意两人相同</span><strong id=\"any\"></strong></div><div class=\"metric\"><span>有人和指定一人相同</span><strong id=\"me\"></strong></div></div><div id=\"bars\"></div><p class=\"formula\" id=\"eq\"></p><nav><button id=\"fifty\">50 人</button><button id=\"reset\">回到 23 人</button></nav><p id=\"status\"></p>",
+        "css": ":root{--accent:#3a7188;--tint:#edf5fa}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
+        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));function render(){const n=Math.round(num('#n',1,100));let no=1;for(let i=0;i<n;i++)no*=1-i/365;const any=1-no,me=1-Math.pow(364/365,n-1);txt('#any',(100*any).toFixed(1)+'%');txt('#me',(100*me).toFixed(1)+'%');$('#bars').innerHTML=bar('任意两人',any,1,(any*100).toFixed(1)+'%')+bar('指定一人',me,1,(me*100).toFixed(1)+'%',true);txt('#eq','任意相同 = 1 − ∏(365 − i)/365；i = 0…'+(n-1));txt('#status',n+' 人有 '+n*(n-1)/2+' 组配对；指定一人只有 '+(n-1)+' 组');world.emit('people',String(n))}listen(render);$('#fifty').onclick=()=>{$('#n').value=50;render()};$('#reset').onclick=()=>{$('#n').value=23;render()};render();"
+      },
+      {
+        "id": "birthday-experiment",
+        "afterParagraphId": "birthday-p2",
+        "title": "一次发生，不等于概率就是100%",
+        "kind": "figure",
+        "height": 420,
+        "html": "<h3>一次发生，不等于概率就是100%</h3><nav><button id=\"run\">模拟 1000 间房</button><button id=\"reset\">清空实验</button></nav><div class=\"metrics\"><div class=\"metric\"><span>观测频率</span><strong id=\"frequency\"></strong></div><div class=\"metric\"><span>理论概率</span><strong id=\"theory\"></strong></div></div><p id=\"status\"></p><p class=\"note\">生日独立且均匀分布在365天；实验使用固定种子的伪随机数便于复查，结果是样本频率。</p>",
+        "css": ":root{--accent:#3a7188;--tint:#edf5fa}body{padding:16px 2px 22px;font-size:15px;color:#243b3b;line-height:1.65;border-top:2px solid var(--accent)}h3{font-size:20px;line-height:1.4;font-weight:650;margin:0 0 8px}p{margin:8px 0}small,.note{font-size:13px;color:#596d70}button{background:white;border:1px solid #bccacb;border-radius:5px;padding:7px 12px;color:inherit}button:hover,button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}label{display:grid;gap:4px;font-size:13px;min-width:0}input[type=number]{width:100%;min-width:0;border:1px solid #bccacb;padding:7px;background:#fff;color:inherit;border-radius:4px}input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--tint);padding:12px;min-width:0}.metric strong{font-size:25px;display:block;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.formula{font:14px/1.8 ui-monospace,monospace;background:#f2f5f4;padding:10px;overflow-wrap:anywhere}.row{display:grid;grid-template-columns:105px minmax(0,1fr) 85px;align-items:center;gap:8px;margin:10px 0;font-size:13px}.track{height:16px;background:#edf1f1;border-radius:2px;overflow:hidden}.bar{height:100%;background:var(--accent)}.bar.alt{background:#bd895e}.value{text-align:right;font-variant-numeric:tabular-nums}table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #dce4e3;padding:7px 4px}svg{width:100%;height:auto;display:block}details{margin:10px 0}summary{cursor:pointer}a{color:var(--accent);overflow-wrap:anywhere}.scroll{max-height:260px;overflow:auto}#status{font-size:14px;font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:440px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:82px minmax(0,1fr) 72px;gap:5px}.metric strong{font-size:22px}h3{font-size:18px}}",
+        "js": "const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],txt=(s,v)=>$(s).textContent=v;const num=(s,min,max)=>{const e=$(s),v=Number(e.value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))};const fmt=(v,d=0)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});const bar=(name,v,max,label,alt=false)=>'<div class=\"row\"><span>'+name+'</span><div class=\"track\"><div class=\"bar '+(alt?'alt':'')+'\" style=\"width:'+Math.max(0,Math.min(100,v/max*100))+'%\"></div></div><span class=\"value\">'+label+'</span></div>';const listen=fn=>all('input').forEach(e=>e.addEventListener('input',fn));let n=23,trials=0,hits=0,seed=20260914;const random=()=>{seed=(Math.imul(1664525,seed)+1013904223)>>>0;return seed/4294967296};function render(){let p=1;for(let i=0;i<n;i++)p*=1-i/365;txt('#frequency',trials?(hits/trials*100).toFixed(1)+'%':'尚未实验');txt('#theory',((1-p)*100).toFixed(1)+'%');txt('#status','人数 '+n+'；已模拟 '+trials+' 间房')}function reset(){trials=0;hits=0;seed=20260914;render()}$('#run').onclick=()=>{for(let t=0;t<1000;t++){const seen=new Set();let hit=false;for(let j=0;j<n;j++){const d=Math.floor(random()*365);if(seen.has(d))hit=true;seen.add(d)}if(hit)hits++;trials++}render()};$('#reset').onclick=reset;world.onState(s=>{if(s.people&&Number(s.people)!==n){n=Number(s.people);reset()}});render();"
+      }
+    ],
+    "bindings": [
+      {
+        "id": "people",
+        "paragraphId": "birthday-p2",
+        "label": "当前总人数",
+        "initial": "23",
+        "hidden": true
+      }
+    ],
+    "libraryReferences": [],
+    "scene": [
+      {
+        "action": "focus",
+        "target": "birthday-p1",
+        "title": "沿正文理解",
+        "text": "两种问题 → 组合与补集 → 随机实验。"
+      },
+      {
+        "action": "reveal",
+        "target": "birthday-compare",
+        "title": "同一间房，两个不同的问题",
+        "text": "调节总人数，同时计算任意碰撞和与指定一人相同的概率。",
+        "demo": {
+          "event": "click",
+          "selector": "#fifty"
+        }
+      },
+      {
+        "action": "reveal",
+        "target": "birthday-experiment",
+        "title": "一次发生，不等于概率就是100%",
+        "text": "在当前人数下重复1000次房间实验，比较频率与理论值；换人数后清空旧实验。",
+        "demo": {
+          "event": "click",
+          "selector": "#run"
+        }
+      },
+      {
+        "action": "restore",
+        "target": "birthday-p2",
+        "title": "回到原文",
+        "text": "把比较结果带回作者的论点；可以复位并重新尝试。"
+      }
+    ],
+    "design": {
+      "version": "explanation-v4.2026-09-14",
+      "intent": "比较“任意两人”与“有人和我相同”的差别，并用重复实验核对理论。",
+      "readingFlow": "两种问题 → 组合与补集 → 随机实验。",
+      "voice": "保留原文语气，补充内容使用可核对的解释。",
+      "style": {
+        "palette": [
+          "#3a7188",
+          "#edf5fa",
+          "#243b3b"
+        ],
+        "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+        "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+        "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+      },
+      "decisions": [
+        {
+          "title": "围绕问题安排操作",
+          "reason": "比较“任意两人”与“有人和我相同”的差别，并用重复实验核对理论。",
+          "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+        },
+        {
+          "title": "保留事实边界",
+          "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+          "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+        }
+      ],
+      "components": [
+        {
+          "blockId": "birthday-compare",
+          "purpose": "调节总人数，同时计算任意碰撞和与指定一人相同的概率。",
+          "whyHere": "此处原文刚提出“同一间房，两个不同的问题”涉及的关系，读者可以就地核对，再继续阅读。",
+          "interaction": "调节总人数，同时计算任意碰撞和与指定一人相同的概率。",
+          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "checks": [
+            "97.0%",
+            "0.0%",
+            "23 人有 253 组配对；指定一人只有 22 组"
+          ]
+        },
+        {
+          "blockId": "birthday-experiment",
+          "purpose": "在当前人数下重复1000次房间实验，比较频率与理论值；换人数后清空旧实验。",
+          "whyHere": "此处原文刚提出“一次发生，不等于概率就是100%”涉及的关系，读者可以就地核对，再继续阅读。",
+          "interaction": "在当前人数下重复1000次房间实验，比较频率与理论值；换人数后清空旧实验。",
+          "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+          "checks": [
+            "人数 23；已模拟 1000 间房",
+            "人数 23；已模拟 0 间房"
+          ]
+        }
+      ]
+    },
+    "provenance": {
+      "method": "codex",
+      "tier": "session",
+      "model": "Codex 当前会话（未记录具体模型 ID）",
+      "runId": "codex-e1cb7cd3-e050-434e-bced-a29da7d93d52",
+      "sourceHash": "a65c16652907e229fc57419798da1af6c97367609455812b3aed08bf920d2e19",
+      "createdAt": "2026-09-14T12:39:54.112Z",
+      "baselineVersion": "explanation-v4",
+      "prompt": "按当前原文与作者要求重构，区分原文事实、补充计算和情景假设，保留图片来源，逐篇实际验收。"
+    }
+  }
+}

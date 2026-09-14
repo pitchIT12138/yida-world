@@ -1,0 +1,58 @@
+{
+  "sourceHash": "f9d903cba93ad6768fb921cd1247a3812ea31a2641c2210ae804c620c59500da",
+  "design": {
+    "version": "explanation-v4.2026-09-14",
+    "intent": "把总克数拆成各份贡献，并比较同样总量的不同食物组合。",
+    "readingFlow": "累加每份 → 看贡献 → 比较同总量的组合。",
+    "voice": "保留原文语气，补充内容使用可核对的解释。",
+    "style": {
+      "palette": [
+        "#937245",
+        "#faf4e7",
+        "#243b3b"
+      ],
+      "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+      "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+      "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+    },
+    "decisions": [
+      {
+        "title": "围绕问题安排操作",
+        "reason": "把总克数拆成各份贡献，并比较同样总量的不同食物组合。",
+        "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+      },
+      {
+        "title": "保留事实边界",
+        "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+        "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "daily-table",
+        "purpose": "调整三种教学份量，查看贡献；比较不同组成但总数相同的两种组合。",
+        "whyHere": "此处原文刚提出“同样24克，可以由不同组合构成”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "调整三种教学份量，查看贡献；比较不同组成但总数相同的两种组合。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "总量 24 g；共 3 份",
+          "6 + 8 + 10 = 24 g",
+          "总量 0 g；共 0 份"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "daily-table": "40ef6e2f169f91b06cb5fb075c340f2eb7d6fa55c6b6152bb5ccd871e45f0aaa"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-59af7454-9e94-4ad8-b6aa-ce6a2fc77f33",
+    "sourceHash": "f9d903cba93ad6768fb921cd1247a3812ea31a2641c2210ae804c620c59500da",
+    "createdAt": "2026-09-14T12:39:55.801Z",
+    "baselineVersion": "explanation-v4",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

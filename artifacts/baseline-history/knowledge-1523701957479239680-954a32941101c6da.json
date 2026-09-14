@@ -1,0 +1,69 @@
+{
+  "sourceHash": "a3666d0cae64a8e06683fad306953b047e6bfea6ab8cdf5bbb4ebb7794915e87",
+  "design": {
+    "version": "explanation-v4.2026-09-14",
+    "intent": "区分模糊愿望、可执行行动与明确结束条件，帮助读者辨认任务回路。",
+    "readingFlow": "识别模糊任务 → 写下结束条件 → 区分完成与主动终止。",
+    "voice": "保留原文语气，补充内容使用可核对的解释。",
+    "style": {
+      "palette": [
+        "#8a7750",
+        "#faf5e7",
+        "#243b3b"
+      ],
+      "typography": "正文15px，数字使用表格数字，标题18–20px；窄屏保持标签与完整数值。",
+      "surface": "图示随正文展开，细线区分论点，控制区与结果在同一阅读位置。",
+      "motion": "操作即时响应；动画由读者启动，可停止或复位。"
+    },
+    "decisions": [
+      {
+        "title": "围绕问题安排操作",
+        "reason": "区分模糊愿望、可执行行动与明确结束条件，帮助读者辨认任务回路。",
+        "tradeoff": "减少无信息增量的装饰，保留能比较、计算和定位证据的反馈。"
+      },
+      {
+        "title": "保留事实边界",
+        "reason": "原文引述、补充计算和情景假设分别说明；缺失资料不补成确定事实。",
+        "tradeoff": "对缺少明细的地方仅提供已有数据范围内的比较。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "wins-boundary",
+        "purpose": "比较同一目标的模糊描述与可核对行动，指出完成标准。",
+        "whyHere": "此处原文刚提出“怎样才算做完了”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "比较同一目标的模糊描述与可核对行动，指出完成标准。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "阅读一篇短文，记录3个生词并各写1个例句；核对后结束。",
+          "缺少范围和结束条件：何时可以确认完成？"
+        ]
+      },
+      {
+        "blockId": "small-wins",
+        "purpose": "写下行动和验收条件，亲自确认完成或记录主动终止，再开始下一项。",
+        "whyHere": "此处原文刚提出“为这一次行动写下结束条件”涉及的关系，读者可以就地核对，再继续阅读。",
+        "interaction": "写下行动和验收条件，亲自确认完成或记录主动终止，再开始下一项。",
+        "implementation": "本地原生 HTML/CSS/JavaScript。数值由可见参数计算；示例、原文与核验说明分开呈现。",
+        "checks": [
+          "请同时写下行动和结束条件",
+          "待填写：行动与结束条件"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "wins-boundary": "fbeed95c2b0f5bc23f6ddf38150d7dd932b25471cebdb9a4e53151a827c16086",
+    "small-wins": "98e216dfcaccb6987e6d85623e4183a02d706ef6f7d5ea7e6a1752f5c35774e6"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-a2b9f571-9e01-406d-9d97-9fec9f74d432",
+    "sourceHash": "a3666d0cae64a8e06683fad306953b047e6bfea6ab8cdf5bbb4ebb7794915e87",
+    "createdAt": "2026-09-14T12:39:57.254Z",
+    "baselineVersion": "explanation-v4",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

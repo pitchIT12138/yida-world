@@ -1,0 +1,84 @@
+{
+  "id": "latency-comparison",
+  "version": "1",
+  "title": "串行与批量的延迟比较",
+  "tags": [
+    "延迟",
+    "往返",
+    "批量",
+    "比较",
+    "性能"
+  ],
+  "goal": "分离往返成本与执行成本",
+  "when": "比较两种执行方式且成本模型已知",
+  "avoid": "依赖命令或并发资源争抢不能套用独立批量假设",
+  "guidance": "修改命令数、RTT、处理时间或切换假设，横条、公式和下方边界工具同步。；整数有界输入；串行n×RTT+n×p，一批RTT+n×p；横条都除以串行总时间。",
+  "source": {
+    "answerId": "redis",
+    "runId": "codex-2c186581-43a4-4efa-b071-a8f580391ef0"
+  },
+  "parameters": [
+    {
+      "name": "命令数、RTT、处理时间",
+      "description": "根据文章替换默认值、单位与快捷场景，不把示例值当真实测量"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "redis-compare",
+      "afterParagraphId": "redis-p1",
+      "title": "相同的命令，等待占了多少？",
+      "kind": "figure",
+      "height": 570,
+      "css": "body{padding:16px 2px;color:#253849;font-size:15px}h3{font-size:19px;line-height:1.4;margin:0 0 16px}p{margin:12px 0;line-height:1.65}.muted{color:#556b7c;font-size:14px}.controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 18px}button{border:1px solid #b6c8d5;background:#fff;color:#1d536f;border-radius:5px;padding:7px 12px;min-height:40px}button.primary{background:#17638a;color:#fff;border-color:#17638a}input[type=number]{width:80px;border:1px solid #8fa7b8;border-radius:4px;padding:6px;color:#172f40;background:#fff}input[type=range]{accent-color:#17638a;max-width:100%;width:180px}label{display:flex;align-items:center;gap:8px;flex-wrap:wrap}strong.number{display:block;font-size:30px;line-height:1.3;color:#174e72;font-variant-numeric:tabular-nums;margin:10px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}.column{border-top:2px solid #a4bac9;padding-top:12px;min-width:0}.column p{margin:6px 0}.formula{font-family:ui-monospace,monospace;font-size:14px;overflow-wrap:anywhere}.note{border-left:3px solid #a4bac9;padding:8px 12px;background:#f3f7fa}.result{font-size:17px;color:#164f71;font-weight:600}.meter{height:14px;background:#e4edf3;position:relative;border-radius:2px;margin:8px 0}.meter span{display:block;height:100%;background:#32759b}.meter i{position:absolute;top:-4px;bottom:-4px;width:2px;background:#243848;left:50%}.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:14px}.legend span:before{content:'';display:inline-block;width:12px;height:12px;background:#32759b;margin-right:5px}.legend .work{background:transparent}.legend .work:before{background:#b89950}.bar{display:flex;height:22px;background:#eef2f5;margin:8px 0 4px}.wait{background:#32759b}.work{background:#b89950}.bar-label{display:flex;justify-content:space-between;gap:10px}.bar-label b{font-variant-numeric:tabular-nums}.settings{display:grid;gap:10px}.settings label{justify-content:space-between;max-width:420px}input[type=checkbox]{width:18px;height:18px;accent-color:#17638a}.check{align-items:flex-start;flex-wrap:nowrap}output{font-variant-numeric:tabular-nums}@media(max-width:430px){.columns{gap:12px}.column{font-size:14px}strong.number{font-size:27px}.controls{gap:8px}body{padding:12px 2px}h3{font-size:18px}}",
+      "html": "<h3>相同的命令，等待占了多少？</h3><div class=\"settings\"><label>命令数 n<input id=\"commands\" type=\"number\" min=\"1\" max=\"30\" value=\"6\"></label><label>一次往返 RTT（ms）<input id=\"rtt\" type=\"number\" min=\"1\" max=\"200\" value=\"80\"></label><label>每条处理 p（ms）<input id=\"processing\" type=\"number\" min=\"1\" max=\"50\" value=\"2\"></label></div><div class=\"controls\"><button id=\"original\" type=\"button\">原文参数</button><button id=\"low\" type=\"button\">低延迟假设</button><button id=\"heavy\" type=\"button\">处理较重假设</button></div><div class=\"legend\"><span>等待往返</span><span class=\"work\">处理命令</span></div><div aria-live=\"polite\"><p class=\"bar-label\">逐条等待 <b id=\"serial\">492 ms</b></p><div class=\"bar\" aria-hidden=\"true\"><span class=\"wait\" id=\"serial-wait\"></span><span class=\"work\" id=\"serial-work\"></span></div><p class=\"formula\" id=\"serial-formula\"></p><p class=\"bar-label\">一批发送 <b id=\"pipeline\">92 ms</b></p><div class=\"bar\" aria-hidden=\"true\"><span class=\"wait\" id=\"pipe-wait\"></span><span class=\"work\" id=\"pipe-work\"></span></div><p class=\"formula\" id=\"pipe-formula\"></p><p id=\"saving\" class=\"result\"></p></div><p class=\"note\">两条横条使用同一刻度。处理的命令数相同，减少的是等待往返次数。此处假设命令独立、单批串行处理，无额外开销；参数是演示假设，并非实测。</p>",
+      "js": "const q=s=>document.querySelector(s);let last='';function bounded(id,max){const input=q(id),value=Number(input.value);const result=Math.min(max,Math.max(1,Number.isFinite(value)?Math.round(value):1));input.value=String(result);return result}function draw(){const n=bounded('#commands',30),rtt=bounded('#rtt',200),p=bounded('#processing',50),work=n*p,serial=n*rtt+work,pipeline=rtt+work;q('#serial').textContent=serial+' ms';q('#pipeline').textContent=pipeline+' ms';q('#serial-formula').textContent=n+' × '+rtt+' + '+n+' × '+p+' = '+serial+' ms';q('#pipe-formula').textContent=rtt+' + '+n+' × '+p+' = '+pipeline+' ms';q('#serial-wait').style.width=(n*rtt/serial*100)+'%';q('#serial-work').style.width=(work/serial*100)+'%';q('#pipe-wait').style.width=(rtt/serial*100)+'%';q('#pipe-work').style.width=(work/serial*100)+'%';q('#saving').textContent='省去 '+(n-1)+' 次往返，节省 '+(serial-pipeline)+' ms；用时比 '+(serial/pipeline).toFixed(2)+' 倍。';const value=JSON.stringify({n,rtt,p});if(last!==value){last=value;world.emit('pipeline-assumptions',value)}}for(const id of ['#commands','#rtt','#processing']){q(id).addEventListener('input',()=>{if(q(id).value!=='')draw()});q(id).addEventListener('change',draw)}function preset(rtt,p){q('#commands').value='6';q('#rtt').value=String(rtt);q('#processing').value=String(p);draw()}q('#original').addEventListener('click',()=>preset(80,2));q('#low').addEventListener('click',()=>preset(1,2));q('#heavy').addEventListener('click',()=>preset(10,50));draw();"
+    }
+  ],
+  "bindings": [
+    {
+      "id": "pipeline-assumptions",
+      "paragraphId": "redis-p1",
+      "label": "共同参数",
+      "initial": "{\"n\":6,\"rtt\":80,\"p\":2}",
+      "hidden": true
+    }
+  ],
+  "scene": [
+    {
+      "action": "reveal",
+      "target": "redis-compare",
+      "title": "492与92是怎样算出来的",
+      "text": "共同刻度下，金色处理部分长度相同，蓝色等待减少400ms。公式紧跟横条，避免只记住加速倍数。",
+      "demo": {
+        "event": "click",
+        "selector": "#original"
+      }
+    },
+    {
+      "action": "highlight",
+      "target": "redis-compare",
+      "title": "网络已经很快时，还能省多少",
+      "text": "RTT改为1ms：逐条18ms，一批13ms，节省5ms。收益依赖假设，不能把原文倍数套到所有情况。",
+      "demo": {
+        "event": "click",
+        "selector": "#low"
+      }
+    },
+    {
+      "action": "restore",
+      "target": "redis-compare",
+      "title": "用原文参数继续检验批次",
+      "text": "恢复6条、80ms、2ms，下方自动同步参数。",
+      "demo": {
+        "event": "click",
+        "selector": "#original"
+      }
+    }
+  ],
+  "checks": [
+    "原文参数492/92ms，节省400ms，处理部分都为12ms。",
+    "低延迟18/13ms；处理较重360/310ms；1条时两者相等。",
+    "320px无溢出，公式和完整数值可见。"
+  ]
+}
