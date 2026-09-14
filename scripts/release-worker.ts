@@ -1,7 +1,7 @@
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {parse} from 'dotenv';
 import {generateArtifact} from '../server/generation';
-import {reviewCandidate} from './release-review';
+import {reviewCandidate,ReviewUnavailable} from './release-review';
 import {plainSource,richSource} from '../src/lib/rich-source';
 import {fromContent} from '../src/data/seeds';
 import {digest} from '../server/cloud';
@@ -40,7 +40,7 @@ try{
     repairs=generated.repairs;prior=generated.artifact;
     const answer={source:input.source,artifact:prior,assets:input.assets||[]};await writeFile(attemptDir+'/candidate.json',JSON.stringify(answer,null,2));
     try{const evidence=await reviewCandidate(input.source,prior,answer.assets,env,attemptDir);await writeFile(attemptDir+'/evidence.json',JSON.stringify(evidence,null,2));if(evidence.content.verdict!=='pass')throw Error(evidence.content.findings.join('\n'));events.push(await api('/api/admin/jobs/'+job.id+'/complete',{lease:job.lease,answer,evidence}));break;}
-    catch(e){message=String(e);const review=await readFile(attemptDir+'/content-review.json','utf8').catch(()=>'');message+='\n独立评审核对（也可能包含需核实的测试预期，须依据原文和公式判断）：'+review;await writeFile(attemptDir+'/failure.json',JSON.stringify({error:message}));if(repairs>=2)throw e;await consumeRepair();}
+    catch(e){message=String(e);const review=await readFile(attemptDir+'/content-review.json','utf8').catch(()=>'');message+='\n独立评审核对（也可能包含需核实的测试预期，须依据原文和公式判断）：'+review;await writeFile(attemptDir+'/failure.json',JSON.stringify({error:message}));if(e instanceof ReviewUnavailable||repairs>=2)throw e;await consumeRepair();}
    }
   }
   catch(e){await writeFile(jobDir+'/failure.json',JSON.stringify({error:String(e)}));await api('/api/admin/jobs/'+job.id+'/fail',{lease:job.lease,error:String(e)});events.push({id:job.id,error:String(e)});process.exitCode=1}

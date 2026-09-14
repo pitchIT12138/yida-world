@@ -1,4 +1,5 @@
 import {parse} from 'acorn';
+import {modelJSON} from './model-json';
 import {applyArtifactPatches,PATCH_INSTRUCTION} from './artifact-patch';
 import {profile,callModel,type RuntimeEnv} from './model';
 import {SYSTEM_PROMPT} from './prompt';
@@ -23,10 +24,10 @@ export async function generateArtifact(input:GenerationInput,env:RuntimeEnv,opti
   await options.onOutput?.(response.text,response.usage);
   for(const [k,v]of Object.entries(response.usage))usage[k]=(usage[k]||0)+v;
   try{
-   const parsed=parseModelJSON(response.text) as any;const artifact=(parsed?.patches?applyArtifactPatches(repairBase,parsed.patches):parsed) as AnswerArtifact;repairBase=artifact;if(!artifact?.design)throw Error('缺少设计记录');
+   const transport=modelJSON(response.text);const parsed=transport.value;const artifact=(parsed?.patches?applyArtifactPatches(repairBase,parsed.patches):parsed) as AnswerArtifact;repairBase=artifact;if(!artifact?.design)throw Error('缺少设计记录');
    // A demo is already represented by reveal + demo in the Runtime protocol.
    // Canonicalize this unambiguous transport alias, never rewrite generated code.
-   const normalized:string[]=[];
+   const normalized:string[]=[...transport.normalizations];
    artifact.scene?.forEach((step:any,i:number)=>{if(step.action==='demo'&&step.demo){step.action='reveal';normalized.push('scene['+i+'].action:demo→reveal')}});
    artifact.provenance={method:'api',runId:options.runId,sourceHash,model:p.model,tier:input.tier,createdAt:new Date().toISOString(),prompt:input.instruction,reasoningEffort:p.reasoningEffort,baselineVersion:baseline?.version||DESIGN_POLICY_VERSION,baselineHash:await digest(JSON.stringify(baseline||DESIGN_POLICY_VERSION)),elapsedMs:Date.now()-start+(input.repair?.candidate.provenance.elapsedMs||0),usage,repairCount:repairs,normalizations:normalized};
    validateArtifact(artifact,input.source,input.selectedParagraphIds);validateLibraryReferences(artifact);
