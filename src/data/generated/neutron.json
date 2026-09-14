@@ -32,8 +32,8 @@
         "id": "density-scale",
         "afterParagraphId": "neutron-p1",
         "title": "一勺不是单位，先把单位换对",
-        "html": "<small>数学类比 · 中子星物质不能这样取出</small><h3>让体积经过单位闸门</h3><label>体积 / mL<input id=\"volume\" type=\"range\" min=\"1\" max=\"10\" value=\"5\"></label><svg class=\"visual\" viewBox=\"0 0 620 220\"></svg><output id=\"status\"></output><div class=\"row\"><button id=\"kg\">看千克</button><button id=\"ton\">换成吨</button><button id=\"reset\">复位5mL</button></div><p class=\"note\">固定原文假设ρ=4×10¹⁷ kg/m³。1mL=10⁻⁶m³；m=ρV。容器只画体积比例，绝不表现可取出的真实材料。</p>",
-        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let tonne=false;function draw(){const v=+q(\"#volume\").value,m=v*4e11;q(\"svg\").innerHTML='<path d=\"M30 40v150h100V40\" fill=\"none\" stroke=\"#6e618c\" stroke-width=\"3\"/><rect x=\"32\" y=\"'+(188-v*13)+'\" width=\"96\" height=\"'+v*13+'\" fill=\"#8066a0\"/><path d=\"M160 110H220M340 110H410\" stroke=\"#837292\" stroke-width=\"4\"/><text x=\"220\" y=\"83\">\\xF7 1,000,000</text><text x=\"220\" y=\"133\">'+v+' \\xD7 10\\u207B\\u2076 m\\xB3</text><text x=\"420\" y=\"83\">\\xD7 4\\xD710\\xB9\\u2077</text><text x=\"420\" y=\"133\">'+(m/1e12).toFixed(1)+\" \\xD710\\xB9\\xB2 kg</text>\";q(\"#status\").textContent=tonne?(m/1e3).toLocaleString(\"en-US\")+\" \\u5428\":m.toLocaleString(\"en-US\")+\" \\u5343\\u514B\"}__name(draw,\"draw\");q(\"#volume\").oninput=draw;q(\"#kg\").onclick=()=>{tonne=false;draw()};q(\"#ton\").onclick=()=>{tonne=true;draw()};q(\"#reset\").onclick=()=>{q(\"#volume\").value=5;tonne=false;draw()};draw()",
+        "html": "<small>数学类比 · 中子星物质不能这样取出</small><h3>让体积与密度，一起决定质量</h3><div class=\"controls\"><label>体积 / mL<input id=\"volume\" type=\"number\" value=\"5\" min=\"0.01\" max=\"1000\"></label><label>密度 / 10¹⁷ kg/m³<input id=\"density\" type=\"number\" value=\"4\" min=\"0.01\" max=\"20\"></label></div><svg class=\"visual\" viewBox=\"0 0 620 220\"></svg><output id=\"status\"></output><div class=\"row\"><button id=\"kg\">看千克</button><button id=\"ton\">换成吨</button><button id=\"reset\">复位原文参数</button></div><p class=\"note\">原文示例ρ=4×10¹⁷ kg/m³，5mL。1mL=10⁻⁶m³；m=ρV。手动输入只做数学情景。左图高度按体积的立方根缩放，右圆半径按质量的立方根缩放，均是非线性量级示意；精确数量以读数为准。后文标尺保留原文固定示例。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let tonne=false;function draw(){const v=Math.max(.01,Math.min(1e3,+q(\"#volume\").value||.01)),rho=Math.max(.01,Math.min(20,+q(\"#density\").value||.01)),m=v*rho*1e11,volumeHeight=Math.cbrt(v/1e3)*150,massRadius=Math.cbrt(m/2e15)*65;q(\"svg\").innerHTML='<path d=\"M30 25v170h100V25\" fill=\"none\" stroke=\"#6e618c\" stroke-width=\"3\"/><rect x=\"32\" y=\"'+(193-volumeHeight)+'\" width=\"96\" height=\"'+volumeHeight+'\" fill=\"#8066a0\"/><path d=\"M150 110H240M380 110H460\" stroke=\"#837292\" stroke-width=\"3\"/><text x=\"170\" y=\"60\">'+v+' \\xD7 10\\u207B\\u2076 m\\xB3</text><text x=\"250\" y=\"140\">\\xD7 '+rho+'\\xD710\\xB9\\u2077</text><circle cx=\"520\" cy=\"100\" r=\"'+Math.max(2,massRadius)+'\" fill=\"#735b99\"/><text x=\"420\" y=\"210\">'+m.toExponential(2)+\" kg</text>\";q(\"#status\").textContent=tonne?(m/1e3).toLocaleString(\"en-US\")+\" \\u5428\":m.toLocaleString(\"en-US\")+\" \\u5343\\u514B\"}__name(draw,\"draw\");[\"volume\",\"density\"].forEach(k=>{q(\"#\"+k).oninput=draw;q(\"#\"+k).onchange=()=>{const e=q(\"#\"+k);e.value=Math.max(+e.min,Math.min(+e.max,+e.value||+e.min));draw()}});q(\"#kg\").onclick=()=>{tonne=false;draw()};q(\"#ton\").onclick=()=>{tonne=true;draw()};q(\"#reset\").onclick=()=>{q(\"#volume\").value=5;q(\"#density\").value=4;tonne=false;draw()};draw()",
         "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#534164;--paper:#f5eff8;--muted:#806c8c}",
         "height": 470,
         "kind": "experience"
@@ -51,34 +51,22 @@
     ],
     "scene": [
       {
-        "action": "focus",
-        "target": "neutron-p1",
-        "title": "一勺不是单位，先把单位换对",
-        "text": "单位换算直接控制质量，防止把毫升乘以每立方米密度漏掉百万倍。"
-      },
-      {
         "action": "reveal",
         "target": "density-scale",
-        "title": "亲手试一次",
-        "text": "拖动体积，液面与每一步换算同步；用千克和吨两种单位核对。"
-      },
-      {
-        "action": "focus",
-        "target": "neutron-p2",
-        "title": "把尺子拉远十二个数量级",
-        "text": "把数量级换算变成越界与装入标尺的操作，解释常识尺度为何失效。"
+        "title": "一勺不是单位，先把单位换对",
+        "text": "改变体积与密度，看质量跨越数量级"
       },
       {
         "action": "reveal",
         "target": "orders-ruler",
-        "title": "亲手试一次",
+        "title": "把尺子拉远十二个数量级",
         "text": "逐次拉远标尺，直到质量落进画面；上限、条长和越界提示一致。"
       }
     ],
     "design": {
-      "version": "session-repair-2026-09-14",
+      "version": "free-exploration-2026-09-15",
       "intent": "把毫升逐级换成立方米，再让读者沿数量级缩放，看到2×10¹²千克离日常有多远。",
-      "readingFlow": "密度假设旁量体积 → 末段展开数量级尺；同一质量同步两处。",
+      "readingFlow": "先在标题与原文短引后操作「一勺不是单位，先把单位换对」。改变体积与密度，看质量跨越数量级。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
       "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
@@ -102,10 +90,13 @@
           "blockId": "density-scale",
           "purpose": "单位换算直接控制质量，防止把毫升乘以每立方米密度漏掉百万倍。",
           "whyHere": "紧接对应原文：做一个明确写出假设的数量级练习：取密度 4×10¹⁷ 千克每立方米，体积 5 毫升，也就是 5×10⁻⁶ 立方米。质量等于密度乘体积。",
-          "interaction": "拖动体积，液面与每一步换算同步；用千克和吨两种单位核对。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "interaction": "改变体积与密度，看质量跨越数量级",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
+            "#reset → 2,000,000,000,000 千克",
             "#ton → 2,000,000,000 吨",
+            "#volume → 4,000,000,000 吨",
+            "#density → 2,000,000,000 吨",
             "#reset → 2,000,000,000,000 千克"
           ]
         },
@@ -114,7 +105,7 @@
           "purpose": "把数量级换算变成越界与装入标尺的操作，解释常识尺度为何失效。",
           "whyHere": "紧接对应原文：一个数字太容易被划过去。也许让读者先猜，再比较不同数量级，最后不断拉远尺度，才会感到日常直觉为什么在这里失效。这个练习只是密度乘体积的数学类比。",
           "interaction": "逐次拉远标尺，直到质量落进画面；上限、条长和越界提示一致。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#fit → 目标占标尺 20%",
             "#reset → 仍超出标尺：目标是上限的 2,000,000,000 倍"
@@ -122,14 +113,29 @@
         }
       ]
     },
+    "presentation": {
+      "version": 1,
+      "leadBlockId": "density-scale",
+      "cue": "改变体积与密度，看质量跨越数量级",
+      "nodes": [
+        {
+          "blockId": "density-scale",
+          "label": "一勺不是单位，先把单位换对"
+        },
+        {
+          "blockId": "orders-ruler",
+          "label": "把尺子拉远十二个数量级"
+        }
+      ]
+    },
     "provenance": {
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-8420677a-56af-4a00-82a5-3ebf32093d12",
+      "runId": "codex-630245c3-71c8-41f7-b517-488708764d9a",
       "sourceHash": "fd38a92b2b8c68cec571e01ef3c0dfe694a8f20db07273ff8229dfe809b56847",
-      "createdAt": "2026-09-14T15:33:43.055Z",
-      "baselineVersion": "expressive-v7.2026-09-14",
+      "createdAt": "2026-09-14T16:31:32.721Z",
+      "baselineVersion": "composed-v8.2026-09-14",
       "prompt": "按作者要求加工；内部备注留存在本地工作台。"
     }
   }

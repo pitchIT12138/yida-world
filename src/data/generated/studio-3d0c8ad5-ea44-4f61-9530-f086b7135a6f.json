@@ -118,43 +118,31 @@
         "id": "cash-river",
         "afterParagraphId": "p-4ff7cab2-1bfd-463d-a7ec-953d759865a6",
         "title": "每一年的钱，流回今天",
-        "html": "<small>补充计算 · 年末现金流 · 4%是演示值，原文折现率缺失</small><h3>点一年，看它在今天还剩多少</h3><div class=\"controls\"><label>首年收入 / 元<input id=\"income\" type=\"number\" min=\"0\" max=\"10000000\" value=\"65700\"></label><label>首年支出 / 元<input id=\"expense\" type=\"number\" min=\"0\" max=\"10000000\" value=\"0\"></label><label>净现金流年增长 / %<input id=\"growth\" type=\"number\" min=\"-50\" max=\"50\" value=\"0\" step=\"0.1\"></label><label>折现率 / %<input id=\"rate\" type=\"number\" min=\"0\" max=\"50\" value=\"4\" step=\"0.1\"></label><label>年限<input id=\"years\" type=\"number\" min=\"1\" max=\"60\" value=\"30\"></label></div><div class=\"row\"><button id=\"sync\">继续跟随工资条</button><button id=\"reset\">全部复位</button><small id=\"mode\">收入跟随工资条</small></div><svg id=\"river\" class=\"visual\" viewBox=\"0 0 660 260\" aria-label=\"逐年净现金流和折现值\"></svg><div class=\"row\"><button id=\"prev\">← 前一年</button><b id=\"yearlabel\"></b><button id=\"next\">后一年 →</button></div><output id=\"detail\"></output><div class=\"metrics\"><div><span>名义净现金流合计</span><b id=\"nominal\"></b></div><div><span>折回今天的现值</span><b id=\"pv\"></b></div></div><output id=\"status\"></output><p class=\"note\">浅色柱是当年净现金流，深色柱是现值；支出超过收入时，两种柱都落到零线以下。第t年=(首年收入−首年支出)×(1+g)^(t−1)，PV=Σ第t年÷(1+r)^t。此计算仅衡量现金流，不能解释为人的价值。输入显示与计算范围一致。</p>",
-        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let selected=1,manual=false,income=65700,resetSerial=0;const limits={income:[0,1e7],expense:[0,1e7],growth:[-50,50],rate:[0,50],years:[1,60]};const money=__name(n=>n.toLocaleString(\"en-US\",{minimumFractionDigits:2,maximumFractionDigits:2})+\" \\u5143\",\"money\");function number(k){const el=q(\"#\"+k),[lo,hi]=limits[k],n=Math.min(hi,Math.max(lo,Number(el.value)||0));el.value=k===\"years\"?Math.round(n):n;return+el.value}__name(number,\"number\");function draw(){const i=number(\"income\"),e=number(\"expense\"),g=number(\"growth\")/100,r=number(\"rate\")/100,n=number(\"years\");selected=Math.min(n,Math.max(1,selected));const flows=Array.from({length:n},(_,j)=>(i-e)*Math.pow(1+g,j)),pvs=flows.map((f,j)=>f/Math.pow(1+r,j+1)),max=Math.max(1,...flows.map(Math.abs),...pvs.map(Math.abs));let svg='<path d=\"M10 130H650\" stroke=\"#6d888d\"/><text x=\"10\" y=\"18\" fill=\"#58737a\">\\u6536\\u5165\\u8D85\\u8FC7\\u652F\\u51FA \\u2191</text><text x=\"10\" y=\"250\" fill=\"#58737a\">\\u652F\\u51FA\\u8D85\\u8FC7\\u6536\\u5165 \\u2193</text>';for(let j=0;j<n;j++){const x=15+j*630/n,w=Math.max(2,630/n-3),h=flows[j]/max*95,hp=pvs[j]/max*95;svg+='<g role=\"button\" tabindex=\"0\" aria-label=\"\\u9009\\u62E9\\u7B2C'+(j+1)+'\\u5E74\" data-year=\"'+(j+1)+'\"><rect x=\"'+x+'\" y=\"28\" width=\"'+w+'\" height=\"204\" fill=\"'+(selected===j+1?\"#d8e9e8\":\"transparent\")+'\"/><rect x=\"'+x+'\" y=\"'+(130-Math.max(0,h))+'\" width=\"'+w+'\" height=\"'+Math.max(.3,Math.abs(h))+'\" fill=\"#9bbfbd\"/><rect x=\"'+x+'\" y=\"'+(130-Math.max(0,hp))+'\" width=\"'+w*.5+'\" height=\"'+Math.max(.3,Math.abs(hp))+'\" fill=\"#236e70\"/></g>'}q(\"#river\").innerHTML=svg;q(\"#yearlabel\").textContent=\"\\u7B2C \"+selected+\" \\u5E74 / \"+n+\" \\u5E74\";q(\"#detail\").textContent=\"\\u7B2C\"+selected+\"\\u5E74\\uFF1A\"+money(flows[selected-1])+\" \\xF7 \"+Math.pow(1+r,selected).toFixed(4)+\" = \"+money(pvs[selected-1]);const total=flows.reduce((a,b)=>a+b,0),pv=pvs.reduce((a,b)=>a+b,0);q(\"#nominal\").textContent=money(total);q(\"#pv\").textContent=money(pv);q(\"#status\").textContent=\"\\u5DF2\\u8BA1\\u7B97 \"+n+\" \\u5E74 \\xB7 \"+(total<0?\"\\u51C0\\u6D41\\u51FA\":\"\\u51C0\\u6D41\\u5165\");q(\"#mode\").textContent=manual?\"\\u6536\\u5165\\u5DF2\\u624B\\u52A8\\u4FEE\\u6539\":\"\\u6536\\u5165\\u8DDF\\u968F\\u5DE5\\u8D44\\u6761\";q(\"#prev\").disabled=selected===1;q(\"#next\").disabled=selected===n}__name(draw,\"draw\");for(const k of Object.keys(limits))q(\"#\"+k).oninput=()=>{if(k===\"income\")manual=true;draw()};q(\"#river\").onclick=e=>{const t=e.target.closest(\"[data-year]\");if(t){selected=+t.dataset.year;draw()}};q(\"#river\").onkeydown=e=>{if(e.key===\"Enter\"||e.key===\" \"){const t=e.target.closest(\"[data-year]\");if(t){e.preventDefault();selected=+t.dataset.year;draw()}}};q(\"#next\").onclick=()=>{selected++;draw()};q(\"#prev\").onclick=()=>{selected--;draw()};q(\"#sync\").onclick=()=>{manual=false;q(\"#income\").value=income;draw()};q(\"#reset\").onclick=()=>{manual=false;income=65700;selected=1;for(const[k,v]of Object.entries({income:65700,expense:0,growth:0,rate:4,years:30}))q(\"#\"+k).value=v;world.emit(\"resetSerial\",++resetSerial);world.emit(\"annualIncome\",65700);draw()};world.onState(s=>{if(s.annualIncome!==void 0){income=+s.annualIncome;if(!manual){q(\"#income\").value=income;draw()}}resetSerial=+s.resetSerial||0});draw()",
-        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#174d55;--paper:#edf5f5;--muted:#507178}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:clamp(15px,3.4vw,27px);white-space:normal;overflow-wrap:anywhere}#detail{font-size:13px;line-height:1.7}svg g{cursor:pointer}svg g:focus{outline:2px solid #ac643b}@media(max-width:420px){.metrics{grid-template-columns:1fr}.metrics b{font-size:24px}}",
+        "html": "<small>年末现金流 · 4%为演示值，原文折现率缺失</small><h3>把未来的一年，拉到今天</h3><svg id=\"river\" class=\"visual\" viewBox=\"0 0 660 260\" tabindex=\"0\" aria-label=\"现金流时间轴，左右键选年份，上下键调整1000元\"></svg><div class=\"row\"><button id=\"prev\">←</button><b id=\"yearlabel\"></b><button id=\"next\">→</button><label>选中年份净现金流 / 元<input id=\"override\" type=\"number\" value=\"65700\"></label><button id=\"undo-year\">撤销这一年覆盖</button></div><output id=\"detail\"></output><div class=\"metrics\"><div><span>名义合计</span><b id=\"nominal\"></b></div><div><span>今天的现值</span><b id=\"pv\"></b></div></div><div class=\"controls\"><label>首年收入 / 元<input id=\"income\" type=\"number\" value=\"65700\" min=\"0\"></label><label>首年支出 / 元<input id=\"expense\" type=\"number\" value=\"0\" min=\"0\"></label><label>净现金流年增长 / %<input id=\"growth\" type=\"number\" value=\"0\" min=\"-99\" max=\"100\"></label><label>折现率 / %<input id=\"rate\" type=\"number\" value=\"4\" min=\"-99\" max=\"100\"></label><label>年限<input id=\"years\" type=\"number\" value=\"30\" min=\"1\" max=\"60\"></label></div><div class=\"row\"><button id=\"save-a\">保留当前方案 A</button><button id=\"sync\">跟随工资条</button><button id=\"reset\">全部复位</button></div><output id=\"comparison\"></output><output id=\"mode\"></output><output id=\"status\"></output><p class=\"note\">拖柱顶修改单年，空白处点击选择年份。浅柱是净现金流，深柱是现值，A方案为橙线；负值落在零线以下。年度覆盖独立于整条曲线参数，撤销后重新跟随公式。(收入−支出)×(1+g)^(t−1)，PV=ΣCFt/(1+r)^t。只衡量现金流，不衡量人的价值。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let selected=1,overrides={},a=null,linked=true,wage=65700,lastReset=\"0\",scale=1,dragScale=1,drag=false;const money=__name(v=>Math.abs(v)>1e12?v.toExponential(3)+\" \\u5143\":v.toLocaleString(\"en-US\",{minimumFractionDigits:2,maximumFractionDigits:2})+\" \\u5143\",\"money\");function params(){const get2=__name((id,min,max)=>Math.max(min,Math.min(max,Number(q(\"#\"+id).value)||0)),\"get\");return{income:get2(\"income\",0,1e9),expense:get2(\"expense\",0,1e9),g:get2(\"growth\",-99,100)/100,r:get2(\"rate\",-99,100)/100,n:Math.round(get2(\"years\",1,60))}}__name(params,\"params\");function draw(){const p=params();selected=Math.min(p.n,selected);const values=Array.from({length:p.n},(_,i)=>overrides[i+1]??(p.income-p.expense)*(1+p.g)**i),pv=values.map((v,i)=>v/(1+p.r)**(i+1));if(!values.every(Number.isFinite)||!pv.every(Number.isFinite)){q(\"#status\").textContent=\"\\u53C2\\u6570\\u8FC7\\u5927\\uFF0C\\u65E0\\u6CD5\\u8868\\u793A\\uFF1B\\u8BF7\\u51CF\\u5C0F\\u589E\\u957F\\u6216\\u6298\\u73B0\\u5E45\\u5EA6\\u3002\";return}scale=Math.max(1,...values.map(Math.abs),...pv.map(Math.abs),...a?a.values.map(Math.abs):[]);const unit=600/p.n,baseline=125;let svg='<path d=\"M30 125H630\" stroke=\"#728f8e\"/>';values.forEach((v,i)=>{const x=30+i*unit,ph=pv[i]/scale*100,h=v/scale*100;svg+='<rect data-year=\"'+(i+1)+'\" x=\"'+x+'\" y=\"'+Math.min(baseline,baseline-h)+'\" width=\"'+Math.max(1,unit-2)+'\" height=\"'+Math.max(1,Math.abs(h))+'\" fill=\"'+(selected===i+1?\"#559a96\":\"#b3d1ce\")+'\"/><rect x=\"'+(x+unit*.25)+'\" y=\"'+Math.min(baseline,baseline-ph)+'\" width=\"'+Math.max(1,unit*.35)+'\" height=\"'+Math.abs(ph)+'\" fill=\"#196467\"/><circle data-year=\"'+(i+1)+'\" cx=\"'+(x+unit/2)+'\" cy=\"'+(baseline-h)+'\" r=\"'+(selected===i+1?5:2)+'\" fill=\"'+(overrides[i+1]!==void 0?\"#b67135\":\"#17494c\")+'\"/>'});if(a)svg+='<polyline fill=\"none\" stroke=\"#bc733b\" stroke-width=\"2\" points=\"'+a.values.slice(0,p.n).map((v,i)=>30+(i+.5)*unit+\",\"+(baseline-v/scale*100)).join(\" \")+'\"/>';svg+='<text x=\"30\" y=\"245\">\\u7B2C1\\u5E74</text><text x=\"550\" y=\"245\">\\u7B2C'+p.n+\"\\u5E74</text>\";q(\"#river\").innerHTML=svg;const total=pv.reduce((s,v)=>s+v,0);q(\"#pv\").textContent=money(total);q(\"#nominal\").textContent=money(values.reduce((s,v)=>s+v,0));q(\"#yearlabel\").textContent=\"\\u7B2C \"+selected+\" / \"+p.n+\" \\u5E74\";q(\"#override\").value=Math.round(values[selected-1]*100)/100;q(\"#detail\").textContent=\"\\u7B2C\"+selected+\"\\u5E74\\uFF1A\"+money(values[selected-1])+\" \\u2192 \\u4ECA\\u5929 \"+money(pv[selected-1])+(overrides[selected]!==void 0?\" \\xB7 \\u5DF2\\u5355\\u5E74\\u8986\\u76D6\":\" \\xB7 \\u8DDF\\u968F\\u516C\\u5F0F\");q(\"#mode\").textContent=linked?\"\\u6536\\u5165\\u8DDF\\u968F\\u5DE5\\u8D44\\u6761\":\"\\u6536\\u5165\\u624B\\u52A8\\u8BBE\\u7F6E\\uFF0C\\u5DE5\\u8D44\\u6761\\u4E0D\\u4F1A\\u8986\\u76D6\";q(\"#status\").textContent=\"\\u5DF2\\u8BA1\\u7B97 \"+p.n+\" \\u5E74 \\xB7 \"+Object.keys(overrides).filter(k=>+k<=p.n).length+\" \\u5E74\\u5355\\u72EC\\u7F16\\u8F91\";q(\"#comparison\").textContent=a?\"A\\u73B0\\u503C \"+money(a.pv)+\" / B\\u8F83A \"+money(total-a.pv):\"\\u4FDD\\u7559\\u5F53\\u524D\\u65B9\\u6848\\uFF0C\\u518D\\u8BD5\\u53E6\\u4E00\\u7EC4\\u53C2\\u6570\\u3002\";return{values,pv:total}}__name(draw,\"draw\");[\"income\",\"expense\",\"growth\",\"rate\",\"years\"].forEach(id=>{q(\"#\"+id).oninput=()=>{if(id===\"income\")linked=false;draw()};q(\"#\"+id).onchange=()=>{const p=params();for(const[k,v]of Object.entries({income:p.income,expense:p.expense,growth:p.g*100,rate:p.r*100,years:p.n}))q(\"#\"+k).value=v;draw()}});q(\"#override\").onchange=()=>{const v=Number(q(\"#override\").value);if(Number.isFinite(v))overrides[selected]=v;draw()};q(\"#undo-year\").onclick=()=>{delete overrides[selected];draw()};q(\"#prev\").onclick=()=>{selected=Math.max(1,selected-1);draw()};q(\"#next\").onclick=()=>{selected=Math.min(params().n,selected+1);draw()};q(\"#save-a\").onclick=()=>{a=draw();draw()};q(\"#sync\").onclick=()=>{linked=true;q(\"#income\").value=wage;draw()};q(\"#reset\").onclick=()=>{selected=1;overrides={};a=null;linked=true;wage=65700;for(const[k,v]of Object.entries({income:65700,expense:0,growth:0,rate:4,years:30}))q(\"#\"+k).value=v;world.emit(\"resetSerial\",String(Date.now()));world.emit(\"annualIncome\",\"65700\");draw()};const point=__name(e=>{const r=q(\"#river\").getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*660,y:(e.clientY-r.top)/r.height*260}},\"point\");q(\"#river\").onpointerdown=e=>{const pt=point(e);selected=Math.max(1,Math.min(params().n,Math.floor((pt.x-30)/600*params().n)+1));drag=!!e.target.closest(\"[data-year]\");dragScale=scale;q(\"#river\").setPointerCapture(e.pointerId);draw()};q(\"#river\").onpointermove=e=>{if(drag){overrides[selected]=Math.round((125-point(e).y)/100*dragScale/100)*100;draw()}};q(\"#river\").onpointerup=q(\"#river\").onpointercancel=()=>drag=false;q(\"#river\").onkeydown=e=>{if(!e.key.startsWith(\"Arrow\"))return;e.preventDefault();if(e.key===\"ArrowRight\")selected=Math.min(params().n,selected+1);if(e.key===\"ArrowLeft\")selected=Math.max(1,selected-1);if(e.key===\"ArrowUp\"||e.key===\"ArrowDown\")overrides[selected]=+q(\"#override\").value+(e.key===\"ArrowUp\"?1e3:-1e3);draw()};world.onState(s=>{if(s.annualIncome!==void 0){wage=Number(s.annualIncome);if(linked)q(\"#income\").value=wage}lastReset=s.resetSerial||lastReset;draw()});draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#174d55;--paper:#edf5f5;--muted:#507178}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:clamp(15px,3.4vw,27px);white-space:normal;overflow-wrap:anywhere}#detail{font-size:13px;line-height:1.7}svg g{cursor:pointer}svg g:focus{outline:2px solid #ac643b}@media(max-width:420px){.metrics{grid-template-columns:1fr}.metrics b{font-size:24px}}#river{touch-action:none;cursor:crosshair;background:linear-gradient(#eff8f3,#e3f0ed);border-radius:8px}.row label{flex:1;min-width:140px}.metrics b{font-size:25px;white-space:normal;overflow-wrap:anywhere}#comparison{padding:10px;background:#e6d9be;color:#68502e;margin:10px 0}#mode{font-size:11px}#detail{font-size:12px}.metrics{gap:12px}",
         "height": 850,
         "kind": "experience"
       }
     ],
     "scene": [
       {
-        "action": "focus",
-        "target": "p-6e5678bc-4f30-4fc5-a828-e312993e00ca",
-        "title": "把一年的工时压成工资条",
-        "text": "工资公式随三个输入一起改写，避免只更新金额却留下旧公式。"
-      },
-      {
         "action": "reveal",
         "target": "wage-stamps",
-        "title": "亲手试一次",
+        "title": "把一年的工时压成工资条",
         "text": "改时薪或工时，十二个月的柱形和公式同步；下方时间轴自动接收年收入。"
-      },
-      {
-        "action": "focus",
-        "target": "p-4ff7cab2-1bfd-463d-a7ec-953d759865a6",
-        "title": "每一年的钱，流回今天",
-        "text": "将总现值拆回每年的折现过程，负现金流有独立可见方向；手动收入模式与工资联动明确。"
       },
       {
         "action": "reveal",
         "target": "cash-river",
-        "title": "亲手试一次",
-        "text": "改变收支、增长、年限或折现率；点柱形或前后按钮检查对应年；零折现、负现金流和复位均同步。"
+        "title": "每一年的钱，流回今天",
+        "text": "选中一年，拖动现金流；保留 A 再试另一种未来"
       }
     ],
     "design": {
-      "version": "session-repair-2026-09-14",
+      "version": "free-exploration-2026-09-15",
       "intent": "沿工资、年度现金流、折现后的今天三层推进：操作的不是一个静止总数，而是整条时间轴。",
-      "readingFlow": "原文工资推算处改动工时 → 模型结果处点选年份、改变收支和折现；工资变化持续传入时间轴。",
+      "readingFlow": "先在标题与原文短引后操作「每一年的钱，流回今天」。选中一年，拖动现金流；保留 A 再试另一种未来。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
       "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
@@ -179,7 +167,7 @@
           "purpose": "工资公式随三个输入一起改写，避免只更新金额却留下旧公式。",
           "whyHere": "紧接对应原文：我们可以用小时工为例子，假定一个小时工每小时的工资是15元，一天工作12小时，一年工作365天，线性推算这个小时工一年收入65,700元，然后假设这名小时工可以工作30年，折现率按照当前贷款利率大致取  且保持不变，代入公式可以算出来现值  。",
           "interaction": "改时薪或工时，十二个月的柱形和公式同步；下方时间轴自动接收年收入。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#wage → 10 × 12 × 365 = 43,800 元 / 年"
           ]
@@ -188,18 +176,33 @@
           "blockId": "cash-river",
           "purpose": "将总现值拆回每年的折现过程，负现金流有独立可见方向；手动收入模式与工资联动明确。",
           "whyHere": "紧接对应原文：我当时看到他算这个结果的时候还是很震惊，毕竟100万是一个比996还要狠的打工人的“价格”，但是后面回过头来一想也很合理，因为一个人要吃饭睡觉，一天的的劳动时间总归是有一个上限，如果折现率按当时的贷款利率水平算，薪资水平也保持在月薪5000左右，100万就是这个理论上限。",
-          "interaction": "改变收支、增长、年限或折现率；点柱形或前后按钮检查对应年；零折现、负现金流和复位均同步。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "interaction": "选中一年，拖动现金流；保留 A 再试另一种未来",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
-            "#years → 已计算 1 年 · 净流入",
-            "#rate → 43,800.00 元",
             "#reset → 1,136,086.59 元",
-            "#years → 第1年：65,700.00 元 ÷ 1.0400 = 63,173.08 元",
-            "#expense → 已计算 1 年 · 净流出",
-            "#rate → -34,300.00 元",
-            "#reset → 已计算 30 年 · 净流入",
-            "[data-year=\"30\"] → 第 30 年 / 30 年"
+            "#rate → 1,971,000.00 元",
+            "#years → 65,700.00 元",
+            "#expense → -34,300.00 元",
+            "#reset → 1,136,086.59 元",
+            "#river → 已计算 30 年 · 1 年单独编辑",
+            "#undo-year → 已计算 30 年 · 0 年单独编辑",
+            "#save-a → A现值 1,136,086.59 元 / B较A 0.00 元"
           ]
+        }
+      ]
+    },
+    "presentation": {
+      "version": 1,
+      "leadBlockId": "cash-river",
+      "cue": "选中一年，拖动现金流；保留 A 再试另一种未来",
+      "nodes": [
+        {
+          "blockId": "wage-stamps",
+          "label": "把一年的工时压成工资条"
+        },
+        {
+          "blockId": "cash-river",
+          "label": "每一年的钱，流回今天"
         }
       ]
     },
@@ -207,10 +210,10 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-d796e93a-b857-4b9d-b945-88602630ed5c",
+      "runId": "codex-7e48c272-b12b-4fef-bbb2-d4989edd6ecf",
       "sourceHash": "bace68a43458ae7517ae15ff2e3a730b48b7c075421878da2d738909dc308320",
-      "createdAt": "2026-09-14T15:27:07.370Z",
-      "baselineVersion": "expressive-v7.2026-09-14",
+      "createdAt": "2026-09-14T16:21:25.164Z",
+      "baselineVersion": "composed-v8.2026-09-14",
       "prompt": "按作者要求加工；内部备注留存在本地工作台。"
     }
   }

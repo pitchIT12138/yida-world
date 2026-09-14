@@ -36,31 +36,25 @@
         "id": "layer-route",
         "afterParagraphId": "hnsw-p2",
         "title": "这一跳，究竟省去了什么？",
-        "html": "<small>显式一维两层教学图 · 非完整HNSW</small><h3>从0出发，逐次比较邻居</h3><label>查询位置<input id=\"query\" type=\"range\" min=\"0\" max=\"100\" value=\"76\"></label><div class=\"row\"><button id=\"step\">下一次距离比较</button><button id=\"finish\">走完整条路</button><button id=\"reset\">从入口重来</button></div><svg class=\"visual\" viewBox=\"0 0 660 260\"></svg><output id=\"status\"></output><output id=\"counts\"></output><p class=\"note\">高层节点0、50、100；底层0至100每10一个，相邻节点相连。采用贪心：邻居更近才移动，已计算距离缓存。这个有序一维图是机制示意，不能证明真实高维HNSW的召回率或速度。</p>",
-        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let frames=[],i=0;function route(){const target=+q(\"#query\").value,seen=new Set;let node=0,path=[0];frames=[];function evaluate(v,level){seen.add(v);frames.push({node,probe:v,level,path:[...path],seen:[...seen],end:false})}__name(evaluate,\"evaluate\");evaluate(0,1);for(const[nodes,level]of[[[0,50,100],1],[Array.from({length:11},(_,j)=>j*10),0]]){for(let guard=0;guard<20;guard++){const at=nodes.indexOf(node),neighbors=[nodes[at-1],nodes[at+1]].filter(x=>x!==void 0);let next=node;for(const v of neighbors){if(!seen.has(v))evaluate(v,level);if(Math.abs(v-target)<Math.abs(next-target))next=v}if(next===node)break;node=next;path.push(node);frames.push({node,probe:node,level,path:[...path],seen:[...seen],end:false})}}frames.push({node,probe:node,level:0,path,seen:[...seen],end:true});i=0;draw()}__name(route,\"route\");function draw(){const f=frames[i],x=__name(v=>30+v*6,\"x\");let s='<path d=\"M30 70H630M30 190H630\" stroke=\"#9ca6c3\"/>';for(const level of[1,0])for(const v of level?[0,50,100]:Array.from({length:11},(_,j)=>j*10)){const y=level?70:190;s+='<circle cx=\"'+x(v)+'\" cy=\"'+y+'\" r=\"'+(v===f.node&&level===f.level?14:9)+'\" fill=\"'+(f.seen.includes(v)?\"#5f5bc1\":\"#c7cee1\")+'\"/><text x=\"'+(x(v)-8)+'\" y=\"'+(y+30)+'\">'+v+\"</text>\"}s+='<path d=\"M'+x(+q(\"#query\").value)+' 25V240\" stroke=\"#ba7339\" stroke-dasharray=\"4\"/><text x=\"30\" y=\"24\">\\u9AD8\\u5C42</text><text x=\"30\" y=\"148\">\\u5E95\\u5C42</text>';q(\"svg\").innerHTML=s;q(\"#status\").textContent=f.end?\"\\u7ED3\\u675F\\uFF1A\\u6700\\u8FD1\\u8282\\u70B9 \"+f.node+\"\\uFF0C\\u8DDD\\u79BB \"+Math.abs(f.node-+q(\"#query\").value):\"\\u7B2C\"+(i+1)+\"\\u6B65 \\xB7 \"+(f.level?\"\\u9AD8\\u5C42\":\"\\u5E95\\u5C42\")+\" \\xB7 \\u6BD4\\u8F83\\u8282\\u70B9 \"+f.probe;q(\"#counts\").textContent=\"\\u72EC\\u7ACB\\u8DDD\\u79BB\\u8BA1\\u7B97 \"+f.seen.length+\" \\u6B21 / \\u5168\\u626B\\u63CF 11 \\u6B21 \\xB7 \\u8DEF\\u5F84 \"+f.path.join(\" \\u2192 \");q(\"#step\").disabled=f.end}__name(draw,\"draw\");q(\"#query\").oninput=route;q(\"#step\").onclick=()=>{i=Math.min(frames.length-1,i+1);draw()};q(\"#finish\").onclick=()=>{i=frames.length-1;draw()};q(\"#reset\").onclick=route;route()",
-        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#444574;--paper:#f1f2fb;--muted:#707293}",
+        "html": "<small>显式一维两层教学图 · 非完整HNSW</small><h3>从0出发，逐次比较邻居</h3><label>查询位置<input id=\"query\" type=\"range\" min=\"0\" max=\"100\" value=\"76\"></label><div class=\"row\"><button id=\"step\">下一次距离比较</button><button id=\"finish\">走完整条路</button><button id=\"reset\">从入口重来</button></div><svg class=\"visual\" viewBox=\"0 0 660 260\"></svg><output id=\"status\"></output><output id=\"counts\"></output><p class=\"note\">高层节点0、50、100；底层0至100每10一个，相邻节点相连。采用贪心：邻居更近才移动，已计算距离缓存。这个有序一维图是机制示意，不能证明真实高维HNSW的召回率或速度。</p><button id=\"scan\">展开全扫描距离</button><div id=\"distances\" hidden></div>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let frames=[],i=0;function route(){const target=+q(\"#query\").value,seen=new Set;let node=0,path=[0];frames=[];function evaluate(v,level){seen.add(v);frames.push({node,probe:v,level,path:[...path],seen:[...seen],end:false})}__name(evaluate,\"evaluate\");evaluate(0,1);for(const[nodes,level]of[[[0,50,100],1],[Array.from({length:11},(_,j)=>j*10),0]]){for(let guard=0;guard<20;guard++){const at=nodes.indexOf(node),neighbors=[nodes[at-1],nodes[at+1]].filter(x=>x!==void 0);let next=node;for(const v of neighbors){if(!seen.has(v))evaluate(v,level);if(Math.abs(v-target)<Math.abs(next-target))next=v}if(next===node)break;node=next;path.push(node);frames.push({node,probe:node,level,path:[...path],seen:[...seen],end:false})}}frames.push({node,probe:node,level:0,path,seen:[...seen],end:true});i=0;draw()}__name(route,\"route\");function draw(){const f=frames[i],x=__name(v=>30+v*6,\"x\");let s='<path d=\"M30 70H630M30 190H630\" stroke=\"#9ca6c3\"/>';for(const level of[1,0])for(const v of level?[0,50,100]:Array.from({length:11},(_,j)=>j*10)){const y=level?70:190;s+='<circle cx=\"'+x(v)+'\" cy=\"'+y+'\" r=\"'+(v===f.node&&level===f.level?14:9)+'\" fill=\"'+(f.seen.includes(v)?\"#5f5bc1\":\"#c7cee1\")+'\"/><text x=\"'+(x(v)-8)+'\" y=\"'+(y+30)+'\">'+v+\"</text>\"}s+='<path d=\"M'+x(+q(\"#query\").value)+' 25V240\" stroke=\"#ba7339\" stroke-dasharray=\"4\"/><text x=\"30\" y=\"24\">\\u9AD8\\u5C42</text><text x=\"30\" y=\"148\">\\u5E95\\u5C42</text>';q(\"svg\").innerHTML=s;q(\"#status\").textContent=f.end?\"\\u7ED3\\u675F\\uFF1A\\u6700\\u8FD1\\u8282\\u70B9 \"+f.node+\"\\uFF0C\\u8DDD\\u79BB \"+Math.abs(f.node-+q(\"#query\").value):\"\\u7B2C\"+(i+1)+\"\\u6B65 \\xB7 \"+(f.level?\"\\u9AD8\\u5C42\":\"\\u5E95\\u5C42\")+\" \\xB7 \\u6BD4\\u8F83\\u8282\\u70B9 \"+f.probe;q(\"#counts\").textContent=\"\\u72EC\\u7ACB\\u8DDD\\u79BB\\u8BA1\\u7B97 \"+f.seen.length+\" \\u6B21 / \\u5168\\u626B\\u63CF 11 \\u6B21 \\xB7 \\u8DEF\\u5F84 \"+f.path.join(\" \\u2192 \");q(\"#step\").disabled=f.end}__name(draw,\"draw\");q(\"#query\").oninput=route;q(\"#step\").onclick=()=>{i=Math.min(frames.length-1,i+1);draw()};q(\"#finish\").onclick=()=>{i=frames.length-1;draw()};q(\"#reset\").onclick=route;route()\n;(()=>{const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\"),svg=q(\"svg\");svg.setAttribute(\"tabindex\",\"0\");svg.setAttribute(\"aria-label\",\"\\u62D6\\u52A8\\u67E5\\u8BE2\\u4F4D\\u7F6E\\uFF0C\\u5DE6\\u53F3\\u952E\\u79FB\\u52A8\");let drag=false;function move(e){const r=svg.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*660;q(\"#query\").value=Math.round(Math.max(0,Math.min(100,(x-30)/6)));q(\"#query\").dispatchEvent(new Event(\"input\"));distances()}__name(move,\"move\");function distances(){const target=+q(\"#query\").value;q(\"#distances\").innerHTML=Array.from({length:11},(_,i)=>{const d=Math.abs(i*10-target);return\"<div><span>\\u8282\\u70B9 \"+i*10+\" \\xB7 \\u8DDD\\u79BB \"+d+'</span><i style=\"width:'+d+'%\"></i></div>'}).join(\"\")}__name(distances,\"distances\");svg.onpointerdown=e=>{drag=true;svg.setPointerCapture(e.pointerId);move(e)};svg.onpointermove=e=>{if(drag)move(e)};svg.onpointerup=svg.onpointercancel=()=>drag=false;svg.onkeydown=e=>{if(![\"ArrowLeft\",\"ArrowRight\"].includes(e.key))return;e.preventDefault();q(\"#query\").value=+q(\"#query\").value+(e.key===\"ArrowRight\"?1:-1);q(\"#query\").dispatchEvent(new Event(\"input\"));distances()};q(\"#scan\").onclick=()=>{q(\"#distances\").hidden=!q(\"#distances\").hidden;distances()};q(\"#query\").addEventListener(\"input\",distances);distances()})();",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#444574;--paper:#f1f2fb;--muted:#707293}svg{touch-action:none;cursor:crosshair}#distances div{font-size:11px;margin:5px 0}#distances i{display:block;height:5px;background:#8580bc}",
         "height": 620,
         "kind": "experience"
       }
     ],
     "scene": [
       {
-        "action": "focus",
-        "target": "hnsw-p2",
-        "title": "这一跳，究竟省去了什么？",
-        "text": "可见节点与实际距离缓存一一对应，搜索结果由图算法计算，不播放预制文字路径。"
-      },
-      {
         "action": "reveal",
         "target": "layer-route",
-        "title": "亲手试一次",
-        "text": "选查询位置，逐步比较邻居或走完；查看层级、已访问节点和距离计算次数。"
+        "title": "这一跳，究竟省去了什么？",
+        "text": "拖动查询点，逐次检查搜索走过的路径"
       }
     ],
     "design": {
-      "version": "session-repair-2026-09-14",
+      "version": "free-exploration-2026-09-15",
       "intent": "在同一查询上逐次量距离、沿边走，再下降一层，让近路有可追溯的访问路径。",
-      "readingFlow": "城市类比后跑同一查询的高层与低层 → 原文边界处对照全扫描。",
+      "readingFlow": "先在标题与原文短引后操作「这一跳，究竟省去了什么？」。拖动查询点，逐次检查搜索走过的路径。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
       "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
@@ -84,14 +78,29 @@
           "blockId": "layer-route",
           "purpose": "可见节点与实际距离缓存一一对应，搜索结果由图算法计算，不播放预制文字路径。",
           "whyHere": "紧接对应原文：如果能让读者自己选一个查询位置，看搜索从入口开始，一层一层接近目标，这段解释就不只是一张静态图片了。这里展示的是层级搜索的概念，不等于完整算法的性能基准。",
-          "interaction": "选查询位置，逐步比较邻居或走完；查看层级、已访问节点和距离计算次数。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "interaction": "拖动查询点，逐次检查搜索走过的路径",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#finish → 结束：最近节点 80，距离 4",
             "#query → 第1步 · 高层 · 比较节点 0",
             "#finish → 结束：最近节点 10，距离 0",
-            "#reset → 第1步 · 高层 · 比较节点 0"
+            "#reset → 第1步 · 高层 · 比较节点 0",
+            "#query → 第1步 · 高层 · 比较节点 0",
+            "#finish → 结束：最近节点 20，距离 0",
+            "svg → 第1步 · 高层 · 比较节点 0",
+            "#finish → 结束：最近节点 20，距离 1"
           ]
+        }
+      ]
+    },
+    "presentation": {
+      "version": 1,
+      "leadBlockId": "layer-route",
+      "cue": "拖动查询点，逐次检查搜索走过的路径",
+      "nodes": [
+        {
+          "blockId": "layer-route",
+          "label": "这一跳，究竟省去了什么？"
         }
       ]
     },
@@ -99,10 +108,10 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-b1a006a5-3ba3-4abe-a8b1-90f5ced55b4e",
+      "runId": "codex-5277fb75-92f9-4f1b-ac1d-4cf61a76e413",
       "sourceHash": "8057b35e82a715f777ed7cf0b062b450669adc3a687ef7350aa03a185750a471",
-      "createdAt": "2026-09-14T15:33:38.854Z",
-      "baselineVersion": "expressive-v7.2026-09-14",
+      "createdAt": "2026-09-14T16:21:14.963Z",
+      "baselineVersion": "composed-v8.2026-09-14",
       "prompt": "按作者要求加工；内部备注留存在本地工作台。"
     }
   }

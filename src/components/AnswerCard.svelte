@@ -17,15 +17,16 @@
   let {answer,config,onupdate,onnotice,onassets,onreview,onidea,onrestore,index=0,shareable=false}:{answer:Answer;config:PublicConfig;onupdate:(artifact:AnswerArtifact)=>void;onnotice:(text:string)=>void;onassets?:(assets:import('../lib/types').SourceAsset[])=>void;onreview?:()=>void;onidea?:(idea:string,selected:string[],error?:string)=>void;onrestore?:(answer:Answer)=>void;index?:number;shareable?:boolean}=$props();
   let root:HTMLElement;
   let inView=$state(false),mediaSource=$state(''),savedMedia=$state<SourceAsset[]>([]),mediaError=$state('');
+  let quickSource=$state(''),quickAssets=$state<SourceAsset[]>([]);
   let sourceIdentity=$derived(JSON.stringify(answer.source));
-  let effectiveAssets=$derived([...new Map([...(mediaSource===sourceIdentity?savedMedia:[]),...(answer.assets||[])].map(a=>[a.url,a])).values()]);
+  let effectiveAssets=$derived([...new Map([...(quickSource===sourceIdentity?quickAssets:[]),...(mediaSource===sourceIdentity?savedMedia:[]),...(answer.assets||[])].map(a=>[a.url,a])).values()]);
   let effectiveAnswer=$derived({...answer,assets:effectiveAssets});
   let needsMedia=$derived(hasCuratedMedia(answer.source)&&sourceMedia(answer.source).some(url=>!answer.assets?.some(a=>a.url===url))&&mediaSource!==sourceIdentity);
   $effect(()=>{
     const source=answer.source,identity=sourceIdentity;
     if(!inView||!needsMedia)return;
     let active=true;mediaError='';
-    void loadCuratedMedia(source).then(assets=>{if(active){savedMedia=assets;mediaSource=identity}}).catch(e=>{if(active)mediaError=e instanceof Error?e.message:'原图加载失败'});
+    void (async()=>{try{const core=answer.artifact?.blocks.find(b=>b.id===answer.artifact?.presentation?.leadBlockId)||answer.artifact?.blocks[0];if(core?.mediaUrls?.length&&!import.meta.env.DEV){const first=await loadCuratedMedia(source,core.mediaUrls);if(!active)return;quickAssets=first;quickSource=identity}const assets=await loadCuratedMedia(source);if(active){savedMedia=assets;mediaSource=identity;quickAssets=[]}}catch(e){if(active)mediaError=e instanceof Error?e.message:'原图加载失败'}})();
     return()=>{active=false};
   });
   let expanded=$state(false),editing=$state(false),selecting=$state(false),selected=$state<string[]>([]),selectionStart=$state(-1);
@@ -42,7 +43,13 @@
   let articleState=$derived(Object.fromEntries((answer.artifact?.bindings||[]).map(b=>[b.id,bindings[b.id]??b.initial])));
   let controller:AbortController|undefined,replayId=0;
   let foldAt=$derived(answer.artifact&&answer.source.paragraphs.length<=8?answer.source.paragraphs.length:answer.artifact?6:3);
-  let shown=$derived(expanded?answer.source.paragraphs:answer.source.paragraphs.slice(0,foldAt));
+  let shown=$derived(answer.source.paragraphs);
+  let lead=$derived(answer.artifact?.blocks.find(b=>b.id===answer.artifact?.presentation?.leadBlockId)||answer.artifact?.blocks[0]);
+  let nodes=$derived(answer.artifact?.presentation?.nodes||answer.artifact?.blocks.map(b=>({blockId:b.id,label:b.title}))||[]);
+  let returnScroll=$state(0);
+  async function jumpBlock(id:string){returnScroll=window.scrollY;sourceOnly=false;await tick();root.querySelector<HTMLElement>('[data-block="'+id+'"]')?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'})}
+  let leadContext=$derived.by(()=>{const ps=answer.source.paragraphs;const i=ps.findIndex(p=>p.id===lead?.afterParagraphId);return [...ps.slice(0,i+1)].reverse().find(p=>!p.html?.includes('<img')&&!/(https?:|www\.)/.test(p.text)&&p.text.replace(/\[图片[^\]]*\]/g,'').trim())?.text||''});
+  function contextual(id:string){return !!answer.artifact?.blocks.some(b=>b.afterParagraphId===id)}
   $effect(()=>{if(socialReady)void writeLocal('social-'+answer.source.id,{votes,bookmarked,comments:[...comments]}).catch(()=>onnotice('本地互动暂时无法保存。'))});
   let effectiveTier=$derived(config.tiers.includes(tier)?tier:config.tiers[0]||'balanced');
   function selectParagraph(i:number){
@@ -120,6 +127,17 @@
   });
 </script>
 
+{#snippet interaction(block:import('../lib/types').InteractiveBlock)}
+          <div class="block-area" class:flow-inline={block.kind==='inline'} class:flow-aside={block.kind==='aside'} data-block={block.id} hidden={sourceOnly} class:scene-focus={replaying&&sceneTarget===block.id} class:scene-reveal={replaying&&sceneAction==='reveal'&&sceneTarget===block.id}>
+            {#if block.mediaUrls?.some(u=>!effectiveAssets.some(a=>a.url===u))&&needsMedia}
+              <p class="media-loading" style:min-height={block.height+'px'} role="status">{mediaError?'保存的原图暂时无法载入，请刷新重试；可查看正文原图。':'正在载入保存的原图…'}</p>
+            {:else}
+              <WorldFrame {block} assets={effectiveAssets} onstatus={ok=>mediaStatus={...mediaStatus,[answer.artifact!.provenance.runId+block.id]:ok}} {reading} {articleState} demo={replaying&&sceneTarget===block.id?demo:undefined} ondemo={receiveDemo} onbinding={emitBinding}/>
+            {/if}
+            {#if returnScroll>0}<button class="back-to-lead" onclick={()=>window.scrollTo({top:returnScroll,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'})}>回到刚才的正文位置 ↑</button>{/if}
+          </div>
+{/snippet}
+
 <article class="answer-card" class:replaying id={answer.source.id} bind:this={root}>
   <div class="answer-topline">
     <div class="author">
@@ -152,34 +170,39 @@
   {#if selecting}
     <div class="selection-strip"><span>{selectionStart===-1?'点击起始和结束段落，或直接框选正文':'再点一个段落，确定连续选区'}</span><button onclick={()=>{selected=[];selectionStart=-1;selecting=false;recordIdea()}}>取消选区</button></div>
   {/if}
-  <ArtifactLinks artifact={answer.artifact}/>{#if answer.artifact&&!replaying}<button class="text-button" onclick={()=>sourceOnly=!sourceOnly}>{sourceOnly?'显示交互':'只看原文'}</button>{/if}
+  <div class="reading-modes"><button class:active={!sourceOnly} onclick={()=>sourceOnly=false}>互动阅读</button><button class:active={sourceOnly} onclick={()=>sourceOnly=true}>完整原文</button></div>
+  {#if lead}
+    <section class="lead-experience" hidden={sourceOnly}>
+      <p class="operation-cue">{answer.artifact?.presentation?.cue||lead.title}<span>↓ 直接试试</span></p>
+      <p class="lead-context">原文：{leadContext.slice(0,72)}{leadContext.length>72?'…':''}</p>
+      {@render interaction(lead)}
+    </section>
+  {/if}
+  {#if answer.artifact&&!sourceOnly}<nav class="experience-nav" aria-label="本篇可玩什么"><strong>接着探索</strong>{#each nodes as n}<button onclick={()=>void jumpBlock(n.blockId)}>{n.label} ↗</button>{/each}<button class="back-to-reading" onclick={()=>window.scrollTo({top:returnScroll,behavior:'smooth'})}>返回刚才位置</button></nav>{/if}
+  <ArtifactLinks artifact={answer.artifact}/>
+  {#if answer.artifact&&!sourceOnly&&answer.source.paragraphs.length>foldAt}<button class="expand-answer" onclick={()=>expanded=!expanded}>{expanded?'收起补充文字':'展开全部原文 · '+answer.source.paragraphs.length+' 段'}<small>交互已全部展示</small></button>{/if}
   <div class="answer-body" class:source-only={sourceOnly}>
     {#each shown as paragraph,i (paragraph.id)}
+      {#if !answer.artifact||sourceOnly||expanded||contextual(paragraph.id)||!!paragraph.html?.includes('<img')}
       <div class="paragraph" class:selected={selected.includes(paragraph.id)} class:scene-focus={replaying&&sceneTarget===paragraph.id} data-paragraph={paragraph.id}>
         {#if selecting}<button class="paragraph-selector" aria-label={'选择第 '+(i+1)+' 段'} aria-pressed={selected.includes(paragraph.id)} onclick={()=>selectParagraph(i)}>{i+1}</button>{/if}
-        <ReadingParagraph {paragraph} assets={effectiveAssets} folded={!sourceOnly&&!selecting&&!!mediaStatus[(answer.artifact?.provenance.runId||'')+(replacementBlock(answer.artifact,paragraph.id)?.id||'')]}/>
+        {#if !sourceOnly&&!expanded&&paragraph.text.length>280}<details class="context-excerpt"><summary>{paragraph.text.slice(0,160)}… <span>读这段原文</span></summary><ReadingParagraph {paragraph} assets={effectiveAssets}/></details>{:else}
+        <ReadingParagraph {paragraph} assets={effectiveAssets} folded={!sourceOnly&&!selecting&&!!mediaStatus[(answer.artifact?.provenance.runId||'')+(replacementBlock(answer.artifact,paragraph.id)?.id||'')]}/>{/if}
         {#if answer.artifact&&!sourceOnly}
           {#each answer.artifact.bindings.filter(b=>b.paragraphId===paragraph.id&&!b.hidden) as binding}
             <span class="text-binding">{binding.label} <strong>{bindings[binding.id]??binding.initial}</strong></span>
           {/each}
         {/if}
       </div>
+      {/if}
       {#if answer.artifact}
         {#each answer.artifact.blocks.filter(b=>b.afterParagraphId===paragraph.id) as block (block.id+answer.artifact.provenance.runId)}
-          <div class="block-area" class:flow-inline={block.kind==='inline'} class:flow-aside={block.kind==='aside'} data-block={block.id} hidden={sourceOnly||(replaying&&!revealed.includes(block.id))} class:scene-focus={replaying&&sceneTarget===block.id} class:scene-reveal={replaying&&sceneAction==='reveal'&&sceneTarget===block.id}>
-            {#if block.mediaUrls?.length&&needsMedia}
-              <p role="status">{mediaError?'保存的原图暂时无法载入，请刷新重试；可查看正文原图。':'正在载入保存的原图…'}</p>
-            {:else}
-              <WorldFrame {block} assets={effectiveAssets} onstatus={ok=>mediaStatus={...mediaStatus,[answer.artifact!.provenance.runId+block.id]:ok}} {reading} {articleState} demo={replaying&&sceneTarget===block.id?demo:undefined} ondemo={receiveDemo} onbinding={emitBinding}/>
-            {/if}
-          </div>
+          {#if block.id!==lead?.id}{@render interaction(block)}{:else if !sourceOnly}<button class="back-to-lead" onclick={()=>void jumpBlock(block.id)}>↑ 回到「{block.title}」继续操作</button>{/if}
         {/each}
       {/if}
     {/each}
   </div>
-  {#if answer.source.paragraphs.length>foldAt}
-    <button class="expand-answer" onclick={()=>expanded=!expanded}>{expanded?'收起正文':'继续阅读，共 '+answer.source.paragraphs.length+' 段'}<span class:rotate={expanded}><Icon name="chevron" size={15}/></span></button>
-  {/if}
+
   {#if answer.source.sourceUrl}<a class="source-link" href={answer.source.sourceUrl} target="_blank" rel="noreferrer">来源：{answer.source.sourceAuthor||answer.source.author} · {answer.source.title}<Icon name="external" size={12}/></a>{/if}
   <div class="answer-workspace-actions"><button class="text-button" onclick={onreview}>编辑原文</button><button class="text-button" onclick={()=>historyOpen=!historyOpen}>版本历史</button>{#if answer.workspace?.revision}<span>已建立后台版本记录</span>{/if}</div>
   {#if historyOpen}<VersionHistory {answer} onrestore={restoreAnswer}/>{/if}

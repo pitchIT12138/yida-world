@@ -29,6 +29,7 @@ export type InteractiveBlock = {
 };
 export type TextBinding = { id: string; paragraphId: string; label: string; initial: string; hidden?:boolean };
 export type AnswerArtifact = {
+  presentation?: {version:1; leadBlockId:string; cue:string; nodes:{blockId:string;label:string}[]};
   libraryReferences?: import('./interaction-library').LibraryReference[];
   version: 1; answerId: string; explanation: string; blocks: InteractiveBlock[];
   bindings: TextBinding[]; scene: SceneStep[]; design?:DesignBaseline;

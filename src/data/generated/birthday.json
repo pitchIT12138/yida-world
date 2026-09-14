@@ -42,8 +42,8 @@
         "id": "birthday-room",
         "afterParagraphId": "birthday-p2",
         "title": "让生日真的走进房间",
-        "html": "<h3>这一次，会在第几个人相遇？</h3><div class=\"row\"><button id=\"add\">再进来一人</button><button id=\"batch\">重复100间23人房间</button><button id=\"reset\">清空实验</button></div><div id=\"room\"></div><output id=\"status\"></output><output id=\"trials\"></output><p class=\"note\">随机实验不保证23人恰好撞生日。重复实验每间固定23人，判断是否出现任意重复；红色筹码代表重复生日。</p>",
-        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let days=[],count=0,hits=0;function draw(){q(\"#room\").innerHTML=days.map(d=>'<span style=\"background:'+(days.filter(x=>x===d).length>1?\"#b84870\":\"#62578c\")+'\">\\u7B2C'+(d+1)+\"\\u5929</span>\").join(\"\");q(\"#status\").textContent=\"\\u623F\\u95F4\\u5DF2\\u6709 \"+days.length+\" \\u4EBA \\xB7 \"+(new Set(days).size<days.length?\"\\u51FA\\u73B0\\u540C\\u751F\\u65E5\":\"\\u5C1A\\u65E0\\u91CD\\u590D\");q(\"#trials\").textContent=count?\"\\u91CD\\u590D \"+count+\" \\u95F4\\u623F \\xB7 \\u51FA\\u73B0\\u91CD\\u590D \"+hits+\" \\u95F4\\uFF08\"+(100*hits/count).toFixed(1)+\"%\\uFF09\":\"\\u5C1A\\u672A\\u8FDB\\u884C\\u91CD\\u590D\\u5B9E\\u9A8C\";q(\"#add\").disabled=days.length>=60}__name(draw,\"draw\");q(\"#add\").onclick=()=>{days.push(Math.floor(Math.random()*365));draw()};q(\"#batch\").onclick=()=>{for(let i=0;i<100;i++){const d=Array.from({length:23},()=>Math.floor(Math.random()*365));hits+=new Set(d).size<23?1:0}count+=100;draw()};q(\"#reset\").onclick=()=>{days=[];count=hits=0;draw()};draw()",
+        "html": "<h3>这一次，会在第几个人相遇？</h3><label>每间房人数<input id=\"n\" type=\"number\" value=\"23\" min=\"1\" max=\"366\"></label><div class=\"row\"><button id=\"add\">再进来一人</button><button id=\"sample\">抽一间完整房间</button><button id=\"batch\">重复100间房</button><button id=\"reset\">清空实验</button></div><div id=\"room\"></div><output id=\"status\"></output><output id=\"trials\"></output><svg class=\"visual\" viewBox=\"0 0 620 90\"></svg><p class=\"note\">独立均匀抽取365天。改变人数会清除之前的统计，避免混合不同实验；366人必有重复，1人不可能两人同日。蓝色是理论概率，红色是实际重复房间比例。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let days=[],count=0,hits=0;const n=__name(()=>Math.round(Math.max(1,Math.min(366,+q(\"#n\").value||1))),\"n\"),sample=__name(()=>Array.from({length:n()},()=>Math.floor(Math.random()*365)),\"sample\");function draw(){q(\"#room\").innerHTML=days.map(d=>'<span style=\"background:'+(days.filter(x=>x===d).length>1?\"#b84870\":\"#62578c\")+'\">\\u7B2C'+(d+1)+\"\\u5929</span>\").join(\"\");q(\"#status\").textContent=\"\\u623F\\u95F4\\u5DF2\\u6709 \"+days.length+\" \\u4EBA \\xB7 \"+(new Set(days).size<days.length?\"\\u51FA\\u73B0\\u540C\\u751F\\u65E5\":\"\\u5C1A\\u65E0\\u91CD\\u590D\");q(\"#trials\").textContent=count?\"\\u91CD\\u590D \"+count+\" \\u95F4\\u623F \\xB7 \\u51FA\\u73B0\\u91CD\\u590D \"+hits+\" \\u95F4\\uFF08\"+(100*hits/count).toFixed(1)+\"%\\uFF09\":\"\\u5C1A\\u672A\\u8FDB\\u884C\\u91CD\\u590D\\u5B9E\\u9A8C\";q(\"#add\").disabled=days.length>=366;let p=1;for(let i=1;i<n();i++)p*=1-i/365;q(\"svg\").innerHTML='<rect x=\"10\" y=\"10\" width=\"'+(1-p)*600+'\" height=\"22\" fill=\"#62578c\"/><rect x=\"10\" y=\"50\" width=\"'+(count?hits/count*600:0)+'\" height=\"22\" fill=\"#b84870\"/>'}__name(draw,\"draw\");q(\"#add\").onclick=()=>{days.push(Math.floor(Math.random()*365));draw()};q(\"#sample\").onclick=()=>{days=sample();draw()};q(\"#batch\").onclick=()=>{for(let i=0;i<100;i++){days=sample();hits+=new Set(days).size<days.length?1:0}count+=100;draw()};q(\"#n\").oninput=()=>{days=[];count=hits=0;draw()};q(\"#n\").onchange=()=>{q(\"#n\").value=n();draw()};q(\"#reset\").onclick=()=>{days=[];count=hits=0;q(\"#n\").value=23;draw()};draw()",
         "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}#room{display:flex;flex-wrap:wrap;gap:6px;min-height:60px}#room span{padding:4px 8px;border-radius:5px;color:white;font-size:12px}body{--ink:#504784;--paper:#f6f1f8}",
         "height": 380,
         "kind": "experience"
@@ -51,34 +51,22 @@
     ],
     "scene": [
       {
-        "action": "focus",
-        "target": "birthday-p1",
-        "title": "先问清楚：你在找哪一种相同？",
-        "text": "两种事件的比较对象必须可见；把指数式增长的配对连线与理论概率同时展示。"
-      },
-      {
         "action": "reveal",
         "target": "birthday-pairs",
-        "title": "亲手试一次",
+        "title": "先问清楚：你在找哪一种相同？",
         "text": "点其他人与我，密网变成从你出发的星形；改变人数核对配对数与概率。"
-      },
-      {
-        "action": "focus",
-        "target": "birthday-p2",
-        "title": "让生日真的走进房间",
-        "text": "把随机单次与长期频率分开，碰撞以房间中两枚同色生日筹码显示。"
       },
       {
         "action": "reveal",
         "target": "birthday-room",
-        "title": "亲手试一次",
-        "text": "逐人加入；或重复100次固定23人实验，观察频率接近而不必等于理论值。"
+        "title": "让生日真的走进房间",
+        "text": "改变房间人数，让生日真实抽样"
       }
     ],
     "design": {
-      "version": "session-repair-2026-09-14",
+      "version": "free-exploration-2026-09-15",
       "intent": "把“与你同生日”与“任意两人”放进同一个房间，用真实抽样对照不断增加的配对数量。",
-      "readingFlow": "两种问题处连线对比 → 末段逐人入场并重复试验。",
+      "readingFlow": "先在标题与原文短引后操作「让生日真的走进房间」。改变房间人数，让生日真实抽样。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
       "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
@@ -103,7 +91,7 @@
           "purpose": "两种事件的比较对象必须可见；把指数式增长的配对连线与理论概率同时展示。",
           "whyHere": "紧接对应原文：我们经常把问题理解成“有没有人和我同一天生日”，但真正的问题是“任意两个人”。随着人越来越多，可比较的两两组合增加得比人数快得多。",
           "interaction": "点其他人与我，密网变成从你出发的星形；改变人数核对配对数与概率。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#me → 23人 · 22组候选配对 · 概率 5.86%",
             "#reset → 23人 · 253组候选配对 · 概率 50.73%"
@@ -113,12 +101,31 @@
           "blockId": "birthday-room",
           "purpose": "把随机单次与长期频率分开，碰撞以房间中两枚同色生日筹码显示。",
           "whyHere": "紧接对应原文：这很适合做成一次小实验：让人一个一个走进房间，出现重复生日时停下来。重复几次，亲眼看看随机结果与理论概率的区别。",
-          "interaction": "逐人加入；或重复100次固定23人实验，观察频率接近而不必等于理论值。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "interaction": "改变房间人数，让生日真实抽样",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
-            "#add → 房间已有 1 人 · 尚无重复",
+            "#reset → 房间已有 0 人 · 尚无重复",
+            "#n → 尚未进行重复实验",
+            "#batch → 重复 100 间房 · 出现重复 0 间（0.0%）",
+            "#n → 尚未进行重复实验",
+            "#batch → 重复 100 间房 · 出现重复 100 间（100.0%）",
             "#reset → 房间已有 0 人 · 尚无重复"
           ]
+        }
+      ]
+    },
+    "presentation": {
+      "version": 1,
+      "leadBlockId": "birthday-room",
+      "cue": "改变房间人数，让生日真实抽样",
+      "nodes": [
+        {
+          "blockId": "birthday-pairs",
+          "label": "先问清楚：你在找哪一种相同？"
+        },
+        {
+          "blockId": "birthday-room",
+          "label": "让生日真的走进房间"
         }
       ]
     },
@@ -126,10 +133,10 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-f1cec7d9-4058-4503-a182-321bc421e826",
+      "runId": "codex-67f3749a-8e88-4df0-8952-7e573de38282",
       "sourceHash": "a65c16652907e229fc57419798da1af6c97367609455812b3aed08bf920d2e19",
-      "createdAt": "2026-09-14T15:33:19.552Z",
-      "baselineVersion": "expressive-v7.2026-09-14",
+      "createdAt": "2026-09-14T16:26:46.622Z",
+      "baselineVersion": "composed-v8.2026-09-14",
       "prompt": "按作者要求加工；内部备注留存在本地工作台。"
     }
   }

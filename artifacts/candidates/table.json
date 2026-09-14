@@ -31,31 +31,25 @@
         "id": "protein-plate",
         "afterParagraphId": "table-p1",
         "title": "同样24克，可以是完全不同的一盘",
-        "html": "<small>虚构份量：鸡蛋6g、牛奶8g、豆腐10g</small><h3>点食物上桌，点盘中一份拿走</h3><div class=\"row\"><button id=\"egg\">＋ 鸡蛋6g</button><button id=\"milk\">＋ 牛奶8g</button><button id=\"tofu\">＋ 豆腐10g</button></div><div id=\"plate\"></div><svg class=\"visual\" viewBox=\"0 0 620 65\"></svg><output id=\"status\"></output><div class=\"row\"><button id=\"mix\">各一份</button><button id=\"same\">换成同总量的牛奶</button><button id=\"reset\">清空</button></div><p class=\"note\">每一色段对应一份的贡献。各一份=6+8+10=24g；三份牛奶=8+8+8=24g。这只是组成比较，不是饮食建议或真实食品标签。</p>",
-        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let foods=[\"egg\",\"milk\",\"tofu\"];const data={egg:[\"\\u9E21\\u86CB\",6,\"#c9994f\"],milk:[\"\\u725B\\u5976\",8,\"#8caeb8\"],tofu:[\"\\u8C46\\u8150\",10,\"#97a27b\"]};function draw(){const total=foods.reduce((s,k)=>s+data[k][1],0);q(\"#plate\").innerHTML=foods.map((k,i)=>'<button data-index=\"'+i+'\" style=\"background:'+data[k][2]+'\">'+data[k][0]+\"<small>\"+data[k][1]+\"g</small></button>\").join(\"\");let x=0;q(\"svg\").innerHTML=foods.map(k=>{const w=total?600*data[k][1]/total:0,s='<rect x=\"'+(x+10)+'\" y=\"10\" width=\"'+Math.max(0,w-2)+'\" height=\"40\" fill=\"'+data[k][2]+'\"/>';x+=w;return s}).join(\"\");q(\"#status\").textContent=foods.map(k=>data[k][1]).join(\" + \")+(foods.length?\" = \":\"\")+total+\" \\u514B \\xB7 \"+foods.length+\" \\u4EFD\";[\"egg\",\"milk\",\"tofu\"].forEach(k=>q(\"#\"+k).disabled=foods.length>=12)}__name(draw,\"draw\");[\"egg\",\"milk\",\"tofu\"].forEach(k=>q(\"#\"+k).onclick=()=>{if(foods.length<12)foods.push(k);draw()});q(\"#plate\").onclick=e=>{const b=e.target.closest(\"[data-index]\");if(b){foods.splice(+b.dataset.index,1);draw()}};q(\"#mix\").onclick=()=>{foods=[\"egg\",\"milk\",\"tofu\"];draw()};q(\"#same\").onclick=()=>{foods=[\"milk\",\"milk\",\"milk\"];draw()};q(\"#reset\").onclick=()=>{foods=[];draw()};draw()",
-        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#665538;--paper:#fbf5e6}#plate{min-height:180px;border:10px solid #e5dfcb;border-radius:40%;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:18px}#plate button{border:0;border-radius:40%;width:70px;color:#fff}#plate small{display:block;color:#fff}",
+        "html": "<small>虚构份量 · 不是食品标签或饮食建议</small><h3>同样的总量，可以由不同组合组成</h3><div id=\"plate\"></div><div class=\"controls\"><label>鸡蛋份数 · 6g/份<input id=\"egg\" type=\"number\" value=\"1\" min=\"0\" max=\"100\"></label><label>牛奶份数 · 8g/份<input id=\"milk\" type=\"number\" value=\"1\" min=\"0\" max=\"100\"></label><label>豆腐份数 · 10g/份<input id=\"tofu\" type=\"number\" value=\"1\" min=\"0\" max=\"100\"></label></div><svg class=\"visual\" viewBox=\"0 0 620 110\"></svg><output id=\"status\"></output><div class=\"row\"><button id=\"mix\">各一份</button><button id=\"same\">三份牛奶</button><button id=\"save-a\">保留组合 A</button><button id=\"reset\">清空</button></div><output id=\"comparison\"></output><p class=\"note\">点击盘中一份将它拿走，也可直接输入份数。每一色段的宽度是该类别对总量的贡献；A与B采用同一克数尺度。多于60份时画面抽样显示，计算包含全部份数。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\"),keys=[\"egg\",\"milk\",\"tofu\"],names=[\"\\u9E21\\u86CB\",\"\\u725B\\u5976\",\"\\u8C46\\u8150\"],units=[6,8,10],colors=[\"#c9994f\",\"#8caeb8\",\"#97a27b\"];let a=null;function draw(){const counts=keys.map(k=>Math.round(Math.max(0,Math.min(100,+q(\"#\"+k).value||0)))),grams=counts.map((n,i)=>n*units[i]),total=grams.reduce((s,v)=>s+v,0),at=a?a.reduce((s,v,i)=>s+v*units[i],0):0,max=Math.max(1,total,at);q(\"#plate\").replaceChildren();counts.forEach((n,i)=>{for(let j=0;j<Math.min(n,20);j++){const b=document.createElement(\"button\");b.textContent=names[i];b.style.background=colors[i];b.onclick=()=>{q(\"#\"+keys[i]).value=counts[i]-1;draw()};q(\"#plate\").append(b)}});q(\"svg\").innerHTML=[a||[0,0,0],counts].map((row,j)=>{let x=20;return row.map((n,i)=>{const width=n*units[i]/max*580,s='<rect x=\"'+x+'\" y=\"'+(10+j*55)+'\" width=\"'+width+'\" height=\"30\" fill=\"'+colors[i]+'\"/>';x+=width;return s}).join(\"\")}).join(\"\");q(\"#status\").textContent=grams.join(\" + \")+\" = \"+total+\" \\u514B \\xB7 \"+counts.reduce((s,n)=>s+n,0)+\" \\u4EFD\";q(\"#comparison\").textContent=a?\"A \"+at+\"\\u514B / B \"+total+\"\\u514B / \\u5DEE \"+(total-at)+\"\\u514B\":\"\\u4E0A\\u65B9A\\u3001\\u4E0B\\u65B9B\\uFF1B\\u5148\\u4FDD\\u7559\\u4E00\\u4E2A\\u7EC4\\u5408\\u3002\";return counts}__name(draw,\"draw\");keys.forEach(k=>{q(\"#\"+k).oninput=draw;q(\"#\"+k).onchange=()=>{q(\"#\"+k).value=Math.round(Math.max(0,Math.min(100,+q(\"#\"+k).value||0)));draw()}});const set=__name(counts=>{keys.forEach((k,i)=>q(\"#\"+k).value=counts[i]);draw()},\"set\");q(\"#mix\").onclick=()=>set([1,1,1]);q(\"#same\").onclick=()=>set([0,3,0]);q(\"#save-a\").onclick=()=>{a=draw();draw()};q(\"#reset\").onclick=()=>{a=null;set([0,0,0])};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#665538;--paper:#fbf5e6}#plate{min-height:180px;border:10px solid #e5dfcb;border-radius:40%;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:18px}#plate button{border:0;border-radius:40%;width:70px;color:#fff}#plate small{display:block;color:#fff}#plate{display:flex;flex-wrap:wrap;gap:5px;min-height:100px;background:#e8e2ce;border-radius:20px;padding:12px}#plate button{font-size:10px;padding:4px;min-height:32px}",
         "height": 530,
         "kind": "experience"
       }
     ],
     "scene": [
       {
-        "action": "focus",
-        "target": "table-p1",
-        "title": "同样24克，可以是完全不同的一盘",
-        "text": "同总量的不同构成可直接替换，色段是份量贡献，不把总克数当唯一理解。"
-      },
-      {
         "action": "reveal",
         "target": "protein-plate",
-        "title": "亲手试一次",
-        "text": "上桌、拿走、换同总量组合，盘中份数与加法条一一对应。"
+        "title": "同样24克，可以是完全不同的一盘",
+        "text": "自由组合每种食物的份数，保存两盘作比较"
       }
     ],
     "design": {
-      "version": "session-repair-2026-09-14",
+      "version": "free-exploration-2026-09-15",
       "intent": "亲手把不同份量放到同一餐盘，再保持24克总量替换组合，理解每份对总量的贡献。",
-      "readingFlow": "示例份量处加法 → 摆盘处对照同总量组合。",
+      "readingFlow": "先在标题与原文短引后操作「同样24克，可以是完全不同的一盘」。自由组合每种食物的份数，保存两盘作比较。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
       "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
@@ -79,14 +73,26 @@
           "blockId": "protein-plate",
           "purpose": "同总量的不同构成可直接替换，色段是份量贡献，不把总克数当唯一理解。",
           "whyHere": "紧接对应原文：当我们把食物真的摆到一餐里，抽象的克数就变成了可以理解的选择。增加一份、拿走一份，看看组合如何变化。",
-          "interaction": "上桌、拿走、换同总量组合，盘中份数与加法条一一对应。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "interaction": "自由组合每种食物的份数，保存两盘作比较",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
-            "#same → 8 + 8 + 8 = 24 克 · 3 份",
             "#mix → 6 + 8 + 10 = 24 克 · 3 份",
-            "[data-index=\"0\"] → 8 + 10 = 18 克 · 2 份",
-            "#reset → 0 克 · 0 份"
+            "#save-a → A 24克 / B 24克 / 差 0克",
+            "#same → A 24克 / B 24克 / 差 0克",
+            "#milk → 0 + 160 + 0 = 160 克 · 20 份",
+            "#reset → 0 + 0 + 0 = 0 克 · 0 份"
           ]
+        }
+      ]
+    },
+    "presentation": {
+      "version": 1,
+      "leadBlockId": "protein-plate",
+      "cue": "自由组合每种食物的份数，保存两盘作比较",
+      "nodes": [
+        {
+          "blockId": "protein-plate",
+          "label": "同样24克，可以是完全不同的一盘"
         }
       ]
     },
@@ -94,11 +100,11 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-18d731ef-ec75-476d-a6c3-4c298a9cabae",
+      "runId": "codex-00a82e9d-4e5d-4121-8b67-bcfeb7cec7ea",
       "sourceHash": "f9d903cba93ad6768fb921cd1247a3812ea31a2641c2210ae804c620c59500da",
-      "createdAt": "2026-09-14T15:33:58.696Z",
-      "baselineVersion": "expressive-v7.2026-09-14",
-      "prompt": "用户要求：先使用自己作为 Agent 进行默认生成。读取此文章，视觉与交互只使用 HTML/CSS/JS/SVG/Canvas；不使用外部素材，保持原文，先编排整篇阅读路线，再让不同片段自然融入正文；记录每处风格、位置理由、实现及验收约定，以逐步讲解和真实操作展示设计。"
+      "createdAt": "2026-09-14T16:21:35.659Z",
+      "baselineVersion": "composed-v8.2026-09-14",
+      "prompt": "用户要求发布前打磨：真实回答优先、核心操作前置、自由编辑与比较；当前会话实际创作，保留原文与历史。"
     }
   }
 }

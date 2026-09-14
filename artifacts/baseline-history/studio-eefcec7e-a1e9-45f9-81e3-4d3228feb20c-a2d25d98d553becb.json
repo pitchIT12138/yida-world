@@ -1,0 +1,215 @@
+{
+  "sourceHash": "d3aafc9c6ec5b892de7e0bd5c0d4daca54f476b88f9c9d7cfe67b3387a193498",
+  "design": {
+    "version": "free-exploration-2026-09-15",
+    "intent": "保留用户指定的原图滑动比较，增加并排核对构图，避免非同一时刻截图造成误判；疑义两组继续显示原图。",
+    "readingFlow": "先在标题与原文短引后操作「隧道入口：阴影与暖光」。拖动分隔线看车灯；放大后同步移动两张原图。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
+    "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
+    "style": {
+      "palette": [
+        "#183a35",
+        "#f2f5ed",
+        "#d98b51"
+      ],
+      "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+      "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+      "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
+    },
+    "decisions": [
+      {
+        "title": "操作必须改变可见关系",
+        "reason": "保留用户指定的原图滑动比较，增加并排核对构图，避免非同一时刻截图造成误判；疑义两组继续显示原图。",
+        "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "dlss-pair-1",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线看车灯；放大后同步移动两张原图",
+        "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#zoom → 滑动 · 2.0倍 · 拖动分界",
+          "#side → 并排 · 2.0倍 · 拖动分界",
+          "#wipe → 滑动 · 1.0倍 · 拖动分界"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-2",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#zoom → 滑动 · 2.0倍 · 拖动分界",
+          "#side → 并排 · 2.0倍 · 拖动分界",
+          "#wipe → 滑动 · 1.0倍 · 拖动分界"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-3",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#zoom → 滑动 · 2.0倍 · 拖动分界",
+          "#side → 并排 · 2.0倍 · 拖动分界",
+          "#wipe → 滑动 · 1.0倍 · 拖动分界"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-4",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#zoom → 滑动 · 2.0倍 · 拖动分界",
+          "#side → 并排 · 2.0倍 · 拖动分界",
+          "#wipe → 滑动 · 1.0倍 · 拖动分界"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-5",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#zoom → 滑动 · 2.0倍 · 拖动分界",
+          "#side → 并排 · 2.0倍 · 拖动分界",
+          "#wipe → 滑动 · 1.0倍 · 拖动分界"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-6",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "本组方向待核对，继续保留原图与说明，不建立虚假开关对照。",
+        "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
+        "checks": [
+          "#why → 本组延迟标记与作者判别规则不一致，保留原图待核对。"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-7",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "本组方向待核对，继续保留原图与说明，不建立虚假开关对照。",
+        "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
+        "checks": [
+          "#why → 本组延迟标记与作者判别规则不一致，保留原图待核对。"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-8",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#zoom → 滑动 · 2.0倍 · 拖动分界",
+          "#side → 并排 · 2.0倍 · 拖动分界",
+          "#wipe → 滑动 · 1.0倍 · 拖动分界"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-9",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#zoom → 滑动 · 2.0倍 · 拖动分界",
+          "#side → 并排 · 2.0倍 · 拖动分界",
+          "#wipe → 滑动 · 1.0倍 · 拖动分界"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-10",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#zoom → 滑动 · 2.0倍 · 拖动分界",
+          "#side → 并排 · 2.0倍 · 拖动分界",
+          "#wipe → 滑动 · 1.0倍 · 拖动分界"
+        ]
+      },
+      {
+        "blockId": "dlss-pair-11",
+        "purpose": "在原文讨论处比较同一画面；保留已核对的图片、标签与方向疑义。",
+        "whyHere": "紧接对应原文：[图片]",
+        "interaction": "拖动分隔线、看A或B；可切并排检查构图差异，复位回同位置比较。",
+        "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
+        "checks": [
+          "#before → A 区域 100%；B 区域 0%",
+          "#after-only → A 区域 0%；B 区域 100%",
+          "#both → A 区域 50%；B 区域 50%",
+          "#position → A 区域 51%；B 区域 49%",
+          "#zoom → 滑动 · 2.0倍 · 拖动分界",
+          "#side → 并排 · 2.0倍 · 拖动分界",
+          "#wipe → 滑动 · 1.0倍 · 拖动分界"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "dlss-pair-1": "843ca831771d335ec25ea7774755b870321ce3ad82150298e8c618a55ca74e75",
+    "dlss-pair-2": "25a6445bccbd8ba4ce08d564edf5ecbe906f666d64dc3c519dc51b8d0358faa7",
+    "dlss-pair-3": "a2325ca35ef34d4b7a918f9455e7e0eda33b7019b7b0d7c83e0c4cb7a3c31ca5",
+    "dlss-pair-4": "332b115d120c7f913898951931e9325f066f8a87299bfee3eaa657a9d1d794a7",
+    "dlss-pair-5": "40ffdd66c15e6c741d5f1f7afb31d436395c379dacf9058431c20e610643fd3b",
+    "dlss-pair-6": "101b63c4971867501ee9eb01c9ab361de0d7b82c03230f1b52963686b44ed15a",
+    "dlss-pair-7": "19e053036de14b559a7108ce86476ed3971d20d1cd3d47da9a1b758670c7e3f1",
+    "dlss-pair-8": "07475efca4bd70431a86e1361b60a32c7432f161186c2b0468463e23086459e4",
+    "dlss-pair-9": "bc9316e06c2c3e23ce22f73ce1c92e0cc6472e247949fe35a06016278391390e",
+    "dlss-pair-10": "ccfc23df7cf0a6927e77a1a309762ff6782aa6f6cf9e9fd1af43e43708aefbfe",
+    "dlss-pair-11": "41b19948b35ba04ffb9ff731dee6b9c6b11e975c73506c9a118f26c50ba403fe"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-b03bfd71-5dec-4917-abf3-5bd14a13452c",
+    "sourceHash": "d3aafc9c6ec5b892de7e0bd5c0d4daca54f476b88f9c9d7cfe67b3387a193498",
+    "createdAt": "2026-09-14T16:21:31.817Z",
+    "baselineVersion": "composed-v8.2026-09-14",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

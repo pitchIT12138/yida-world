@@ -23,7 +23,9 @@ releaseRoutes.get('/feed',async c=>{
 releaseRoutes.get('/media/:id',async c=>{
  const id=c.req.param('id');if(!/^[a-zA-Z0-9_-]{1,80}$/.test(id))return c.json({error:'内容标识无效'},400);
  if(!c.env.MEDIA)return c.json({error:'图片存储暂不可用'},503);const obj=await c.env.MEDIA.get('curated/'+id+'.json');
- if(!obj)return c.json({error:'原图暂不可用'},404);return new Response(obj.body as any,{headers:{'Content-Type':'application/json','Cache-Control':'public,max-age=3600','X-Content-Type-Options':'nosniff'}});
+ if(!obj)return c.json({error:'原图暂不可用'},404);
+ const requested=c.req.queries('url');if(requested?.length){if(requested.length>24||requested.some(u=>u.length>3000))return c.json({error:'图片范围无效'},400);const assets=await obj.json<import('../src/lib/types').SourceAsset[]>();return c.json(assets.filter(a=>requested.includes(a.url)),200,{'Cache-Control':'public,max-age=3600','X-Content-Type-Options':'nosniff'})}
+ return new Response(obj.body as any,{headers:{'Content-Type':'application/json','Cache-Control':'public,max-age=3600','X-Content-Type-Options':'nosniff'}});
 });
 releaseRoutes.use('/admin/*',async(c,next)=>{if(!await runner(c.req.raw,c.env))return c.json({error:'需要后台任务凭证'},401);if(!c.env.DB||!c.env.MEDIA)return c.json({error:'发布存储未连接'},503);await next()});
 releaseRoutes.post('/admin/discover',async c=>{

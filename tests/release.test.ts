@@ -65,3 +65,8 @@ describe('publication transaction',()=>{
   expect((await post('/public/test/restore',{version:1,expectedRevision:1})).status).toBe(409);
  });
 });
+
+it('serves only requested saved originals for the first interactive picture without dropping full export media',async()=>{
+ const env=cloudFixture();const assets=[{url:'https://image.test/one',sha256:'a'},{url:'https://image.test/two',sha256:'b'},{url:'https://image.test/three',sha256:'c'}];env.objects.set('curated/example.json',JSON.stringify(assets));
+ const selected=await app.request('/api/media/example?url='+encodeURIComponent(assets[0].url)+'&url='+encodeURIComponent(assets[1].url),{},env);expect(await selected.json()).toEqual(assets.slice(0,2));expect(selected.headers.get('Cache-Control')).toContain('public');expect(await(await app.request('/api/media/example',{},env)).json()).toEqual(assets);expect(await(await app.request('/api/media/example?url=https://unrelated.test/',{},env)).json()).toEqual([]);
+});

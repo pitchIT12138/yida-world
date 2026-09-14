@@ -273,43 +273,31 @@
         "id": "project-shelf",
         "afterParagraphId": "knowledge-1523701957479239680-p42",
         "title": "认真终止，也是一个明确结尾",
-        "html": "<h3>把手头的项目放到三个位置</h3><div class=\"shelf\"><section><b>进行中</b><div id=\"open\"></div></section><section><b>已完成</b><div id=\"done\"></div></section><section><b>已终止</b><div id=\"stopped\"></div></section></div><label>选择项目<select id=\"item\"><option value=\"0\">半篇文章</option><option value=\"1\">旧学习计划</option><option value=\"2\">未读完的书</option></select></label><label>结果或终止原因<input id=\"reason\" type=\"text\" placeholder=\"写下可回看的交代\" maxlength=\"120\"></label><div class=\"row\"><button id=\"complete\">记录完成</button><button id=\"stop\">主动终止</button><button id=\"reset\">重置示例</button></div><output id=\"status\"></output><p class=\"note\">此处只整理模拟项目，不验证你在现实中是否完成。完成与终止分栏保存原因；不虚构“能量感”分数。</p>",
-        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");const names=[\"\\u534A\\u7BC7\\u6587\\u7AE0\",\"\\u65E7\\u5B66\\u4E60\\u8BA1\\u5212\",\"\\u672A\\u8BFB\\u5B8C\\u7684\\u4E66\"];let states=[\"open\",\"open\",\"open\"],reasons=[\"\",\"\",\"\"];function draw(){for(const k of[\"open\",\"done\",\"stopped\"]){const box=q(\"#\"+k);box.replaceChildren();states.forEach((s,i)=>{if(s===k){const p=document.createElement(\"p\");p.textContent=names[i]+(reasons[i]?\"\\uFF1A\"+reasons[i]:\"\");box.append(p)}})}q(\"#status\").textContent=\"\\u8FDB\\u884C\\u4E2D \"+states.filter(s=>s===\"open\").length+\" / \\u5DF2\\u5B8C\\u6210 \"+states.filter(s=>s===\"done\").length+\" / \\u5DF2\\u7EC8\\u6B62 \"+states.filter(s=>s===\"stopped\").length}__name(draw,\"draw\");function move(to){const i=+q(\"#item\").value,reason=q(\"#reason\").value.trim();if(!reason){q(\"#status\").textContent=\"\\u5148\\u4E3A\\u8FD9\\u4E2A\\u7ED3\\u5C3E\\u5199\\u4E00\\u53E5\\u7ED3\\u679C\\u6216\\u539F\\u56E0\\u3002\";return}states[i]=to;reasons[i]=reason;draw()}__name(move,\"move\");q(\"#complete\").onclick=()=>move(\"done\");q(\"#stop\").onclick=()=>move(\"stopped\");q(\"#reset\").onclick=()=>{states=[\"open\",\"open\",\"open\"];reasons=[\"\",\"\",\"\"];q(\"#reason\").value=\"\";draw()};draw()",
-        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#3f6544;--paper:#f0f4e9}.shelf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.shelf section{background:#fff8;padding:8px;min-height:130px;font-size:12px}.shelf p{padding:5px;border-bottom:1px solid #adbea8;overflow-wrap:anywhere}input[type=text]{width:100%;padding:10px}",
+        "html": "<small>把自己的任务放进实验 · 不测量情绪</small><h3>什么状态，才算这一件事结束？</h3><label>任务<input id=\"task\" value=\"写一篇短文\" maxlength=\"100\"></label><label>完成标准<input id=\"criterion\" value=\"写出三句能表达主旨的话\" maxlength=\"160\"></label><label>主动终止的理由<input id=\"reason\" placeholder=\"例如：目标已经改变\" maxlength=\"160\"></label><div class=\"row\"><button id=\"add\">拆成一个可行动的小任务</button><button id=\"reset\">清空重来</button></div><div id=\"board\"></div><output id=\"status\"></output><p class=\"note\">完成与主动终止是两种不同结束。终止需要写明理由；可继续添加自己的步骤，完成标准没有被预设句子锁定。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let items=[];const escape=__name(s=>s.replace(/[&<>\"']/g,c=>({\"&\":\"&amp;\",\"<\":\"&lt;\",\">\":\"&gt;\",'\"':\"&quot;\",\"'\":\"&#39;\"})[c]),\"escape\");function draw(){q(\"#board\").innerHTML=[\"\\u5F85\\u884C\\u52A8\",\"\\u8FDB\\u884C\\u4E2D\",\"\\u5DF2\\u5B8C\\u6210\",\"\\u5DF2\\u7EC8\\u6B62\"].map((name,i)=>\"<section><h4>\"+name+\"</h4>\"+items.filter(x=>x.state===i).map(x=>\"<article><b>\"+escape(x.task)+\"</b><p>\"+escape(x.goal)+\"</p>\"+(i<2?'<button data-start=\"'+x.id+'\">'+(i===0?\"\\u5F00\\u59CB\":\"\\u5B8C\\u6210\")+'</button><button data-stop=\"'+x.id+'\">\\u4E3B\\u52A8\\u7EC8\\u6B62</button>':\"<small>\"+escape(x.reason||\"\\u8FBE\\u6210\\u6240\\u5199\\u6807\\u51C6\")+\"</small>\")+\"</article>\").join(\"\")+\"</section>\").join(\"\");q(\"#status\").textContent=items.length+\" \\u4E2A\\u4EFB\\u52A1 \\xB7 \\u5DF2\\u5B8C\\u6210 \"+items.filter(x=>x.state===2).length+\" \\xB7 \\u5DF2\\u7EC8\\u6B62 \"+items.filter(x=>x.state===3).length}__name(draw,\"draw\");q(\"#add\").onclick=()=>{const task=q(\"#task\").value.trim(),goal=q(\"#criterion\").value.trim();if(task&&goal)items.push({id:items.length,task,goal,state:0});draw()};q(\"#board\").onclick=e=>{const b=e.target.closest(\"button\");if(!b)return;if(b.dataset.start!==void 0){const x=items[+b.dataset.start];x.state=x.state===0?1:2}else{const reason=q(\"#reason\").value.trim();if(reason){const x=items[+b.dataset.stop];x.state=3;x.reason=\"\\u7EC8\\u6B62\\u7406\\u7531\\uFF1A\"+reason}}draw()};q(\"#reset\").onclick=()=>{items=[];draw()};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#3f6544;--paper:#f0f4e9}.shelf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.shelf section{background:#fff8;padding:8px;min-height:130px;font-size:12px}.shelf p{padding:5px;border-bottom:1px solid #adbea8;overflow-wrap:anywhere}input[type=text]{width:100%;padding:10px}#board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}#board section{background:#e5ebdf;padding:10px;border-radius:8px;min-height:100px}#board article{background:#fff;padding:10px;border-left:3px solid #63845d;margin:5px 0;overflow-wrap:anywhere}#board button{font-size:11px;padding:4px}label{margin:8px 0}input{padding:8px;width:100%}",
         "height": 570,
         "kind": "experience"
       }
     ],
     "scene": [
       {
-        "action": "focus",
-        "target": "knowledge-1523701957479239680-p16",
-        "title": "做了三步，为什么还像没做完？",
-        "text": "用可检查结果和终点改变回路状态，避免纯粹点亮完成按钮充当成就感。"
-      },
-      {
         "action": "reveal",
         "target": "close-loop",
-        "title": "亲手试一次",
+        "title": "做了三步，为什么还像没做完？",
         "text": "写三句后比较两种完成标准；明确任务才允许存档，闭合后的操作停止。"
-      },
-      {
-        "action": "focus",
-        "target": "knowledge-1523701957479239680-p42",
-        "title": "认真终止，也是一个明确结尾",
-        "text": "把作者提出的主动了断变成有记录的状态迁移，既不和成功混同，也不遗忘原因。"
       },
       {
         "action": "reveal",
         "target": "project-shelf",
-        "title": "亲手试一次",
-        "text": "填写原因后把项目移到已完成或已终止；三栏和未完数量真实改变。"
+        "title": "认真终止，也是一个明确结尾",
+        "text": "写下自己的任务与完成标准，亲手推进或终止"
       }
     ],
     "design": {
-      "version": "session-repair-2026-09-14",
+      "version": "free-exploration-2026-09-15",
       "intent": "让模糊任务与明确完成标准走过同一段行动，再通过完成或主动终止把回路闭合；不把情绪简化为可测数值。",
-      "readingFlow": "定义后选择完成标准 → 亲身行动处动手完成 → 清理项目处区分完成、继续与主动终止。",
+      "readingFlow": "先在标题与原文短引后操作「认真终止，也是一个明确结尾」。写下自己的任务与完成标准，亲手推进或终止。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
       "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
@@ -334,7 +322,7 @@
           "purpose": "用可检查结果和终点改变回路状态，避免纯粹点亮完成按钮充当成就感。",
           "whyHere": "紧接对应原文：闭合任务回路的关键是亲身践行：你必须要通过你自己的行为来闭合任务回路——假想的没有用，看别人闭合没有用，给自己打鸡血没有用，必须要你亲身践行才有用。",
           "interaction": "写三句后比较两种完成标准；明确任务才允许存档，闭合后的操作停止。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#act → 模糊任务：写了1句，但没有约定终点。",
             "#act → 模糊任务：写了2句，但没有约定终点。",
@@ -347,13 +335,29 @@
           "blockId": "project-shelf",
           "purpose": "把作者提出的主动了断变成有记录的状态迁移，既不和成功混同，也不遗忘原因。",
           "whyHere": "紧接对应原文：将不可能做完的项目彻底终止、勇于面对自己不得不放弃一个项目的事实，这本身也是一种「了断」和「完结」。如果能认真总结未能完成项目的经验并应用到接下来的行动中，这种中止依然能带来一定的完结感和意义感。",
-          "interaction": "填写原因后把项目移到已完成或已终止；三栏和未完数量真实改变。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "interaction": "写下自己的任务与完成标准，亲手推进或终止",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
-            "#reason → 进行中 3 / 已完成 0 / 已终止 0",
-            "#stop → 进行中 2 / 已完成 0 / 已终止 1",
-            "#reset → 进行中 3 / 已完成 0 / 已终止 0"
+            "#add → 1 个任务 · 已完成 0 · 已终止 0",
+            "[data-start=\"0\"] → 1 个任务 · 已完成 0 · 已终止 0",
+            "[data-start=\"0\"] → 1 个任务 · 已完成 1 · 已终止 0",
+            "#reset → 0 个任务 · 已完成 0 · 已终止 0"
           ]
+        }
+      ]
+    },
+    "presentation": {
+      "version": 1,
+      "leadBlockId": "project-shelf",
+      "cue": "写下自己的任务与完成标准，亲手推进或终止",
+      "nodes": [
+        {
+          "blockId": "close-loop",
+          "label": "做了三步，为什么还像没做完？"
+        },
+        {
+          "blockId": "project-shelf",
+          "label": "认真终止，也是一个明确结尾"
         }
       ]
     },
@@ -361,11 +365,11 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-83df23ae-2463-40b4-b2b1-1361085f6823",
+      "runId": "codex-141b7918-2c24-4015-93ef-fa5c4ac7774b",
       "sourceHash": "a3666d0cae64a8e06683fad306953b047e6bfea6ab8cdf5bbb4ebb7794915e87",
-      "createdAt": "2026-09-14T15:34:15.194Z",
-      "baselineVersion": "expressive-v7.2026-09-14",
-      "prompt": "用户要求：先使用自己作为 Agent 进行默认生成。读取此文章，视觉与交互只使用 HTML/CSS/JS/SVG/Canvas；不使用外部素材，保持原文，先编排整篇阅读路线，再让不同片段自然融入正文；记录每处风格、位置理由、实现及验收约定，以逐步讲解和真实操作展示设计。"
+      "createdAt": "2026-09-14T16:21:16.446Z",
+      "baselineVersion": "composed-v8.2026-09-14",
+      "prompt": "用户要求发布前打磨：真实回答优先、核心操作前置、自由编辑与比较；当前会话实际创作，保留原文与历史。"
     }
   }
 }

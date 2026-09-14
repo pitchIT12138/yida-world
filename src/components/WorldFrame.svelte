@@ -19,10 +19,10 @@
     io.observe(holder);
     const receive=(event:MessageEvent)=>{
       if(!validMessage(event,frame?.contentWindow||null,channel,block.id))return;
-      if(event.data.type==='resize'&&typeof event.data.value==='number'&&Number.isFinite(event.data.value))height=Math.max(36,Math.min(1000,event.data.value));
+      if(event.data.type==='resize'&&typeof event.data.value==='number'&&Number.isFinite(event.data.value))height=Math.max(36,Math.min(6000,event.data.value));
       if(event.data.type==='error'){error='这段交互遇到问题，可以重新打开。';onstatus(false)}
       if(event.data.type==='media-ready'&&!error)onstatus(true);
-      if(event.data.type==='binding'){const v=event.data.value as any;if(v&&typeof v.key==='string'&&typeof v.value==='string')onbinding(v.key,v.value.slice(0,160))}
+      if(event.data.type==='binding'&&ready){const v=event.data.value as any;if(v&&typeof v.key==='string'&&typeof v.value==='string')onbinding(v.key,v.value.slice(0,160))}
       if(event.data.type==='ready'){ready=true;if(reading)send('read',reading);send('state',articleState);send('active',visible&&!document.hidden)}
       if(event.data.type==='demo-result'){const v=event.data.value as any;if(v?.id===demo?.id&&typeof v.ok==='boolean')ondemo(v.id,v.ok,typeof v.message==='string'?v.message.slice(0,160):undefined)}
     };

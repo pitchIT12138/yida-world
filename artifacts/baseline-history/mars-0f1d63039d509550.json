@@ -1,0 +1,58 @@
+{
+  "sourceHash": "f953e8841fd93857b77cf653bafd44fdba79d14ed300509dc9736badf7caa07a",
+  "design": {
+    "version": "free-exploration-2026-09-15",
+    "intent": "亲手推进一条消息的传播，区分发出、送达、回复到达；距离改变的是全部时间节点。",
+    "readingFlow": "先在标题与原文短引后操作「谢邀发出了，地球还没收到」。写一条消息，亲自推进它穿过太空。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
+    "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
+    "style": {
+      "palette": [
+        "#183a35",
+        "#f2f5ed",
+        "#d98b51"
+      ],
+      "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+      "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+      "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
+    },
+    "decisions": [
+      {
+        "title": "操作必须改变可见关系",
+        "reason": "亲手推进一条消息的传播，区分发出、送达、回复到达；距离改变的是全部时间节点。",
+        "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "light-post",
+        "purpose": "信封位置对应实际光速计算，送达与回复不是同一状态。",
+        "whyHere": "紧接对应原文：为了讨论得具体，假设这次两地相距 2.25 亿千米，按每秒 299,792.458 千米计算单程延迟。现在，你在火星发出一句“谢邀”，地球上的人什么时候能看到？",
+        "interaction": "写一条消息，亲自推进它穿过太空",
+        "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
+        "checks": [
+          "#send → 消息正在去地球的路上",
+          "#step → 消息正在去地球的路上",
+          "#arrival → 地球已收到；回复正在路上",
+          "#arrival → 回复已回到火星",
+          "#reset → 待发送",
+          "#reset → 待发送",
+          "#message → 待发送",
+          "#send → 消息正在去地球的路上"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "light-post": "df905f7b658a6dafc72fe87d21f71e2dc1e31600afac76588c3641c173eaf0a9"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-54f9b0e5-167c-43c2-af66-dc3939d284d3",
+    "sourceHash": "f953e8841fd93857b77cf653bafd44fdba79d14ed300509dc9736badf7caa07a",
+    "createdAt": "2026-09-14T16:21:19.223Z",
+    "baselineVersion": "composed-v8.2026-09-14",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}

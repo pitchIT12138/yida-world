@@ -31,31 +31,25 @@
         "id": "light-post",
         "afterParagraphId": "mars-p1",
         "title": "谢邀发出了，地球还没收到",
-        "html": "<small>传播时间演示 · 不计设备、排队或人工思考耗时</small><h3>先把消息送过225,000,000千米</h3><label>距离 / 百万千米<input id=\"distance\" type=\"number\" min=\"55\" max=\"400\" value=\"225\"></label><div class=\"row\"><button id=\"send\">从火星发出“谢邀”</button><button id=\"step\">推进5分钟</button><button id=\"arrival\">推进到下一个送达时刻</button><button id=\"reset\">复位</button></div><svg class=\"visual\" viewBox=\"0 0 650 220\"></svg><output id=\"status\"></output><output id=\"time\"></output><p class=\"note\">每次操作明确推进模拟时间，不在后台自动播放。单程t=d÷299,792.458；地球收到后假设立即回复，因此往返为2t。55与400百万千米只是距离情景。</p>",
-        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let elapsed=0,sent=false;function delay(){const el=q(\"#distance\");el.value=Math.min(400,Math.max(55,+el.value||55));return+el.value*1e6/299792.458}__name(delay,\"delay\");function draw(){const t=delay(),received=elapsed>=t,reply=elapsed>=2*t,ratio=Math.min(1,elapsed/t),x=!received?80+ratio*480:560-Math.min(1,(elapsed-t)/t)*480;q(\"svg\").innerHTML='<path d=\"M80 105H560\" stroke=\"#7e8caf\" stroke-dasharray=\"5\"/><circle cx=\"80\" cy=\"105\" r=\"32\" fill=\"#bb654c\"/><circle cx=\"560\" cy=\"105\" r=\"32\" fill=\"#519ac1\"/><text x=\"55\" y=\"165\" fill=\"#e3eafa\">\\u706B\\u661F</text><text x=\"535\" y=\"165\" fill=\"#e3eafa\">\\u5730\\u7403</text>'+(sent?'<rect x=\"'+(x-11)+'\" y=\"88\" width=\"22\" height=\"16\" fill=\"#edd5a3\"/><path d=\"M'+(x-11)+' 88l11 10 11-10\" fill=\"none\" stroke=\"#7d603a\"/>':\"\");q(\"#status\").textContent=!sent?\"\\u5F85\\u53D1\\u9001\":reply?\"\\u56DE\\u590D\\u5DF2\\u56DE\\u5230\\u706B\\u661F\":received?\"\\u5730\\u7403\\u5DF2\\u6536\\u5230\\uFF1B\\u56DE\\u590D\\u6B63\\u5728\\u8DEF\\u4E0A\":\"\\u6D88\\u606F\\u6B63\\u5728\\u53BB\\u5730\\u7403\\u7684\\u8DEF\\u4E0A\";q(\"#time\").textContent=\"\\u5DF2\\u8FC7 \"+elapsed.toFixed(1)+\" \\u79D2 \\xB7 \\u5355\\u7A0B \"+t.toFixed(1)+\" \\u79D2 / \\u5F80\\u8FD4 \"+(2*t).toFixed(1)+\" \\u79D2\";q(\"#step\").disabled=!sent||reply;q(\"#arrival\").disabled=!sent||reply}__name(draw,\"draw\");q(\"#send\").onclick=()=>{sent=true;elapsed=0;draw()};q(\"#step\").onclick=()=>{elapsed=Math.min(delay()*2,elapsed+300);draw()};q(\"#arrival\").onclick=()=>{const t=delay();elapsed=elapsed<t?t:2*t;draw()};q(\"#distance\").oninput=()=>{elapsed=0;sent=false;draw()};q(\"#reset\").onclick=()=>{elapsed=0;sent=false;q(\"#distance\").value=225;draw()};draw()",
-        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#e3eafa;--paper:#18253e;--muted:#abbdda}",
+        "html": "<small>传播时间演示 · 不计设备、排队或人工思考耗时</small><h3>先把消息送过225,000,000千米</h3><label>距离 / 百万千米<input id=\"distance\" type=\"number\" min=\"55\" max=\"400\" value=\"225\"></label><div class=\"row\"><button id=\"send\">从火星发出“谢邀”</button><button id=\"step\">推进5分钟</button><button id=\"arrival\">推进到下一个送达时刻</button><button id=\"reset\">复位</button></div><svg class=\"visual\" viewBox=\"0 0 650 220\"></svg><output id=\"status\"></output><output id=\"time\"></output><p class=\"note\">每次操作明确推进模拟时间，不在后台自动播放。单程t=d÷299,792.458；地球收到后假设立即回复，因此往返为2t。55与400百万千米只是距离情景。</p><label>要发送的消息<input id=\"message\" value=\"谢邀\" maxlength=\"120\"></label><div id=\"messages\"></div>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let elapsed=0,sent=false;function delay(){const el=q(\"#distance\");el.value=Math.min(400,Math.max(55,+el.value||55));return+el.value*1e6/299792.458}__name(delay,\"delay\");function draw(){const t=delay(),received=elapsed>=t,reply=elapsed>=2*t,ratio=Math.min(1,elapsed/t),x=!received?80+ratio*480:560-Math.min(1,(elapsed-t)/t)*480;q(\"svg\").innerHTML='<path d=\"M80 105H560\" stroke=\"#7e8caf\" stroke-dasharray=\"5\"/><circle cx=\"80\" cy=\"105\" r=\"32\" fill=\"#bb654c\"/><circle cx=\"560\" cy=\"105\" r=\"32\" fill=\"#519ac1\"/><text x=\"55\" y=\"165\" fill=\"#e3eafa\">\\u706B\\u661F</text><text x=\"535\" y=\"165\" fill=\"#e3eafa\">\\u5730\\u7403</text>'+(sent?'<rect x=\"'+(x-11)+'\" y=\"88\" width=\"22\" height=\"16\" fill=\"#edd5a3\"/><path d=\"M'+(x-11)+' 88l11 10 11-10\" fill=\"none\" stroke=\"#7d603a\"/>':\"\");q(\"#status\").textContent=!sent?\"\\u5F85\\u53D1\\u9001\":reply?\"\\u56DE\\u590D\\u5DF2\\u56DE\\u5230\\u706B\\u661F\":received?\"\\u5730\\u7403\\u5DF2\\u6536\\u5230\\uFF1B\\u56DE\\u590D\\u6B63\\u5728\\u8DEF\\u4E0A\":\"\\u6D88\\u606F\\u6B63\\u5728\\u53BB\\u5730\\u7403\\u7684\\u8DEF\\u4E0A\";q(\"#time\").textContent=\"\\u5DF2\\u8FC7 \"+elapsed.toFixed(1)+\" \\u79D2 \\xB7 \\u5355\\u7A0B \"+t.toFixed(1)+\" \\u79D2 / \\u5F80\\u8FD4 \"+(2*t).toFixed(1)+\" \\u79D2\";q(\"#step\").disabled=!sent||reply;q(\"#arrival\").disabled=!sent||reply}__name(draw,\"draw\");q(\"#send\").onclick=()=>{sent=true;elapsed=0;draw()};q(\"#step\").onclick=()=>{elapsed=Math.min(delay()*2,elapsed+300);draw()};q(\"#arrival\").onclick=()=>{const t=delay();elapsed=elapsed<t?t:2*t;draw()};q(\"#distance\").oninput=()=>{elapsed=0;sent=false;draw()};q(\"#reset\").onclick=()=>{elapsed=0;sent=false;q(\"#distance\").value=225;draw()};draw()\n;(()=>{const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let message=\"\";q(\"#send\").textContent=\"\\u53D1\\u9001\\u8FD9\\u6761\\u6D88\\u606F\";function show(){const status=q(\"#status\").textContent,box=q(\"#messages\");box.replaceChildren();for(const[where,content]of[[\"\\u706B\\u661F\",message||\"\\u5C1A\\u672A\\u53D1\\u51FA\"],[\"\\u5730\\u7403\",status.includes(\"\\u5730\\u7403\\u5DF2\\u6536\\u5230\")||status.includes(\"\\u56DE\\u590D\\u5DF2\")?message:\"\\u5C1A\\u672A\\u6536\\u5230\"],[\"\\u706B\\u661F\\u6536\\u5230\\u7684\\u56DE\\u590D\",status.includes(\"\\u56DE\\u590D\\u5DF2\")?\"\\u6536\\u5230\\uFF1A\"+message:\"\\u7B49\\u5F85\\u4F20\\u64AD\"]]){const p=document.createElement(\"p\");p.textContent=where+\"\\uFF1A\"+content;box.append(p)}}__name(show,\"show\");q(\"#send\").addEventListener(\"click\",()=>{message=q(\"#message\").value.trim()||\"\\uFF08\\u7A7A\\u6D88\\u606F\\uFF09\";show()});[\"step\",\"arrival\"].forEach(k=>q(\"#\"+k).addEventListener(\"click\",show));q(\"#reset\").addEventListener(\"click\",()=>{message=\"\";show()});q(\"#distance\").addEventListener(\"input\",()=>{message=\"\";show()});show()})();",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#e3eafa;--paper:#18253e;--muted:#abbdda}#messages{display:grid;grid-template-columns:1fr 1fr;gap:6px}#messages p{padding:8px;border:1px solid #536482;font-size:12px;overflow-wrap:anywhere}#message{padding:8px;max-width:100%}",
         "height": 530,
         "kind": "experience"
       }
     ],
     "scene": [
       {
-        "action": "focus",
-        "target": "mars-p1",
-        "title": "谢邀发出了，地球还没收到",
-        "text": "信封位置对应实际光速计算，送达与回复不是同一状态。"
-      },
-      {
         "action": "reveal",
         "target": "light-post",
-        "title": "亲手试一次",
-        "text": "发送后推进5分钟或直接到送达时刻；换距离会重启情景，避免混用两条时间轴。"
+        "title": "谢邀发出了，地球还没收到",
+        "text": "写一条消息，亲自推进它穿过太空"
       }
     ],
     "design": {
-      "version": "session-repair-2026-09-14",
+      "version": "free-exploration-2026-09-15",
       "intent": "亲手推进一条消息的传播，区分发出、送达、回复到达；距离改变的是全部时间节点。",
-      "readingFlow": "原文距离处发消息 → 最后一段对照往返等待；手动步进避免后台计时误导。",
+      "readingFlow": "先在标题与原文短引后操作「谢邀发出了，地球还没收到」。写一条消息，亲自推进它穿过太空。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
       "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
@@ -79,15 +73,29 @@
           "blockId": "light-post",
           "purpose": "信封位置对应实际光速计算，送达与回复不是同一状态。",
           "whyHere": "紧接对应原文：为了讨论得具体，假设这次两地相距 2.25 亿千米，按每秒 299,792.458 千米计算单程延迟。现在，你在火星发出一句“谢邀”，地球上的人什么时候能看到？",
-          "interaction": "发送后推进5分钟或直接到送达时刻；换距离会重启情景，避免混用两条时间轴。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "interaction": "写一条消息，亲自推进它穿过太空",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#send → 消息正在去地球的路上",
             "#step → 消息正在去地球的路上",
             "#arrival → 地球已收到；回复正在路上",
             "#arrival → 回复已回到火星",
-            "#reset → 待发送"
+            "#reset → 待发送",
+            "#reset → 待发送",
+            "#message → 待发送",
+            "#send → 消息正在去地球的路上"
           ]
+        }
+      ]
+    },
+    "presentation": {
+      "version": 1,
+      "leadBlockId": "light-post",
+      "cue": "写一条消息，亲自推进它穿过太空",
+      "nodes": [
+        {
+          "blockId": "light-post",
+          "label": "谢邀发出了，地球还没收到"
         }
       ]
     },
@@ -95,11 +103,11 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-72358b73-885c-4400-af89-1d145033286c",
+      "runId": "codex-54f9b0e5-167c-43c2-af66-dc3939d284d3",
       "sourceHash": "f953e8841fd93857b77cf653bafd44fdba79d14ed300509dc9736badf7caa07a",
-      "createdAt": "2026-09-14T15:33:49.283Z",
-      "baselineVersion": "expressive-v7.2026-09-14",
-      "prompt": "用户要求：先使用自己作为 Agent 进行默认生成。读取此文章，视觉与交互只使用 HTML/CSS/JS/SVG/Canvas；不使用外部素材，保持原文，先编排整篇阅读路线，再让不同片段自然融入正文；记录每处风格、位置理由、实现及验收约定，以逐步讲解和真实操作展示设计。"
+      "createdAt": "2026-09-14T16:21:19.223Z",
+      "baselineVersion": "composed-v8.2026-09-14",
+      "prompt": "用户要求发布前打磨：真实回答优先、核心操作前置、自由编辑与比较；当前会话实际创作，保留原文与历史。"
     }
   }
 }

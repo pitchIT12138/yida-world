@@ -283,55 +283,37 @@
         "id": "door-encounter",
         "afterParagraphId": "story-1747681485547843585-p59",
         "title": "一连串照顾，改变了正在发生的事",
-        "html": "<small>只演示本次保存的正文 · 不补写未提供的结尾</small><h3>先看到人影，再理解这一幕</h3><div class=\"stage\"><svg class=\"visual\" viewBox=\"0 0 600 260\"></svg><aside id=\"audience-info\" hidden></aside></div><div class=\"row\"><button id=\"advance\" class=\"primary\">开门</button><button id=\"back\">退一步</button><button id=\"view\">切到读者视角</button><button id=\"reset\">复位</button></div><output id=\"status\"></output><p id=\"quote\"></p><p class=\"note\">动作按原文推进：开门 → 扑来掐脖 → 误认为湿衣和受伤 → 换衣擦净 → 道谢 → 午休后读手机。读者层区分弹幕与后续群消息；不开出另一种虚构结局。</p>",
-        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let step=0,reader=false;const labels=[\"\\u5F00\\u95E8\",\"\\u63A5\\u4F4F\\u5C0F\\u5B69\",\"\\u6362\\u8863\\u670D\\u3001\\u64E6\\u51C0\",\"\\u542C\\u5979\\u8BF4\\u8BDD\",\"\\u54C4\\u7761\\u540E\\u770B\\u624B\\u673A\",\"\\u5DF2\\u5230\\u672C\\u6BB5\\u5DF2\\u77E5\\u4FE1\\u606F\"],states=[\"\\u95E8\\u8FD8\\u6CA1\\u6709\\u6253\\u5F00\",\"\\u95E8\\u5185\\uFF1A\\u77EE\\u5C0F\\u7684\\u7EA2\\u8272\\u4EBA\\u5F71\",\"\\u5C0F\\u624B\\u6390\\u4F4F\\u8116\\u5B50\\uFF1B\\u5979\\u5374\\u62C5\\u5FC3\\u5B69\\u5B50\\u7A7F\\u6E7F\\u8863\\u3001\\u53D7\\u4F24\",\"\\u767D\\u88D9\\u66FF\\u4EE3\\u7EA2\\u88D9\\uFF0C\\u8840\\u6C61\\u64E6\\u51C0\\uFF0C\\u5979\\u7EC8\\u4E8E\\u770B\\u6E05\\u5C0F\\u841D\\u8389\",\"\\u5979\\u4EB2\\u4E86\\u4E00\\u53E3\\uFF0C\\u8BF4\\u201C\\u8C22\\u8C22\\u5988\\u5988\\u201D\",\"\\u5348\\u4F11\\u540E\\uFF0C\\u624B\\u673A\\u7FA4\\u624D\\u4F20\\u6765\\u5176\\u4ED6\\u697C\\u5C42\\u7684\\u6B7B\\u8BAF\"],quotes=[\"\\u201C\\u5FEB\\u5F00\\u95E8\\u554A\\uFF0C\\u5B9D\\u5B9D\\u6211\\u56DE\\u5BB6\\u5566\\uFF01\\u201D\",\"\\u201C\\u5E94\\u8BE5\\u662F\\u4E2A\\u7A7F\\u7740\\u7EA2\\u88D9\\u7684\\u5C0F\\u5B69\\u3002\\u201D\",\"\\u201C\\u4F60\\u662F\\u4E0D\\u662F\\u54EA\\u91CC\\u53D7\\u4F24\\u4E86\\uFF1F\\u201D\",\"\\u201C\\u539F\\u6765\\u662F\\u4E2A\\u53EF\\u7231\\u7684\\u5C0F\\u841D\\u8389\\u3002\\u201D\",\"\\u201C\\u4FFA\\u65E0\\u75DB\\u5F53\\u5988\\u5566\\uFF01\\u201D\",\"\\u7FA4\\u6D88\\u606F\\uFF1A3\\u5C42\\u9EC4\\u6BDB\\u906D\\u653B\\u51FB\\uFF0C10\\u5C42\\u5927\\u53D4\\u60CA\\u609A\\u503C\\u5230100\\u6B7B\\u4EA1\\u3002\"];function draw(){const girl=step>0,clean=step>=3,arms=step===2,nap=step===5;let s='<path d=\"M0 225H600\" stroke=\"#665567\"/><rect x=\"80\" y=\"20\" width=\"180\" height=\"205\" fill=\"#372938\" stroke=\"#8b657b\"/>';if(step===0)s+='<rect x=\"82\" y=\"22\" width=\"176\" height=\"200\" fill=\"#65505d\"/><circle cx=\"230\" cy=\"125\" r=\"5\" fill=\"#d5ad83\"/>';if(girl){s+='<g style=\"filter:'+(!reader&&step<3?\"blur(5px)\":\"none\")+'\" transform=\"translate('+(arms?320:210)+\",\"+(nap?110:40)+\")\"+(nap?\" rotate(75 0 65)\":\"\")+'\"><circle cx=\"0\" cy=\"55\" r=\"25\" fill=\"#d2acb4\"/><path d=\"M-25 72L-44 167H44L25 72Z\" fill=\"'+(clean?\"#f3e9dd\":\"#963f5a\")+'\"/><path d=\"M-16 33l-20 20M16 33l20 20\" stroke=\"#18141f\" stroke-width=\"13\"/>'+(arms?'<path d=\"M20 90L110 45M-20 90L80 40\" stroke=\"#d2acb4\" stroke-width=\"12\"/>':\"\")+\"</g>\"}if(step===2)s+='<circle cx=\"405\" cy=\"65\" r=\"24\" fill=\"#a595a8\"/><path d=\"M385 95h40l20 127h-85z\" fill=\"#78677e\"/>';if(step===5)s+='<rect x=\"390\" y=\"65\" width=\"130\" height=\"155\" rx=\"10\" fill=\"#cadbd6\"/><text x=\"401\" y=\"92\" fill=\"#263b3b\">\\u73A9\\u5BB6\\u7FA4 \\xB7 \\u4E8B\\u540E</text><text x=\"401\" y=\"128\" fill=\"#263b3b\">\\u73B0\\u5B58\\u6D3B\\uFF1A20</text><text x=\"401\" y=\"168\" fill=\"#263b3b\">3\\u5C42 / 10\\u5C42</text>';q(\"svg\").innerHTML=s;q(\"#status\").textContent=states[step];q(\"#quote\").textContent=quotes[step];q(\"#advance\").textContent=labels[step];q(\"#advance\").disabled=step===5;q(\"#back\").disabled=step===0;q(\"#audience-info\").hidden=!reader;q(\"#audience-info\").textContent=step<2?\"\\u8BFB\\u8005\\u5728\\u5F00\\u95E8\\u524D\\u5DF2\\u4ECE\\u5F39\\u5E55\\u5F97\\u77E5\\uFF1A30\\u5C42\\u5168\\u662F\\u5927Boss\\u3002\":step<5?\"\\u5F39\\u5E55\\u544A\\u8BC9\\u8BFB\\u8005\\uFF1A\\u8FD9\\u662F\\u6B7B\\u4EA1\\u4E4B\\u5BB6\\u7684Boss\\u4E4B\\u4E00\\uFF0C\\u88D9\\u5B50\\u4E0A\\u7684\\u8840\\u6765\\u81EA\\u73A9\\u5BB6\\uFF1B\\u4E3B\\u4EBA\\u516C\\u770B\\u4E0D\\u5230\\u3002\":\"\\u8FD9\\u4E9B\\u662F\\u5348\\u4F11\\u540E\\u624B\\u673A\\u7FA4\\u4E2D\\u7684\\u6D88\\u606F\\uFF0C\\u4E0D\\u662F\\u9009\\u623F\\u524D\\u53EF\\u7528\\u7684\\u4FE1\\u606F\\u3002\";q(\"#view\").textContent=reader?\"\\u56DE\\u5230\\u4E3B\\u4EBA\\u516C\\u89C6\\u89D2\":\"\\u5207\\u5230\\u8BFB\\u8005\\u89C6\\u89D2\"}__name(draw,\"draw\");q(\"#advance\").onclick=()=>{step=Math.min(5,step+1);draw()};q(\"#back\").onclick=()=>{step=Math.max(0,step-1);draw()};q(\"#view\").onclick=()=>{reader=!reader;draw()};q(\"#reset\").onclick=()=>{step=0;reader=false;draw()};draw()",
-        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#eee3df;--paper:#2b202d;--muted:#c1aab9}.stage{background:#211a26;position:relative}.stage aside{padding:12px;background:#493046;color:#f8e6df;font-size:13px}#status{font-size:18px;font-weight:600}#quote{border-left:2px solid #ba8b91;padding-left:12px;margin-top:12px}",
+        "html": "<small>只演示本次保存的正文 · 不补写未提供的结尾</small><h3>先看到人影，再理解这一幕</h3><div class=\"stage\"><svg class=\"visual\" viewBox=\"0 0 600 260\"></svg><aside id=\"audience-info\" hidden></aside></div><div class=\"row\"><button id=\"advance\" class=\"primary\">开门</button><button id=\"back\">退一步</button><button id=\"view\">切到读者视角</button><button id=\"reset\">复位</button></div><output id=\"status\"></output><p id=\"quote\"></p><p class=\"note\">动作按原文推进：开门 → 扑来掐脖 → 误认为湿衣和受伤 → 换衣擦净 → 道谢 → 午休后读手机。读者层区分弹幕与后续群消息；不开出另一种虚构结局。</p><div class=\"row\" id=\"explore\"><button data-look=\"door\">查看门口</button><button data-look=\"figure\">靠近人影</button><button data-look=\"phone\">查看手机</button></div><output id=\"discovery\"></output><output id=\"memory\"></output>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let step=0,reader=false;const labels=[\"\\u5F00\\u95E8\",\"\\u63A5\\u4F4F\\u5C0F\\u5B69\",\"\\u6362\\u8863\\u670D\\u3001\\u64E6\\u51C0\",\"\\u542C\\u5979\\u8BF4\\u8BDD\",\"\\u54C4\\u7761\\u540E\\u770B\\u624B\\u673A\",\"\\u5DF2\\u5230\\u672C\\u6BB5\\u5DF2\\u77E5\\u4FE1\\u606F\"],states=[\"\\u95E8\\u8FD8\\u6CA1\\u6709\\u6253\\u5F00\",\"\\u95E8\\u5185\\uFF1A\\u77EE\\u5C0F\\u7684\\u7EA2\\u8272\\u4EBA\\u5F71\",\"\\u5C0F\\u624B\\u6390\\u4F4F\\u8116\\u5B50\\uFF1B\\u5979\\u5374\\u62C5\\u5FC3\\u5B69\\u5B50\\u7A7F\\u6E7F\\u8863\\u3001\\u53D7\\u4F24\",\"\\u767D\\u88D9\\u66FF\\u4EE3\\u7EA2\\u88D9\\uFF0C\\u8840\\u6C61\\u64E6\\u51C0\\uFF0C\\u5979\\u7EC8\\u4E8E\\u770B\\u6E05\\u5C0F\\u841D\\u8389\",\"\\u5979\\u4EB2\\u4E86\\u4E00\\u53E3\\uFF0C\\u8BF4\\u201C\\u8C22\\u8C22\\u5988\\u5988\\u201D\",\"\\u5348\\u4F11\\u540E\\uFF0C\\u624B\\u673A\\u7FA4\\u624D\\u4F20\\u6765\\u5176\\u4ED6\\u697C\\u5C42\\u7684\\u6B7B\\u8BAF\"],quotes=[\"\\u201C\\u5FEB\\u5F00\\u95E8\\u554A\\uFF0C\\u5B9D\\u5B9D\\u6211\\u56DE\\u5BB6\\u5566\\uFF01\\u201D\",\"\\u201C\\u5E94\\u8BE5\\u662F\\u4E2A\\u7A7F\\u7740\\u7EA2\\u88D9\\u7684\\u5C0F\\u5B69\\u3002\\u201D\",\"\\u201C\\u4F60\\u662F\\u4E0D\\u662F\\u54EA\\u91CC\\u53D7\\u4F24\\u4E86\\uFF1F\\u201D\",\"\\u201C\\u539F\\u6765\\u662F\\u4E2A\\u53EF\\u7231\\u7684\\u5C0F\\u841D\\u8389\\u3002\\u201D\",\"\\u201C\\u4FFA\\u65E0\\u75DB\\u5F53\\u5988\\u5566\\uFF01\\u201D\",\"\\u7FA4\\u6D88\\u606F\\uFF1A3\\u5C42\\u9EC4\\u6BDB\\u906D\\u653B\\u51FB\\uFF0C10\\u5C42\\u5927\\u53D4\\u60CA\\u609A\\u503C\\u5230100\\u6B7B\\u4EA1\\u3002\"];function draw(){const girl=step>0,clean=step>=3,arms=step===2,nap=step===5;let s='<path d=\"M0 225H600\" stroke=\"#665567\"/><rect x=\"80\" y=\"20\" width=\"180\" height=\"205\" fill=\"#372938\" stroke=\"#8b657b\"/>';if(step===0)s+='<rect x=\"82\" y=\"22\" width=\"176\" height=\"200\" fill=\"#65505d\"/><circle cx=\"230\" cy=\"125\" r=\"5\" fill=\"#d5ad83\"/>';if(girl){s+='<g style=\"filter:'+(!reader&&step<3?\"blur(5px)\":\"none\")+'\" transform=\"translate('+(arms?320:210)+\",\"+(nap?110:40)+\")\"+(nap?\" rotate(75 0 65)\":\"\")+'\"><circle cx=\"0\" cy=\"55\" r=\"25\" fill=\"#d2acb4\"/><path d=\"M-25 72L-44 167H44L25 72Z\" fill=\"'+(clean?\"#f3e9dd\":\"#963f5a\")+'\"/><path d=\"M-16 33l-20 20M16 33l20 20\" stroke=\"#18141f\" stroke-width=\"13\"/>'+(arms?'<path d=\"M20 90L110 45M-20 90L80 40\" stroke=\"#d2acb4\" stroke-width=\"12\"/>':\"\")+\"</g>\"}if(step===2)s+='<circle cx=\"405\" cy=\"65\" r=\"24\" fill=\"#a595a8\"/><path d=\"M385 95h40l20 127h-85z\" fill=\"#78677e\"/>';if(step===5)s+='<rect x=\"390\" y=\"65\" width=\"130\" height=\"155\" rx=\"10\" fill=\"#cadbd6\"/><text x=\"401\" y=\"92\" fill=\"#263b3b\">\\u73A9\\u5BB6\\u7FA4 \\xB7 \\u4E8B\\u540E</text><text x=\"401\" y=\"128\" fill=\"#263b3b\">\\u73B0\\u5B58\\u6D3B\\uFF1A20</text><text x=\"401\" y=\"168\" fill=\"#263b3b\">3\\u5C42 / 10\\u5C42</text>';q(\"svg\").innerHTML=s;q(\"#status\").textContent=states[step];q(\"#quote\").textContent=quotes[step];q(\"#advance\").textContent=labels[step];q(\"#advance\").disabled=step===5;q(\"#back\").disabled=step===0;q(\"#audience-info\").hidden=!reader;q(\"#audience-info\").textContent=step<2?\"\\u8BFB\\u8005\\u5728\\u5F00\\u95E8\\u524D\\u5DF2\\u4ECE\\u5F39\\u5E55\\u5F97\\u77E5\\uFF1A30\\u5C42\\u5168\\u662F\\u5927Boss\\u3002\":step<5?\"\\u5F39\\u5E55\\u544A\\u8BC9\\u8BFB\\u8005\\uFF1A\\u8FD9\\u662F\\u6B7B\\u4EA1\\u4E4B\\u5BB6\\u7684Boss\\u4E4B\\u4E00\\uFF0C\\u88D9\\u5B50\\u4E0A\\u7684\\u8840\\u6765\\u81EA\\u73A9\\u5BB6\\uFF1B\\u4E3B\\u4EBA\\u516C\\u770B\\u4E0D\\u5230\\u3002\":\"\\u8FD9\\u4E9B\\u662F\\u5348\\u4F11\\u540E\\u624B\\u673A\\u7FA4\\u4E2D\\u7684\\u6D88\\u606F\\uFF0C\\u4E0D\\u662F\\u9009\\u623F\\u524D\\u53EF\\u7528\\u7684\\u4FE1\\u606F\\u3002\";q(\"#view\").textContent=reader?\"\\u56DE\\u5230\\u4E3B\\u4EBA\\u516C\\u89C6\\u89D2\":\"\\u5207\\u5230\\u8BFB\\u8005\\u89C6\\u89D2\"}__name(draw,\"draw\");q(\"#advance\").onclick=()=>{step=Math.min(5,step+1);draw()};q(\"#back\").onclick=()=>{step=Math.max(0,step-1);draw()};q(\"#view\").onclick=()=>{reader=!reader;draw()};q(\"#reset\").onclick=()=>{step=0;reader=false;draw()};draw()\n;(()=>{const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let furthest=0,seen=new Set;const stage=q(\".stage\");stage.style.overflow=\"hidden\";function view(object){seen.add(step+\":\"+object);const svg=q(\"svg\");svg.style.transformOrigin=object===\"door\"?\"25% 50%\":object===\"figure\"?\"45% 65%\":\"75% 55%\";svg.style.transform=\"scale(1.35)\";q(\"#discovery\").textContent=object===\"door\"?step===0?\"\\u95E8\\u672A\\u6253\\u5F00\\uFF0C\\u4EBA\\u7269\\u53EA\\u80FD\\u542C\\u5230\\u50AC\\u4FC3\\u3002\":\"\\u95E8\\u5DF2\\u6253\\u5F00\\uFF1B\\u540C\\u4E00\\u4E2A\\u7A7A\\u95F4\\uFF0C\\u540E\\u7EED\\u52A8\\u4F5C\\u6CA1\\u6709\\u6362\\u573A\\u3002\":object===\"figure\"?step===0?\"\\u95E8\\u6321\\u4F4F\\u4E86\\u4EBA\\u5F71\\u3002\":step<3?reader?\"\\u8BFB\\u8005\\u770B\\u5230\\u7EA2\\u88D9\\u4E0E\\u8840\\u8FF9\\uFF0C\\u4E5F\\u77E5\\u9053\\u5F39\\u5E55\\u4E2D\\u7684\\u5371\\u9669\\u3002\":\"\\u8FD1\\u89C6\\u89C6\\u89D2\\u91CC\\u53EA\\u6709\\u7EA2\\u8272\\u8F6E\\u5ED3\\uFF1B\\u5C1A\\u4E0D\\u80FD\\u8FA8\\u8BA4\\u7EC6\\u8282\\u3002\":\"\\u6362\\u8863\\u64E6\\u51C0\\u540E\\uFF0C\\u4EBA\\u7269\\u7EC8\\u4E8E\\u8FA8\\u6E05\\u5B69\\u5B50\\u7684\\u8138\\u3002\":step<5?\"\\u6B64\\u65F6\\u8FD8\\u6CA1\\u6709\\u5348\\u4F11\\u540E\\u7684\\u7FA4\\u6D88\\u606F\\uFF0C\\u4E0D\\u80FD\\u63D0\\u524D\\u8BFB\\u53D6\\u3002\":\"\\u5348\\u4F11\\u540E\\u7684\\u7FA4\\u6D88\\u606F\\u5DF2\\u51FA\\u73B0\\uFF1A3\\u5C42\\u4E0E10\\u5C42\\u53D1\\u751F\\u4E86\\u6B7B\\u4EA1\\u4E8B\\u4EF6\\u3002\";q(\"#memory\").textContent=(step<furthest?\"\\u56DE\\u770B\\uFF1A\\u4F60\\u5DF2\\u7ECF\\u77E5\\u9053\\u540E\\u9762\\u7684\\u4FE1\\u606F\\u3002\":\"\\u9996\\u6B21\\u63A8\\u8FDB\\uFF1A\\u53EA\\u4F7F\\u7528\\u5F53\\u524D\\u53EF\\u77E5\\u4FE1\\u606F\\u3002\")+\" \\u5DF2\\u63A2\\u7D22 \"+seen.size+\" \\u5904\"}__name(view,\"view\");q(\"#explore\").onclick=e=>{const b=e.target.closest(\"[data-look]\");if(b)view(b.dataset.look)};[\"advance\",\"back\",\"view\"].forEach(id=>q(\"#\"+id).addEventListener(\"click\",()=>{furthest=Math.max(furthest,step);q(\"svg\").style.transform=\"none\";q(\"#discovery\").textContent=\"\\u9009\\u62E9\\u7A7A\\u95F4\\u4E2D\\u7684\\u7269\\u4EF6\\u7EE7\\u7EED\\u89C2\\u5BDF\\u3002\";q(\"#memory\").textContent=step<furthest?\"\\u56DE\\u770B\\uFF1A\\u4F60\\u5DF2\\u7ECF\\u77E5\\u9053\\u540E\\u9762\\u7684\\u4FE1\\u606F\\u3002\":\"\\u9996\\u6B21\\u63A8\\u8FDB\\uFF1A\\u53EA\\u4F7F\\u7528\\u5F53\\u524D\\u53EF\\u77E5\\u4FE1\\u606F\\u3002\"}));q(\"#reset\").addEventListener(\"click\",()=>{furthest=0;seen.clear();q(\"svg\").style.transform=\"none\";q(\"#discovery\").textContent=\"\";q(\"#memory\").textContent=\"\\u9996\\u6B21\\u63A2\\u7D22\"});q(\"svg\").style.transition=\"transform .2s\"})();",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#eee3df;--paper:#2b202d;--muted:#c1aab9}.stage{background:#211a26;position:relative}.stage aside{padding:12px;background:#493046;color:#f8e6df;font-size:13px}#status{font-size:18px;font-weight:600}#quote{border-left:2px solid #ba8b91;padding-left:12px;margin-top:12px}.stage svg{transform-origin:center}#discovery{padding:12px;background:#443347;color:#eddee8}#memory{font-size:11px;margin-top:8px}",
         "height": 690,
         "kind": "experience"
       }
     ],
     "scene": [
       {
-        "action": "focus",
-        "target": "story-1747681485547843585-p42",
-        "title": "你没有挑中30楼，是它剩给了你",
-        "text": "消除旧版把她描述为主动挑选危险楼层的错误；空间占用直接表达无可选择。"
-      },
-      {
         "action": "reveal",
         "target": "last-floor",
-        "title": "亲手试一次",
+        "title": "你没有挑中30楼，是它剩给了你",
         "text": "连续让其他玩家选房，空房逐格消失，最后30层落在你手里；弹幕只在观众层显现。"
-      },
-      {
-        "action": "focus",
-        "target": "story-1747681485547843585-p44",
-        "title": "同一条走廊，两套信息",
-        "text": "把原文中感知与解释的区别放在同一空间，让视角切换真正改变可见知识。"
       },
       {
         "action": "reveal",
         "target": "threshold-view",
-        "title": "亲手试一次",
+        "title": "同一条走廊，两套信息",
         "text": "切换主人公与读者；危险标牌和弹幕会出现或消失，走廊保持为同一场景。"
-      },
-      {
-        "action": "focus",
-        "target": "story-1747681485547843585-p59",
-        "title": "一连串照顾，改变了正在发生的事",
-        "text": "场景中门、人物位置、掐脖动作、裙色、午休和手机逐步改变，说明误认怎样推动关系变化。"
       },
       {
         "action": "reveal",
         "target": "door-encounter",
-        "title": "亲手试一次",
-        "text": "按顺序执行原文中的动作；可随时退一步或切换读者视角，核对她此刻还不知道什么。"
+        "title": "一连串照顾，改变了正在发生的事",
+        "text": "推开门，探索人影；切换人物所见与读者已知"
       }
     ],
     "design": {
-      "version": "session-repair-2026-09-14",
+      "version": "free-exploration-2026-09-15",
       "intent": "通过楼层占用、门内场景和信息显隐，体验主人公的日常解释与读者危险知识之间的错位。",
-      "readingFlow": "先在选房段经历被剩下的30层 → 进门前切两种信息 → 最后长段内推进拥抱、照顾与手机信息；不补写截断结尾。",
+      "readingFlow": "先在标题与原文短引后操作「一连串照顾，改变了正在发生的事」。推开门，探索人影；切换人物所见与读者已知。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
       "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
@@ -356,7 +338,7 @@
           "purpose": "消除旧版把她描述为主动挑选危险楼层的错误；空间占用直接表达无可选择。",
           "whyHere": "紧接对应原文：【尤其是 30 层，全是大 Boss，号称死亡之家。】",
           "interaction": "连续让其他玩家选房，空房逐格消失，最后30层落在你手里；弹幕只在观众层显现。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#next → 红姐在1楼，俊哥在2楼",
             "#next → 其他人优先选择低楼层",
@@ -369,7 +351,7 @@
           "purpose": "把原文中感知与解释的区别放在同一空间，让视角切换真正改变可见知识。",
           "whyHere": "紧接对应原文：而且，这可是大平层！还有我梦寐以求的家人哎！",
           "interaction": "切换主人公与读者；危险标牌和弹幕会出现或消失，走廊保持为同一场景。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#reader → 读者已知：这是死亡之家，她却把这里当成家。",
             "#her → 她的解释：大平层、凉快，还有梦寐以求的家人。"
@@ -379,16 +361,37 @@
           "blockId": "door-encounter",
           "purpose": "场景中门、人物位置、掐脖动作、裙色、午休和手机逐步改变，说明误认怎样推动关系变化。",
           "whyHere": "紧接对应原文：虽然我的视线一直模糊不清，但两条辫子一甩一甩的，应该是个穿着红裙的小孩。\n小孩阴森一笑，猛地朝我扑来，冰凉的小手掐住了我的脖子。\n我顺势把她搂在怀里，摸到她裙子是湿漉漉的，立刻不满地说：\n「小孩子怎么能穿湿衣服呢？快脱下！我带你去换干净衣服！」\n我的鼻子动了动，闻到了一阵血腥味，又焦急地问：\n「你是不是哪里受伤了？药箱",
-          "interaction": "按顺序执行原文中的动作；可随时退一步或切换读者视角，核对她此刻还不知道什么。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "interaction": "推开门，探索人影；切换人物所见与读者已知",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#advance → 门内：矮小的红色人影",
             "#advance → 小手掐住脖子；她却担心孩子穿湿衣、受伤",
             "#advance → 白裙替代红裙，血污擦净，她终于看清小萝莉",
             "#advance → 她亲了一口，说“谢谢妈妈”",
             "#advance → 午休后，手机群才传来其他楼层的死讯",
-            "#reset → 门还没有打开"
+            "#reset → 门还没有打开",
+            "#reset → 门还没有打开",
+            "[data-look=\"phone\"] → 此时还没有午休后的群消息，不能提前读取。"
           ]
+        }
+      ]
+    },
+    "presentation": {
+      "version": 1,
+      "leadBlockId": "door-encounter",
+      "cue": "推开门，探索人影；切换人物所见与读者已知",
+      "nodes": [
+        {
+          "blockId": "last-floor",
+          "label": "你没有挑中30楼，是它剩给了你"
+        },
+        {
+          "blockId": "threshold-view",
+          "label": "同一条走廊，两套信息"
+        },
+        {
+          "blockId": "door-encounter",
+          "label": "一连串照顾，改变了正在发生的事"
         }
       ]
     },
@@ -396,11 +399,11 @@
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-4f11cdd5-6c88-448b-a939-4721651293d0",
+      "runId": "codex-c00c3258-2a2a-47f9-8916-182eef86640c",
       "sourceHash": "2206ee3ff1f37126179afdc8f4070291416415b4653177ffd2fccd45ea04fbf5",
-      "createdAt": "2026-09-14T15:27:08.040Z",
-      "baselineVersion": "expressive-v7.2026-09-14",
-      "prompt": "用户授权：当前会话重新创作默认交互；读取原文、备注及历史，保留来源，先操作与反馈设计，再实际浏览器验收。"
+      "createdAt": "2026-09-14T16:21:23.701Z",
+      "baselineVersion": "composed-v8.2026-09-14",
+      "prompt": "用户要求发布前打磨：真实回答优先、核心操作前置、自由编辑与比较；当前会话实际创作，保留原文与历史。"
     }
   }
 }

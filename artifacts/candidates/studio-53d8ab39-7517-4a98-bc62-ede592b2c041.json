@@ -220,9 +220,9 @@
         "id": "exam-score",
         "afterParagraphId": "p-e8630d9c-8a66-4a9d-94f6-e8631de4b3ac",
         "title": "平均分下降，130分却未必覆盖更多",
-        "html": "<small>作者同口径统计 · 非个人录取概率</small><h3>把三年的位置叠在同一把尺上</h3><div class=\"row\"><button id=\"mean\">平均分</button><button id=\"median\">中位数</button><button id=\"coverage\">130分覆盖岗位</button></div><svg class=\"visual\" viewBox=\"0 0 660 270\"></svg><output id=\"status\"></output><p class=\"note\">分数尺明确截取120—132，便于看差异；覆盖图使用0—100%。缺少岗位明细，不能外推其他分数覆盖，更不能生成个人录取概率。</p>",
-        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");function draw(mode){const vals=mode===\"mean\"?[124.48,124.17,122.1]:mode===\"median\"?[125.7,125.1,123]:[80.72,86.86,86.48],min=mode===\"coverage\"?0:120,max=mode===\"coverage\"?100:132;let s=\"\";vals.forEach((v,i)=>{const x=100+(v-min)/(max-min)*450,y=50+i*75;s+='<text x=\"10\" y=\"'+(y+5)+'\">'+(2024+i)+'</text><path d=\"M100 '+y+'H550\" stroke=\"#becde0\"/>'+(mode===\"coverage\"?'<rect x=\"100\" y=\"'+(y-10)+'\" width=\"'+(x-100)+'\" height=\"20\" fill=\"#557ba6\"/>':'<circle cx=\"'+x+'\" cy=\"'+y+'\" r=\"10\" fill=\"#557ba6\"/>')+'<text x=\"570\" y=\"'+(y+5)+'\">'+v+(mode===\"coverage\"?\"%\":\"\")+\"</text>\"});s+='<text x=\"100\" y=\"260\">'+min+'</text><text x=\"535\" y=\"260\">'+max+\"</text>\";q(\"svg\").innerHTML=s;q(\"#status\").textContent=mode===\"coverage\"?\"130\\u5206\\u8986\\u76D6\\uFF1A2025\\u5E7486.86% \\u2192 2026\\u5E7486.48%\\uFF0C\\u4E0B\\u964D0.38\\u4E2A\\u767E\\u5206\\u70B9\\u3002\":mode===\"mean\"?\"\\u5E73\\u5747\\u5206\\uFF1A124.48 \\u2192 124.17 \\u2192 122.10\\u3002\":\"\\u4E2D\\u4F4D\\u6570\\uFF1A125.70 \\u2192 125.10 \\u2192 123.00\\u3002\"}__name(draw,\"draw\");q(\"#mean\").onclick=()=>draw(\"mean\");q(\"#median\").onclick=()=>draw(\"median\");q(\"#coverage\").onclick=()=>draw(\"coverage\");draw(\"mean\")",
-        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#314c70;--paper:#f0f4fa}",
+        "html": "<small>原文统计 · 非个人录取概率</small><h3>自己选择年份和指标，看看结论是否一致</h3><div class=\"row\" id=\"years\"><label><input type=\"checkbox\" data-year=\"2024\" checked>2024</label><label><input type=\"checkbox\" data-year=\"2025\" checked>2025</label><label><input type=\"checkbox\" data-year=\"2026\" checked>2026</label></div><div class=\"row\"><label><input type=\"checkbox\" id=\"mean\" checked>平均分</label><label><input type=\"checkbox\" id=\"median\" checked>中位数</label><label><input type=\"checkbox\" id=\"coverage\" checked>130分岗位覆盖</label><button id=\"reset\">全选复位</button></div><svg class=\"visual\" viewBox=\"0 0 660 440\"></svg><output id=\"status\"></output><p class=\"note\">平均与中位数轴为120—132分，覆盖轴为0—100%。点击每个圆点读取原值。岗位覆盖的分子、分母明细未提供，仅展示作者比例，不反推虚构岗位人数。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");const data={mean:[124.48,124.17,122.1],median:[125.7,125.1,123],coverage:[80.72,86.86,86.48]},names={mean:\"\\u5E73\\u5747\\u5206\",median:\"\\u4E2D\\u4F4D\\u6570\",coverage:\"130\\u5206\\u5C97\\u4F4D\\u8986\\u76D6\"},colors=[\"#879dab\",\"#4778a0\",\"#bf8050\"];function draw(){let s=\"\",row=0;for(const key of Object.keys(data)){if(!q(\"#\"+key).checked)continue;const min=key===\"coverage\"?0:120,max=key===\"coverage\"?100:132,y=55+row*135;s+='<text x=\"10\" y=\"'+(y-20)+'\">'+names[key]+'</text><path d=\"M140 '+y+'H620\" stroke=\"#bbcbd8\"/>';[2024,2025,2026].forEach((year,i)=>{if(!q('[data-year=\"'+year+'\"]').checked)return;const x=140+(data[key][i]-min)/(max-min)*480;s+='<g data-point=\"'+key+\":\"+i+'\" role=\"button\" tabindex=\"0\" aria-label=\"'+year+names[key]+'\"><circle cx=\"'+x+'\" cy=\"'+(y-28+i*28)+'\" r=\"12\" fill=\"'+colors[i]+'\"/><text x=\"'+(x+18)+'\" y=\"'+(y-24+i*28)+'\">'+year+\"</text></g>\"});s+='<text x=\"140\" y=\"'+(y-12)+'\">'+min+'</text><text x=\"605\" y=\"'+(y-12)+'\">'+max+\"</text>\";row++}q(\"svg\").innerHTML=s;q(\"#status\").textContent=\"\\u663E\\u793A \"+document.querySelectorAll(\"[data-year]:checked\").length+\" \\u4E2A\\u5E74\\u4EFD / \"+row+\" \\u4E2A\\u6307\\u6807\"}__name(draw,\"draw\");document.querySelectorAll(\"input\").forEach(e=>e.onchange=draw);function read(e){const p=e.target.closest(\"[data-point]\");if(!p)return;const[k,i]=p.dataset.point.split(\":\");q(\"#status\").textContent=2024+ +i+\"\\u5E74 \"+names[k]+\"\\uFF1A\"+data[k][i].toFixed(2)+(k===\"coverage\"?\"%\\uFF08\\u4F5C\\u8005\\u63D0\\u4F9B\\u6BD4\\u4F8B\\uFF0C\\u672A\\u63D0\\u4F9B\\u5C97\\u4F4D\\u660E\\u7EC6\\uFF09\":\"\\u5206\")}__name(read,\"read\");q(\"svg\").onclick=read;q(\"svg\").onkeydown=e=>{if(e.key===\"Enter\")read(e)};q(\"#reset\").onclick=()=>{document.querySelectorAll(\"input\").forEach(e=>e.checked=true);draw()};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}body{--ink:#314c70;--paper:#f0f4fa}.row label{flex-direction:row;align-items:center}svg g{cursor:pointer;pointer-events:bounding-box}svg text{font-size:18px}",
         "height": 540,
         "kind": "experience"
       },
@@ -249,58 +249,34 @@
     ],
     "scene": [
       {
-        "action": "focus",
-        "target": "p-99933172-101c-43a1-a148-afb3046f093a",
-        "title": "这份研究照亮了哪一条入口",
-        "text": "渠道关系与研究抽样同时可见，避免把国考构成外推到全部部委招录。"
-      },
-      {
         "action": "reveal",
         "target": "exam-scope",
-        "title": "亲手试一次",
+        "title": "这份研究照亮了哪一条入口",
         "text": "切全渠道与本文范围；其他六条关系仍在，但统计聚焦国考分支。"
-      },
-      {
-        "action": "focus",
-        "target": "p-e8630d9c-8a66-4a9d-94f6-e8631de4b3ac",
-        "title": "平均分下降，130分却未必覆盖更多",
-        "text": "同尺比较三年，支持“整体分数下降但高分覆盖未单调上升”的具体论点。"
       },
       {
         "action": "reveal",
         "target": "exam-score",
-        "title": "亲手试一次",
-        "text": "在平均分、中位数和固定130覆盖间切换，点位或覆盖条依据原文数据重绘。"
-      },
-      {
-        "action": "focus",
-        "target": "p-1ccb22b2-0b67-4f27-b2c6-eeff6f717a7b",
-        "title": "343，除以谁？",
-        "text": "保留原文统计分母，直接展示分母替换导致的比例变化。"
+        "title": "平均分下降，130分却未必覆盖更多",
+        "text": "组合年份与指标，点击数据点查看原值"
       },
       {
         "action": "reveal",
         "target": "replacement-denominator",
-        "title": "亲手试一次",
+        "title": "343，除以谁？",
         "text": "切换两个明确写出的分母，比例条和算式一同改变；作者口径可复位。"
-      },
-      {
-        "action": "focus",
-        "target": "p-f753065e-bc9b-4a88-930f-bb7152665c4d",
-        "title": "两组人，两套分类，不能混排",
-        "text": "一人一格的构成对应精确人数；切组时分类名称一起更换，不伪造统一层次。"
       },
       {
         "action": "reveal",
         "target": "recruitment-cohorts",
-        "title": "亲手试一次",
+        "title": "两组人，两套分类，不能混排",
         "text": "选应届或非应届，再点类别定位人数与比例；保持每个类别在所属分母下。"
       }
     ],
     "design": {
-      "version": "session-repair-2026-09-14",
+      "version": "free-exploration-2026-09-15",
       "intent": "先限定研究样本，再比较分数、固定130分覆盖及录用构成；不能把岗位覆盖误作个人录取概率。",
-      "readingFlow": "研究范围旁看七渠道 → 研究结论首条对照三年分数与130覆盖 → 递补处看分母 → 应届与非应届分开看分类。",
+      "readingFlow": "先在标题与原文短引后操作「平均分下降，130分却未必覆盖更多」。组合年份与指标，点击数据点查看原值。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
       "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
@@ -325,7 +301,7 @@
           "purpose": "渠道关系与研究抽样同时可见，避免把国考构成外推到全部部委招录。",
           "whyHere": "紧接对应原文：需要进一步界定的是，本文接下来所研究的国考招录情况（包括前面所列举的数字），范围仅限于在京的部委机关本级（含部委管理的国家局本级）及统一使用副省级试卷、人员和机关合署办公或者和机关双向流动较为频繁的参公事业单位。本文排除了3家不在京但也有单独招录“户头”的党口参公事业单位，一刀切排除了部委下属所有不在京的参公事业单位，",
           "interaction": "切全渠道与本文范围；其他六条关系仍在，但统计聚焦国考分支。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#all → 七条进入渠道：国考样本不能代表所有渠道。",
             "#scope → 本文样本：国考渠道，798名公示录用人员。"
@@ -335,11 +311,12 @@
           "blockId": "exam-score",
           "purpose": "同尺比较三年，支持“整体分数下降但高分覆盖未单调上升”的具体论点。",
           "whyHere": "紧接对应原文：一是尽管近些年整体就业形势严峻，部委岗位的平均报录比也与日俱增，但2024至2026年部委本级岗位的进面分数线（包括平均值和中位数）却呈现稳中有降的态势。根据前述统计口径，2024年部委本级进面分数线平均值是124.48分，中位数是125.7分，如果考130分可以入围约80.72%的岗位。2025年部委本级进面分数线平",
-          "interaction": "在平均分、中位数和固定130覆盖间切换，点位或覆盖条依据原文数据重绘。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "interaction": "组合年份与指标，点击数据点查看原值",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
-            "#median → 中位数：125.70 → 125.10 → 123.00。",
-            "#coverage → 130分覆盖：2025年86.86% → 2026年86.48%，下降0.38个百分点。"
+            "#reset → 显示 3 个年份 / 3 个指标",
+            "[data-point=\"coverage:2\"] circle → 2026年 130分岗位覆盖：86.48%（作者提供比例，未提供岗位明细）",
+            "#mean → 显示 3 个年份 / 2 个指标"
           ]
         },
         {
@@ -347,7 +324,7 @@
           "purpose": "保留原文统计分母，直接展示分母替换导致的比例变化。",
           "whyHere": "紧接对应原文：二是2024至2026年递补进面率明显增加。据不完全统计，2026年在前述国考招录专题网站上，按照前述口径，数十家单位发布的递补进面公告共递补了343人，个别单位的递补名单是用word发布的，足足有七、八页。这块之所以说是不完全统计，因为我只数了一遍，且我很确定还有至少2家单位没有在专题网站上公示递补情况，我在确定明显",
           "interaction": "切换两个明确写出的分母，比例条和算式一同改变；作者口径可复位。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#author → 作者口径：343 / 3905 = 8.78%",
             "#wrong → 另一口径：343 / 4248 = 8.07%"
@@ -358,7 +335,7 @@
           "purpose": "一人一格的构成对应精确人数；切组时分类名称一起更换，不伪造统一层次。",
           "whyHere": "紧接对应原文：四是非应届生招录方面，从过往工作履历和学校学历层次看整体上是不如应届生的，人员结构整体以来自泛体制内单位为主，来自纯体制外单位或者待业的一般学历背景较为突出，和往年相比对待业人员更为友好。2026年国考招录，部委本级岗位共招录非应届生438人，其中过往工作履历情况A的共67人（男生28人）；B的共239人；C的共117",
           "interaction": "选应届或非应届，再点类别定位人数与比例；保持每个类别在所属分母下。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "[data-category=\"A\"] → 学校学历 · A：179 / 360（49.72%）",
             "#experienced → 工作履历 · 全部：438 / 438（100.00%）",
@@ -367,14 +344,37 @@
         }
       ]
     },
+    "presentation": {
+      "version": 1,
+      "leadBlockId": "exam-score",
+      "cue": "组合年份与指标，点击数据点查看原值",
+      "nodes": [
+        {
+          "blockId": "exam-scope",
+          "label": "这份研究照亮了哪一条入口"
+        },
+        {
+          "blockId": "exam-score",
+          "label": "平均分下降，130分却未必覆盖更多"
+        },
+        {
+          "blockId": "replacement-denominator",
+          "label": "343，除以谁？"
+        },
+        {
+          "blockId": "recruitment-cohorts",
+          "label": "两组人，两套分类，不能混排"
+        }
+      ]
+    },
     "provenance": {
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-a35ec9f0-e1c5-43ae-9842-8661fc43af2a",
+      "runId": "codex-91e98d83-a5e7-487d-9c87-8c3aed37cf01",
       "sourceHash": "5d85d0c329b6a4de5c47ef4f943b1dac0c1897803e70882743997402d63b546a",
-      "createdAt": "2026-09-14T15:36:12.671Z",
-      "baselineVersion": "expressive-v7.2026-09-14",
+      "createdAt": "2026-09-14T16:25:16.565Z",
+      "baselineVersion": "composed-v8.2026-09-14",
       "prompt": "用户要求：先使用自己作为 Agent 进行默认生成。读取此文章，视觉与交互只使用 HTML/CSS/JS/SVG/Canvas；不使用外部素材，保持原文，先编排整篇阅读路线，再让不同片段自然融入正文；记录每处风格、位置理由、实现及验收约定，以逐步讲解和真实操作展示设计。"
     }
   }

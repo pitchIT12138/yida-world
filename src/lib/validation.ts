@@ -81,6 +81,14 @@ export function validateArtifact(v: unknown, source: AnswerSource, selected: str
     if(b.kind!==undefined&&!['inline','figure','experience','aside'].includes(b.kind))fail('表达片段布局无效');
     if (!Number.isFinite(b.height) || b.height < 36 || b.height > 1000) fail('blocks['+a.blocks.indexOf(b)+'] ('+b.id+').height 高度应在 36–1000 之间');
   }
+  if(a.presentation){
+    const p=a.presentation;
+    if(p.version!==1||!ids.has(p.leadBlockId))fail('核心交互必须属于当前产物');
+    str(p.cue,200,'核心操作提示');
+    if(!Array.isArray(p.nodes)||p.nodes.length>24)fail('阅读节点格式无效');
+    const seen=new Set<string>();
+    for(const n of p.nodes){if(!n||!ids.has(n.blockId)||seen.has(n.blockId))fail('阅读节点不存在或重复');seen.add(n.blockId);str(n.label,120,'阅读节点标题')}
+  }
   if (!Array.isArray(a.bindings) || a.bindings.length > 12) fail('正文联动格式无效');
   const bindingIds = new Set<string>();
   for (const b of a.bindings) {

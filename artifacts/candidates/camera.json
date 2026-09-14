@@ -40,22 +40,16 @@
     ],
     "scene": [
       {
-        "action": "focus",
-        "target": "camera-p1",
-        "title": "别换场景，换你想让人看见的地方",
-        "text": "保持物体与机位固定，让焦点移动和景深改变可以一眼分辨。"
-      },
-      {
         "action": "reveal",
         "target": "focus-window",
-        "title": "亲手试一次",
-        "text": "直接点杯子、植物或街道；拉宽清晰范围；留一张快照与现在比较。"
+        "title": "别换场景，换你想让人看见的地方",
+        "text": "点击场景选焦点，调整清晰范围"
       }
     ],
     "design": {
-      "version": "session-repair-2026-09-14",
+      "version": "free-exploration-2026-09-15",
       "intent": "固定同一杯子、植物与街景，只改变对焦距离和清晰范围，让读者通过照片本身理解两者区别。",
-      "readingFlow": "定义旁选择主体 → 场景段内调清晰范围并保留一张对照。",
+      "readingFlow": "先在标题与原文短引后操作「别换场景，换你想让人看见的地方」。点击场景选焦点，调整清晰范围。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
       "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
@@ -79,8 +73,8 @@
           "blockId": "focus-window",
           "purpose": "保持物体与机位固定，让焦点移动和景深改变可以一眼分辨。",
           "whyHere": "紧接对应原文：假设桌上有一只近处的杯子，窗边有一盆植物，窗外是远处的街道。把注意力从杯子转到街道，就是重新选择要看清的距离。光圈变化带来的模糊可以用示意画面帮助理解，但不能当成真实镜头的光学仿真。",
-          "interaction": "直接点杯子、植物或街道；拉宽清晰范围；留一张快照与现在比较。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "interaction": "点击场景选焦点，调整清晰范围",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#street → 对焦：街道 · 清晰范围：窄",
             "#depth → 对焦：街道 · 清晰范围：宽",
@@ -90,15 +84,26 @@
         }
       ]
     },
+    "presentation": {
+      "version": 1,
+      "leadBlockId": "focus-window",
+      "cue": "点击场景选焦点，调整清晰范围",
+      "nodes": [
+        {
+          "blockId": "focus-window",
+          "label": "别换场景，换你想让人看见的地方"
+        }
+      ]
+    },
     "provenance": {
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-41a236de-f7ee-4839-9c23-fbb4246e4ddb",
+      "runId": "codex-a1402426-9c06-48ee-b347-8e3f980a39cd",
       "sourceHash": "3d52480c4bb280ce14a060e1dbf15f4d100af2d4c3dd21abb96a8f7b76e93b9d",
-      "createdAt": "2026-09-14T15:33:34.732Z",
-      "baselineVersion": "expressive-v7.2026-09-14",
-      "prompt": "用户要求：先使用自己作为 Agent 进行默认生成。读取此文章，视觉与交互只使用 HTML/CSS/JS/SVG/Canvas；不使用外部素材，保持原文，先编排整篇阅读路线，再让不同片段自然融入正文；记录每处风格、位置理由、实现及验收约定，以逐步讲解和真实操作展示设计。"
+      "createdAt": "2026-09-14T16:21:12.219Z",
+      "baselineVersion": "composed-v8.2026-09-14",
+      "prompt": "用户要求发布前打磨：真实回答优先、核心操作前置、自由编辑与比较；当前会话实际创作，保留原文与历史。"
     }
   }
 }

@@ -12,10 +12,11 @@ export const seedAnswers=realAnswersFirst(mergeCurated(seeds,Object.values(saved
 function mediaEntry(source:AnswerSource){return Object.entries(saved).find(([,entry])=>entry.hasSavedMedia&&entry.source.id===source.id&&JSON.stringify(entry.source)===JSON.stringify(source))}
 export function hasCuratedMedia(source:AnswerSource){return !!mediaEntry(source)}
 // Keep image bytes out of the initial bundle and out of automatic workspace writes.
-export async function loadCuratedMedia(source:AnswerSource):Promise<SourceAsset[]>{
+export async function loadCuratedMedia(source:AnswerSource,urls?:string[]):Promise<SourceAsset[]>{
  const entry=mediaEntry(source);if(!entry)return [];
  const path=entry[0].replace('/curated-index/','/generated/');
- let request=pending.get(path);
- if(!request){request=import.meta.env.DEV?originals[path]().then(item=>validateAssets(item.assets)):fetch('/api/media/'+encodeURIComponent(source.id)).then(async r=>{if(!r.ok)throw Error('原图暂时无法读取');return validateAssets(await r.json())});pending.set(path,request);request.catch(()=>pending.delete(path))}
+ const key=path+(urls?'?'+JSON.stringify(urls):'');
+ let request=pending.get(key);
+ if(!request){request=import.meta.env.DEV?originals[path]().then(item=>validateAssets(urls?item.assets?.filter(a=>urls.includes(a.url)):item.assets)):fetch('/api/media/'+encodeURIComponent(source.id)+(urls?'?'+new URLSearchParams(urls.map(u=>['url',u])).toString():'')).then(async r=>{if(!r.ok)throw Error('原图暂时无法读取');return validateAssets(await r.json())});pending.set(key,request);request.catch(()=>pending.delete(key))}
  return request;
 }

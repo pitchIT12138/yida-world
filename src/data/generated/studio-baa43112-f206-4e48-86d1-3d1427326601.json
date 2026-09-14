@@ -816,9 +816,9 @@
         "id": "population-crowd",
         "afterParagraphId": "p-091eef03-36a7-4cef-9483-ca5564f4372c",
         "title": "同一百人，结构在移动",
-        "html": "<small>原文的离散节点 · 非完整人口预测模型</small><h3>总量只少一点，人群却换了位置</h3><div class=\"row\"><button id=\"y2025\">2025</button><button id=\"y2030\">2030</button><button id=\"y2035\">2035</button><button id=\"reset\">复位</button></div><svg class=\"visual\" viewBox=\"0 0 600 230\" aria-label=\"100个人形按年龄比例分组\"></svg><div class=\"metrics\"><div><b id=\"old\"></b><span>60岁以上</span></div><div><b id=\"labor\"></b><span>16—59岁</span></div><div><b id=\"total\"></b><span>总人口</span></div></div><output id=\"status\"></output><p class=\"note\">每个人形约代表总人口的1%，按占比取整；数字保留原文数据。儿童青色，15—59岁绿色，60岁以上橙色。2035年4.48÷13.75≈32.6%，原文32.5%为概数。年龄组概数不强行配平。</p>",
-        "js": "const __name=(fn)=>fn;\nconst rows={2025:[14.0489,2.13,8.69,3.2338,8.5136],2030:[13.95,1.68,8.36,3.92,8.19],2035:[13.75,1.3,7.98,4.48,7.82]};const q=__name(s=>document.querySelector(s),\"q\");function draw(y){const[total,child,work,old,labor]=rows[y];const c=Math.round(child/total*100),o=Math.round(old/total*100);q(\"svg\").innerHTML=Array.from({length:100},(_,i)=>{const x=14+i%20*29,y2=15+Math.floor(i/20)*42,col=i<c?\"#6da4ad\":i>=100-o?\"#ce753d\":\"#285c4c\";return'<g fill=\"'+col+'\" transform=\"translate('+x+\",\"+y2+')\"><circle cy=\"2\" r=\"5\"/><path d=\"M-6 10h12l2 14h-5v10h-6V24h-5z\"/></g>'}).join(\"\");q(\"#old\").textContent=old.toFixed(2)+\" \\u4EBF\";q(\"#labor\").textContent=labor.toFixed(2)+\" \\u4EBF\";q(\"#total\").textContent=total.toFixed(2)+\" \\u4EBF\";q(\"#status\").textContent=y+\"\\uFF1A\\u6BCF100\\u4EBA\\u4E2D\\u7EA6\"+o+\"\\u4EBA\\u5E74\\u6EE160\\u5C81\";[2025,2030,2035].forEach(v=>q(\"#y\"+v).setAttribute(\"aria-pressed\",String(v===y)))}__name(draw,\"draw\");[2025,2030,2035].forEach(y=>q(\"#y\"+y).onclick=()=>draw(y));q(\"#reset\").onclick=()=>draw(2025);draw(2025)",
-        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}",
+        "html": "<small>原文离散年份＋可编辑情景 · 不是人口预测</small><h3>人群改变之后，谁在供养谁？</h3><div class=\"row\"><button id=\"y2025\">2025原文</button><button id=\"y2030\">2030原文</button><button id=\"y2035\">2035原文</button><button id=\"reset\">复位</button></div><div id=\"crowd\"></div><div class=\"controls\"><label>0—14岁 / 亿人<input id=\"children\" type=\"number\" value=\"2.13\" min=\"0\" max=\"30\"></label><label>15—59岁 / 亿人<input id=\"working\" type=\"number\" value=\"8.69\" min=\"0\" max=\"30\"></label><label>60岁以上 / 亿人<input id=\"older\" type=\"number\" value=\"3.2338\" min=\"0\" max=\"30\"></label></div><div class=\"row\"><button id=\"transfer\">0.1亿人由劳动年龄组进入老年组</button><button id=\"save-a\">保留 A 情景</button></div><svg class=\"visual\" viewBox=\"0 0 620 145\"></svg><output id=\"status\"></output><output id=\"comparison\"></output><p class=\"note\">每个人形代表总量的1%，按比例取整。这里固定比较15—59岁/60岁以上；不与16—59岁、65岁以上或参保人数混算。年份人口分组为原文概数，与原文总人口有舍入差异。手动改变后明确转为情景实验。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let label=\"2025\\u539F\\u6587\",a=null;const rows={2025:[2.13,8.69,3.2338],2030:[1.68,8.36,3.92],2035:[1.3,7.98,4.48]};function current(){return[\"children\",\"working\",\"older\"].map(id=>Math.max(0,Math.min(30,+q(\"#\"+id).value||0)))}__name(current,\"current\");function draw(){const[c,w,o]=current(),total=c+w+o,young=total?Math.round(c/total*100):0,old=total?Math.round(o/total*100):0;q(\"#crowd\").innerHTML=Array.from({length:total?100:0},(_,i)=>'<i class=\"person '+(i<young?\"young\":i>=100-old?\"older\":\"worker\")+'\"></i>').join(\"\");const ratio=o?w/o:null;q(\"svg\").innerHTML='<text x=\"10\" y=\"25\">15\\u201459\\u5C81 '+w.toFixed(2)+' \\u4EBF</text><path d=\"M20 60H590\" stroke=\"#b3c3b2\" stroke-width=\"30\"/><path d=\"M20 60H'+(20+(total?w/total:0)*570)+'\" stroke=\"#336c4d\" stroke-width=\"30\"/><text x=\"320\" y=\"120\">60\\u5C81\\u4EE5\\u4E0A '+o.toFixed(2)+\" \\u4EBF</text>\";q(\"#status\").textContent=label+\" \\xB7 15\\u201459\\u5C81 / 60\\u5C81\\u4EE5\\u4E0A = \"+(ratio===null?\"\\u65E0\\u8001\\u5E74\\u5206\\u6BCD\":ratio.toFixed(2)+\" : 1\");if(a){const denom=Math.max(total,a.c+a.w+a.o,1);let x=20;q(\"svg\").innerHTML+='<text x=\"10\" y=\"140\">A</text>'+[[a.c,\"#69a2ab\"],[a.w,\"#336c4d\"],[a.o,\"#d18343\"]].map(([v,col])=>{const width=v/denom*560,t='<rect x=\"'+x+'\" y=\"128\" width=\"'+width+'\" height=\"14\" fill=\"'+col+'\"/>';x+=width;return t}).join(\"\")}q(\"#comparison\").textContent=a?\"A \"+a.w.toFixed(2)+\" / \"+a.o.toFixed(2)+\" \\u4EBF\\uFF1BB \"+w.toFixed(2)+\" / \"+o.toFixed(2)+\" \\u4EBF\":\"\\u6539\\u4E00\\u4E2A\\u6570\\u5B57\\uFF0C\\u89C2\\u5BDF\\u4EBA\\u7FA4\\u4E0E\\u4F9B\\u517B\\u5173\\u7CFB\\u4E00\\u8D77\\u53D8\\u5316\\u3002\"}__name(draw,\"draw\");function load(y){label=y+\"\\u539F\\u6587\";[\"children\",\"working\",\"older\"].forEach((k,i)=>q(\"#\"+k).value=rows[y][i]);draw()}__name(load,\"load\");[2025,2030,2035].forEach(y=>q(\"#y\"+y).onclick=()=>load(y));[\"children\",\"working\",\"older\"].forEach(k=>q(\"#\"+k).oninput=()=>{label=\"\\u81EA\\u5B9A\\u4E49\\u60C5\\u666F\";draw()});q(\"#transfer\").onclick=()=>{const[c,w,o]=current(),delta=Math.min(.1,w);q(\"#working\").value=(w-delta).toFixed(4);q(\"#older\").value=(o+delta).toFixed(4);label=\"\\u81EA\\u5B9A\\u4E49\\u60C5\\u666F\";draw()};q(\"#save-a\").onclick=()=>{const[c,w,o]=current();a={c,w,o};draw()};q(\"#reset\").onclick=()=>{a=null;load(2025)};draw()",
+        "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}#crowd{display:grid;grid-template-columns:repeat(20,1fr);gap:8px 4px;margin:18px 0}.person{display:block;height:22px;background:#36674b;clip-path:polygon(35% 0,65% 0,72% 22%,65% 32%,80% 38%,100% 78%,72% 78%,66% 100%,54% 100%,50% 76%,46% 100%,34% 100%,28% 78%,0 78%,20% 38%,35% 32%,28% 22%)}.person.young{background:#69a2ab}.person.older{background:#d18343}#comparison{padding:8px;border-left:3px solid #c98b47;font-size:12px}",
         "height": 480,
         "kind": "experience"
       },
@@ -846,8 +846,8 @@
         "id": "pension-transfer",
         "afterParagraphId": "p-e8f578db-a457-4b41-988e-8917a74afa23",
         "title": "把人移过缴费线",
-        "html": "<small>2035中央人数演示 · 并非退休政策精算</small><h3>同一个人，改变收支两端</h3><div class=\"controls\"><label>初始缴费者 / 亿<input id=\"workers\" type=\"number\" min=\"3.8\" max=\"4.1\" step=\"0.01\" value=\"3.95\"></label><label>初始领取者 / 亿<input id=\"retirees\" type=\"number\" min=\"2.1\" max=\"2.3\" step=\"0.01\" value=\"2.2\"></label></div><div class=\"row\"><button id=\"move\">← 1000万人继续缴费</button><button id=\"back\">1000万人转为领取 →</button><button id=\"reset\">复位</button></div><svg class=\"visual\" viewBox=\"0 0 600 200\"></svg><output id=\"status\"></output><p class=\"note\">每个圆点代表约1000万人；部分圆点以透明度表示。转移只演示两边同时变化，人数总和保持不变；每次最多转移现有人数，不能产生负人数。</p>",
-        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let w=3.95,r=2.2;function draw(){let s=\"\";for(const[num,offset,color]of[[w,10,\"#326b54\"],[r,350,\"#bf773e\"]]){for(let i=0;i<Math.ceil(num*10);i++)s+='<circle cx=\"'+(offset+i%10*23)+'\" cy=\"'+(25+Math.floor(i/10)*25)+'\" r=\"8\" fill=\"'+color+'\" opacity=\"'+Math.min(1,num*10-i)+'\"/>'}q(\"svg\").innerHTML=s+'<text x=\"10\" y=\"190\">\\u7F34\\u8D39 '+w.toFixed(2)+' \\u4EBF</text><text x=\"350\" y=\"190\">\\u9886\\u53D6 '+r.toFixed(2)+\" \\u4EBF</text>\";q(\"#status\").textContent=\"\\u7F34\\u8D39 \"+w.toFixed(2)+\" / \\u9886\\u53D6 \"+r.toFixed(2)+\" \\u4EBF \\xB7 \"+(r?w/r:0).toFixed(2)+\" : 1\";q(\"#move\").disabled=r<=.100001;q(\"#back\").disabled=w<=.100001}__name(draw,\"draw\");q(\"#move\").onclick=()=>{if(r>.100001){w+=.1;r-=.1;draw()}};q(\"#back\").onclick=()=>{if(w>.100001){w-=.1;r+=.1;draw()}};for(const k of[\"workers\",\"retirees\"])q(\"#\"+k).oninput=()=>{w=Math.min(4.1,Math.max(3.8,+q(\"#workers\").value));r=Math.min(2.3,Math.max(2.1,+q(\"#retirees\").value));draw()};q(\"#reset\").onclick=()=>{q(\"#workers\").value=3.95;q(\"#retirees\").value=2.2;w=3.95;r=2.2;draw()};draw()",
+        "html": "<small>独立制度人数情景 · 不等同于年龄抚养比</small><h3>把缴费人数、领取人数与每人产出一起改变</h3><div class=\"controls\"><label>缴费者 / 亿人<input id=\"workers\" type=\"number\" value=\"3.95\" min=\"0\" max=\"20\"></label><label>领取者 / 亿人<input id=\"retired\" type=\"number\" value=\"2.2\" min=\"0\" max=\"20\"></label><label>每位缴费者产出指数<input id=\"output\" type=\"number\" value=\"100\" min=\"0\" max=\"1000\"></label></div><svg class=\"visual\" viewBox=\"0 0 620 220\"></svg><div class=\"row\"><button id=\"move\">0.1亿领取者转为缴费者</button><button id=\"save-a\">保留方案 A</button><button id=\"reset\">复位</button></div><output id=\"status\"></output><output id=\"comparison\"></output><p class=\"note\">示意固定分配规则，产出不是实际缴费或养老金。比值=缴费者/领取者；每名领取者对应产出=比值×产出指数。无领取者时不计算该分母。</p>",
+        "js": "const __name=(fn)=>fn;\nconst q=__name(s=>document.querySelector(s),\"q\");let a=null;function draw(){const w=Math.max(0,+q(\"#workers\").value||0),r=Math.max(0,+q(\"#retired\").value||0),o=Math.max(0,+q(\"#output\").value||0),v=r?w/r*o:0;let s=\"\";for(let i=0;i<20;i++)s+='<circle cx=\"'+(25+i*29)+'\" cy=\"30\" r=\"9\" fill=\"'+(i<20*w/Math.max(.1,w+r)?\"#416e50\":\"#cb9061\")+'\"/>';for(let i=0;i<10;i++)s+='<path d=\"M'+(25+i*58)+' 45 Q310 110 310 170\" fill=\"none\" stroke=\"#5f9470\" stroke-opacity=\".45\" stroke-width=\"'+Math.max(1,Math.min(12,o/30))+'\"/>';s+='<circle cx=\"310\" cy=\"180\" r=\"25\" fill=\"#ca8b4d\"/><text x=\"15\" y=\"215\">\\u7F34\\u8D39\\u4EA7\\u51FA '+(w*o).toFixed(1)+\" \\u2192 \\u5206\\u914D\\u7ED9 \"+r.toFixed(2)+\"\\u4EBF\\u9886\\u53D6\\u8005</text>\";q(\"svg\").innerHTML=s;q(\"#status\").textContent=\"\\u7F34\\u8D39 \"+w.toFixed(2)+\" / \\u9886\\u53D6 \"+r.toFixed(2)+\" \\u4EBF \\xB7 \"+(r?(w/r).toFixed(2)+\" : 1\":\"\\u5206\\u6BCD\\u4E3A\\u96F6\");q(\"#comparison\").textContent=\"\\u6BCF\\u540D\\u9886\\u53D6\\u8005\\u5BF9\\u5E94\\u4EA7\\u51FA\\u6307\\u6570 \"+(r?v.toFixed(2):\"\\u4E0D\\u9002\\u7528\")+(a!==null?\" / A \"+a.toFixed(2):\"\");return v}__name(draw,\"draw\");q(\"#move\").onclick=()=>{const d=Math.min(.1,+q(\"#retired\").value);q(\"#workers\").value=(+q(\"#workers\").value+d).toFixed(2);q(\"#retired\").value=(+q(\"#retired\").value-d).toFixed(2);draw()};[\"workers\",\"retired\",\"output\"].forEach(k=>q(\"#\"+k).oninput=draw);q(\"#save-a\").onclick=()=>{a=draw();draw()};q(\"#reset\").onclick=()=>{a=null;q(\"#workers\").value=3.95;q(\"#retired\").value=2.2;q(\"#output\").value=100;draw()};draw()",
         "css": "body{padding:16px;color:var(--ink,#183a35);background:var(--paper,#f2f5ed)}h3,p{margin:0 0 12px}h3{font-size:21px;line-height:1.25}small,.note{font-size:12px;line-height:1.6;color:var(--muted,#526b62)}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}button{border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;padding:8px 12px;min-height:42px}button[aria-pressed=true],button.primary{background:var(--ink,#183a35);color:var(--paper,#f2f5ed)}label{display:flex;flex-direction:column;font-size:12px;gap:4px;min-width:0}input[type=number],select{border:1px solid #9baaa2;background:#fff;color:#16332e;border-radius:4px;padding:8px;width:100%;min-width:0}input[type=range]{width:100%;accent-color:var(--ink,#183a35)}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metrics{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}.metrics b{font-size:26px;line-height:1.2;display:block;font-variant-numeric:tabular-nums;white-space:nowrap}.metrics span{font-size:12px}.visual{display:block;width:100%;height:auto}output{display:block}button:disabled{opacity:.35}svg text{font-family:inherit}.note{margin-top:12px}[hidden]{display:none!important}@media(max-width:420px){body{padding:12px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics b{font-size:23px}h3{font-size:19px}}",
         "height": 480,
         "kind": "experience"
@@ -865,70 +865,40 @@
     ],
     "scene": [
       {
-        "action": "focus",
-        "target": "p-091eef03-36a7-4cef-9483-ca5564f4372c",
-        "title": "同一百人，结构在移动",
-        "text": "先比较相同人数的结构，再看绝对量，防止把2%的总量变化误当成养老压力的全部。"
-      },
-      {
         "action": "reveal",
         "target": "population-crowd",
-        "title": "亲手试一次",
-        "text": "点2035，再回2025；同一百个人形重新分组，人数指标同步。"
-      },
-      {
-        "action": "focus",
-        "target": "p-db3a04c5-c671-4827-8e60-ec04c6b6f503",
-        "title": "把一个新生儿送到2035年",
-        "text": "用出生年份推进解释时滞；儿童情景不会伪造2035劳动人口变化。"
+        "title": "同一百人，结构在移动",
+        "text": "改动一组人口，观察人群和供养关系"
       },
       {
         "action": "reveal",
         "target": "birth-clock",
-        "title": "亲手试一次",
+        "title": "把一个新生儿送到2035年",
         "text": "切生育情景观察儿童数量，再拖动年份让2026新生儿走到16岁。"
-      },
-      {
-        "action": "focus",
-        "target": "p-d5457ad6-3932-4f0f-a826-329fd70bf2f8",
-        "title": "谁在连向同一个领取者？",
-        "text": "用一名分母对象和对应数量的连线，澄清支持比、抚养比与养老金参保口径。"
       },
       {
         "action": "reveal",
         "target": "support-lens",
-        "title": "亲手试一次",
+        "title": "谁在连向同一个领取者？",
         "text": "切换年龄或参保口径，再换年份；连线数量、标签和倒数计算一起变化。"
-      },
-      {
-        "action": "focus",
-        "target": "p-e8f578db-a457-4b41-988e-8917a74afa23",
-        "title": "把人移过缴费线",
-        "text": "让相同总人数在两端转移，看到比率变化不是只给分子加人。"
       },
       {
         "action": "reveal",
         "target": "pension-transfer",
-        "title": "亲手试一次",
+        "title": "把人移过缴费线",
         "text": "点击左移或右移，每步一千万人；点阵、两端人数和供养比同时改变。"
-      },
-      {
-        "action": "focus",
-        "target": "p-3bff9c32-4def-4325-8d92-6bd43fc67d60",
-        "title": "人数少了，每人多做多少？",
-        "text": "固定分配关系后，让生产率填补人口供养比下降留下的缺口。"
       },
       {
         "action": "reveal",
         "target": "productivity-factory",
-        "title": "亲手试一次",
+        "title": "人数少了，每人多做多少？",
         "text": "点刚好补齐，再手动调整增长率；2035产出条跨过或落后于基准线。"
       }
     ],
     "design": {
-      "version": "session-repair-2026-09-14",
+      "version": "free-exploration-2026-09-15",
       "intent": "把人口结构、年龄口径、制度人数与生产率分开操作，亲眼看见总量小变与供养关系大变。",
-      "readingFlow": "结论处看人群重排 → 生育处推时间 → 三种口径处搭供养连线 → 人数处转移缴费者 → 生产率处填补产出缺口。",
+      "readingFlow": "先在标题与原文短引后操作「同一百人，结构在移动」。改动一组人口，观察人群和供养关系。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
       "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
       "style": {
         "palette": [
@@ -952,11 +922,12 @@
           "blockId": "population-crowd",
           "purpose": "先比较相同人数的结构，再看绝对量，防止把2%的总量变化误当成养老压力的全部。",
           "whyHere": "紧接对应原文：换句话说，十年以后大约每3个人就有1个60岁以上老人，每4个人就有1个65岁以上老人。",
-          "interaction": "点2035，再回2025；同一百个人形重新分组，人数指标同步。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "interaction": "改动一组人口，观察人群和供养关系",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
-            "#y2035 → 2035：每100人中约33人年满60岁",
-            "#reset → 2025：每100人中约23人年满60岁"
+            "#y2035 → 2035原文 · 15—59岁 / 60岁以上 = 1.78 : 1",
+            "#working → 自定义情景 · 15—59岁 / 60岁以上 = 2.23 : 1",
+            "#reset → 2025原文 · 15—59岁 / 60岁以上 = 2.69 : 1"
           ]
         },
         {
@@ -964,7 +935,7 @@
           "purpose": "用出生年份推进解释时滞；儿童情景不会伪造2035劳动人口变化。",
           "whyHere": "紧接对应原文：因为2026年出生的孩子到2035年仅9岁，期间的生育政策无法改变2035年的劳动力及退休人口，只能影响儿童数量。未来十年的养老问题已由现有年龄结构决定，即使TFR恢复至1.5也无法增加2035年的缴费人口。劳动力供给的改善需等到2045-2055年以后。",
           "interaction": "切生育情景观察儿童数量，再拖动年份让2026新生儿走到16岁。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#year → 2042年：16岁，已到16岁参照线",
             "#optimistic → 乐观情景 · 2035儿童 1.41 亿 / 总人口 13.87 亿"
@@ -975,7 +946,7 @@
           "purpose": "用一名分母对象和对应数量的连线，澄清支持比、抚养比与养老金参保口径。",
           "whyHere": "紧接对应原文：约2.6名在职参保职工，对应1名领取职工养老金的退休人员。",
           "interaction": "切换年龄或参保口径，再换年份；连线数量、标签和倒数计算一起变化。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#future → 2035 · 15—64岁人口 / 65岁以上人口 = 2.75 : 1",
             "#insured → 2035 · 参保职工（中央情景） / 退休领取者 = 1.80 : 1"
@@ -986,9 +957,10 @@
           "purpose": "让相同总人数在两端转移，看到比率变化不是只给分子加人。",
           "whyHere": "紧接对应原文：真正增长最快的是分母——退休人口，所以养老金系统的主要压力来自退休者增长速度与缴费者增长速度之间的差额。",
           "interaction": "点击左移或右移，每步一千万人；点阵、两端人数和供养比同时改变。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#move → 缴费 4.05 / 领取 2.10 亿 · 1.93 : 1",
+            "#workers → 缴费 5.00 / 领取 2.10 亿 · 2.38 : 1",
             "#reset → 缴费 3.95 / 领取 2.20 亿 · 1.80 : 1"
           ]
         },
@@ -997,7 +969,7 @@
           "purpose": "固定分配关系后，让生产率填补人口供养比下降留下的缺口。",
           "whyHere": "紧接对应原文：本质上是 劳动人口人均生产率 创造的产出，在劳动者与退休者之间重新分配。所以如果一个劳动者2035年的产出比2025年高很多，那么即便供养比从2.6降到1.8，经济系统也并不一定不可持续。",
           "interaction": "点刚好补齐，再手动调整增长率；2035产出条跨过或落后于基准线。",
-          "implementation": "独立沙箱内 HTML、CSS 与 SVG；共享状态只经 world 协议。",
+          "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
           "checks": [
             "#equal → 每名领取者对应产出指数：100.00（2025 = 100）",
             "#growth → 每名领取者对应产出指数：173.08（2025 = 100）",
@@ -1007,13 +979,40 @@
         }
       ]
     },
+    "presentation": {
+      "version": 1,
+      "leadBlockId": "population-crowd",
+      "cue": "改动一组人口，观察人群和供养关系",
+      "nodes": [
+        {
+          "blockId": "population-crowd",
+          "label": "同一百人，结构在移动"
+        },
+        {
+          "blockId": "birth-clock",
+          "label": "把一个新生儿送到2035年"
+        },
+        {
+          "blockId": "support-lens",
+          "label": "谁在连向同一个领取者？"
+        },
+        {
+          "blockId": "pension-transfer",
+          "label": "把人移过缴费线"
+        },
+        {
+          "blockId": "productivity-factory",
+          "label": "人数少了，每人多做多少？"
+        }
+      ]
+    },
     "provenance": {
       "method": "codex",
       "tier": "session",
       "model": "Codex 当前会话（未记录具体模型 ID）",
-      "runId": "codex-6bac3468-8886-469f-b993-52fdb8209334",
+      "runId": "codex-1447468a-6719-4f6f-957b-e174219ae1f5",
       "sourceHash": "bbffbd1e1db1fcae61ffa0aa6204f7c0c3da13581ec08d6317ff364a4b44e20e",
-      "createdAt": "2026-09-14T15:48:07.618Z",
+      "createdAt": "2026-09-14T16:25:23.073Z",
       "baselineVersion": "composed-v8.2026-09-14",
       "prompt": "按作者要求加工；内部备注留存在本地工作台。"
     }

@@ -1,0 +1,56 @@
+{
+  "sourceHash": "a08546a68a06da50b9690592317f40624b1c3c40ca170ef32bfbe97c075a32a8",
+  "design": {
+    "version": "free-exploration-2026-09-15",
+    "intent": "让每一段网络等待占据时间轴，改变批次后只压缩等待；存在前后依赖时禁止提前合批。",
+    "readingFlow": "先在标题与原文短引后操作「命令还在，消失的是空等」。改变请求数和每批数量，一批一批推进。随后按“接着探索”回到对应原文中的其他交互；补充文字可收起，操作始终展示。完整原文保留全部段落与原图。",
+    "voice": "原文保留；补充计算、示意与情景均在操作旁标注。",
+    "style": {
+      "palette": [
+        "#183a35",
+        "#f2f5ed",
+        "#d98b51"
+      ],
+      "typography": "系统中文字体；指标等宽数字；窄屏指标整段换行。",
+      "surface": "每篇由其论点或叙事情境决定画面，操作反馈就在原文对应位置。",
+      "motion": "仅操作驱动；即时反馈；键盘、触摸和复位等价可用。"
+    },
+    "decisions": [
+      {
+        "title": "操作必须改变可见关系",
+        "reason": "让每一段网络等待占据时间轴，改变批次后只压缩等待；存在前后依赖时禁止提前合批。",
+        "tradeoff": "图示为解释论点服务，范围与缺失信息就地说明。"
+      }
+    ],
+    "components": [
+      {
+        "blockId": "network-tracks",
+        "purpose": "批处理改变等待段数量，不改变处理总量；时间游标对应已完成命令数量。",
+        "whyHere": "紧接对应原文：Pipeline 的核心不是让命令凭空消失，而是把多条命令先发出去，再读取响应。简化示意下，逐条等待约花 6×(80+2) 毫秒，一批发送约花 80+6×2 毫秒。",
+        "interaction": "改变请求数和每批数量，一批一批推进",
+        "implementation": "当前会话创作；隔离沙箱内直接操作，输入驱动实际图形与计算。",
+        "checks": [
+          "#reset → 逐条 492 ms / 当前 92 ms · 处理均为12 ms",
+          "#count → 逐条 410 ms / 当前 90 ms · 处理均为10 ms",
+          "#batch → 逐条 410 ms / 当前 170 ms · 处理均为10 ms",
+          "#step → 已完成 3 / 5 条 · 86 ms",
+          "#step → 已完成 5 / 5 条 · 170 ms",
+          "#dependent → 逐条 410 ms / 当前 410 ms · 处理均为10 ms"
+        ]
+      }
+    ]
+  },
+  "codeHashes": {
+    "network-tracks": "bc43b30673d2ef2869d1a7f8672147a4c8a23f9058516015c2d23ee50fbc98f5"
+  },
+  "recordedFrom": {
+    "method": "codex",
+    "tier": "session",
+    "model": "Codex 当前会话（未记录具体模型 ID）",
+    "runId": "codex-a151d450-8264-40ba-b50b-3acb8249de15",
+    "sourceHash": "a08546a68a06da50b9690592317f40624b1c3c40ca170ef32bfbe97c075a32a8",
+    "createdAt": "2026-09-14T16:21:22.040Z",
+    "baselineVersion": "composed-v8.2026-09-14",
+    "prompt": "按作者要求加工；内部备注留存在本地工作台。"
+  }
+}
